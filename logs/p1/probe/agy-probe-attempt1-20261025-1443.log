@@ -1,0 +1,3 @@
+Error: -p took "--effort" as its prompt, so the intended prompt was left as an argument and ignored.
+Attach the prompt to the flag (-p='your prompt') and move --effort elsewhere on the command line.
+exit=2

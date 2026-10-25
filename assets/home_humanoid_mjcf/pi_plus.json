@@ -1,0 +1,43 @@
+{
+  "smplx_model_dir": "./models",
+  "robot": {
+    "name": "pi_plus_fresh",
+    "xml": "./robot/pi_plus.xml",
+    "point_cloud_center": "body:base_link",
+    "tpose_qpos": {
+      "l_shoulder_roll_joint": 1.5707963267948966,
+      "r_shoulder_roll_joint": -1.5707963267948966
+    }
+  },
+  "motion": {
+    "data": "./input",
+    "seq_key": "dance1_subject2",
+    "start": 0,
+    "end": 3945,
+    "stride": 1
+  },
+  "correspondence": {
+    "dataset": {
+      "out": "./output/correspondence.npz",
+      "smpl_models": [
+        {
+          "type": "smplx",
+          "dir": "./models",
+          "genders": [
+            "neutral"
+          ]
+        }
+      ]
+    },
+    "train": {
+      "out_dir": "./output/training"
+    }
+  },
+  "retarget": {
+    "out": "./output/dance_pi_plus.npz",
+    "smplx_batch_size": 32
+  },
+  "view": {
+    "enabled": false
+  }
+}

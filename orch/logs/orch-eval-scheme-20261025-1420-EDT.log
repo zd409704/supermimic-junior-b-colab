@@ -1,0 +1,34 @@
+The evaluation and written-scheme packet is finished and on disk. I wrote no new training code and launched no Authors or runners. No Colab or GPU training has run, and the earlier scaffold code is unchanged.
+
+**Method boot:** the pin's sha256 (`9bdc872e…590afc0`) matches `CURRENT`. I read the existing overlay and added one small append-only overlay, `method/local/OVERLAY-001-owner-colab-runner.md`, because the global method doesn't cover a human (the owner) running the GPU experiments on Colab.
+
+**Evaluation (`docs/EVAL_REVIEW.md`):** accept the scheme with revisions, Provisional.
+- **Soft-body plant as world model:** the rejection stands. It would bring back the gradients through hard contact that the learned world model exists to avoid.
+- **B0 gate (main revision, RV-1):** on a single body, B0 can only show what generality costs. It should become a "not meaningfully worse" test (margin 0.05), not a "must beat the MLP" test. B1 is where the core claim is actually tested.
+- **What transfers in B1:** only the decoder weights. The motion encoder, world model, critic, action scaling, environment config and reference motions are all per body, so transferring the whole policy with no retraining is impossible in this stack.
+- **Ordering:** the body-descriptor redesign has to be decided before B0. Otherwise the B0 checkpoints can't be the starting point for B1.
+
+**Home-humanoid asset (read-only CPU check):**
+- 22 hinge joints, 28 bodies, 15.9 kg, about half the scale of the reference body.
+- All 27 mesh hashes match the manifest, and collisions use simple shapes only.
+- **It still has zero actuators.** Joint inertia is set to zero, so motor gains can't be derived and need data or an assumption.
+- At the default pose the wrists already touch the hips and thighs.
+- The file contains two built-in floor planes and no standing pose.
+
+**Plan (`docs/SCHEME_PLAN.md`):** packets P0–P6 in the order you gave, with arms, budgets and success/kill criteria for B0, B2 and B1. It defines the B1 runnable test as checks RT-1 to RT-8, lists 13 blockers (BLK-0 to BLK-12) and estimates about 17–20 L4 GPU-hours in total.
+
+**Other files:**
+- `briefs/B1-home-humanoid-cross-embodiment.md`: draft brief, not yet frozen.
+- `method-issues/ISSUE-001.md`: logs that the scaffold was built before any brief existed.
+- Appended notes to `docs/DESIGN_REVIEW.md`, `program-ledger.md` (entries D-002 and P-B1) and `progress.md`.
+- `orch/STATUS.md` plus `orch/reports/STATUS-20261025-1431-EDT.md`, with all hashes and an explicit "multi-agent implementation not started".
+
+**Decisions for the Human lead:**
+1. Sign RV-1, RV-2 and RV-8 (gate, mask-fairness controls, budget rule) before the B0 plan is sealed.
+2. B1 would build on two layers of Provisional decisions, which the method doesn't allow. Either sign an exception or lock the base decision.
+3. Confirm that private, never-shared retargets of the non-commercial, no-derivatives motion data are acceptable.
+4. Approve paid Colab compute before the B0, B2 and B1 runs.
+
+**Next launch for the relay bot:** one Claude Code orchestration wake for P1, the scaffold freeze. It covers the descriptor-design contest with two isolated authors, four small pre-freeze fixes, a hash manifest for the freeze, and preparing the B0 Colab smoke-test plan. It should not start any GPU work or B1 arms.
+
+Gap IDs are named `GAP-n` rather than `G1`–`G7` so they can't be read as a product name. A `STATUS-20261025-1421-EDT.md` report that I didn't write appeared in `orch/reports/` during the session; I left it alone.

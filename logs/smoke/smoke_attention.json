@@ -1,0 +1,16 @@
+{
+  "mode": "smoke",
+  "policy": "attention",
+  "params": 463489,
+  "obs_dim": 930,
+  "batch": 64,
+  "horizon": 8,
+  "steps": 20,
+  "device": "cpu",
+  "loss_first": 0.09606081992387772,
+  "loss_last": 0.09508170932531357,
+  "last_grad_norm": 0.0163812804967165,
+  "finite": true,
+  "wall_s": 3.562,
+  "note": "toy linear stand-in WM; verifies BPTT plumbing only, not tracking quality"
+}

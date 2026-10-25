@@ -1,0 +1,42 @@
+You are Claude Code for program supermimic-junior-b-colab. This packet is EVALUATION + WRITTEN SCHEME ONLY.
+
+Method boot (required order):
+1. Read the global pin named in /srv/claude/research/METHOD/CURRENT and verify its sha256.
+2. Read any overlays under method/local/ in this program.
+3. Analyze fit; create append-only method/local/ only if true specials are missing. Do not invent a full local method copy.
+Reusable snippet: /srv/claude/research/METHOD/ORCH_BOOTSTRAP_SNIPPET.txt
+
+Working directory: /srv/claude/research/supermimic-junior-b-colab
+Stay under /srv/claude/research/supermimic-junior-b-colab/ for writes.
+Decision cap: Provisional. Home-humanoid / plant-class wording only; no commercial product or company brand names.
+Times: America/Toronto.
+
+## Hard scope of THIS packet
+
+DO:
+- Read existing docs (README, docs/DESIGN_REVIEW.md, docs/COLAB_RUNBOOK.md, orch/STATUS.md, code/vendor/NOTES.md, progress.md) as context only.
+- Inventory assets at assets/home_humanoid_mjcf/ (primary MJCF XML + meshes/). Treat the morphology as home humanoid in all prose. Refer to the XML by directory path, not by product-like basename if that would violate plant-class wording in new docs.
+- Produce a rigorous written evaluation of the SuperMimic + Junior-(B) attention-policy scheme and how cross-embodiment onto the home-humanoid MJCF should work.
+- Write experiment design: arms, success/kill criteria, Colab constraints, risks, dependencies (actuators, retargets, WM/critic per body), ordered packets.
+- Put outputs on disk under this program.
+
+DO NOT in this packet:
+- Implement new training code, expand B1 runners, multi-agent Author sprints, or large refactors.
+- Claim Colab/GPU training finished.
+- Re-copy meshes from outside this program.
+- Act as if scaffold code is a sealed implementation of cross-embodiment.
+
+## Required artifacts (create or overwrite)
+
+1. docs/EVAL_REVIEW.md - critique of the scheme (accept/revise), separation of Junior-(A) vs (B), SuperMimic loop assumptions, Colab/mjlab feasibility, risks R*, what prior scaffold got right vs skipped process.
+2. docs/SCHEME_PLAN.md - actionable experiment + implementation plan Claude Code will later orchestrate with multi-agent Authors/runners: packet sequence (eval already done -> scaffold freeze -> B0 Colab smoke -> B0 plan seal -> B0 microbench -> B2 -> B1 home-humanoid cross-embodiment), acceptance/kill criteria, concrete definition of the B1 runnable test (load primary MJCF under assets/home_humanoid_mjcf/ with meshes alongside, retarget/eval/rollout expectations), blockers (e.g. zero actuators if still true).
+3. briefs/B1-home-humanoid-cross-embodiment.md - brief for the cross-embodiment track only (Provisional); reference asset directory; plant-class naming.
+4. orch/STATUS.md - overwrite with: method pin sha, this packet result, list of scheme artifacts + hashes, explicit note that multi-agent implementation is NOT started and must be a later Claude Code orchestration wake, next launch recommendation for the relay bot.
+5. orch/reports/ dated copy of that STATUS.
+
+Also append a short dated note to docs/DESIGN_REVIEW.md pointing at EVAL_REVIEW + SCHEME_PLAN as the Claude Code scheme packet (do not reverse the accepted no-algovivo-as-WM consensus unless you have a strong written reason).
+
+When finished, print a short progress summary in session output.
+
+Begin now.
+

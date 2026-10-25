@@ -1,0 +1,20 @@
+Reading additional input from stdin...
+OpenAI Codex v0.163.0
+--------
+workdir: /home/box/.srv-claude/research/supermimic-junior-b-colab
+model: gpt-6-astra
+provider: openai
+approval: never
+sandbox: read-only
+reasoning effort: high
+reasoning summaries: none
+session id: 01a17460-12a8-7121-b21a-6da850d9c5f9
+--------
+user
+Reply with exactly: PROBE-OK and the model name you are.
+codex
+PROBE-OK GPT-6
+tokens used
+3,677
+PROBE-OK GPT-6
+exit=0

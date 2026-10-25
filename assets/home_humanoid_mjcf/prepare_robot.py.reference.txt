@@ -1,0 +1,25 @@
+from pathlib import Path
+import shutil,xml.etree.ElementTree as ET,json,hashlib,subprocess
+ROOT=Path(__file__).resolve().parent
+import argparse
+parser=argparse.ArgumentParser(description='从 Pi+ 原始 XML/meshes 目录重建机器人；将更新本项目配置')
+parser.add_argument('source',type=Path)
+SOURCE=parser.parse_args().source.expanduser().resolve()
+folder=ROOT/'robot';(folder/'meshes').mkdir(parents=True,exist_ok=True)
+src=SOURCE/'xml/PiPlus_S_12L8A0G2H0W_LSE_ZedMini_40V_260908.xml';tree=ET.parse(src);xml=tree.getroot();xml.find('compiler').set('meshdir','meshes')
+for mesh in xml.findall('./asset/mesh'):
+ name=mesh.get('file');shutil.copyfile(SOURCE/'meshes'/name,folder/'meshes'/name)
+world=xml.find('worldbody');ET.SubElement(world,'geom',name='ground',type='plane',size='10 10 .1',rgba='.2 .25 .3 1')
+for side in ['l','r']:
+ pitch=xml.find(f".//body[@name='{side}_ankle_pitch_link']");roll=xml.find(f".//body[@name='{side}_ankle_roll_link']")
+ assert pitch is not None and roll is not None
+ assert pitch.find(f"joint[@name='{side}_ankle_pitch_joint']") is not None
+ assert roll.get('pos')=='0.051 0 0'
+ ET.SubElement(pitch,'site',name=side+'_anatomical_ankle',pos='0 0 0',size='.006',rgba='0 1 .6 1')
+tree.write(folder/'pi_plus.xml')
+(ROOT/'models').mkdir(exist_ok=True);(ROOT/'output').mkdir(exist_ok=True);(ROOT/'web').mkdir(exist_ok=True)
+config={'smplx_model_dir':str(ROOT/'models'),'robot':{'name':'pi_plus_fresh','xml':str(folder/'pi_plus.xml'),'point_cloud_center':'body:base_link','tpose_qpos':{'l_shoulder_roll_joint':1.5707963267948966,'r_shoulder_roll_joint':-1.5707963267948966}},'motion':{'data':str(ROOT/'input'),'seq_key':'dance1_subject2','start':0,'end':300,'stride':1},'correspondence':{'dataset':{'out':str(ROOT/'output/correspondence.npz'),'smpl_models':[{'type':'smplx','dir':str(ROOT/'models'),'genders':['neutral']}]},'train':{'out_dir':str(ROOT/'output/training')}},'retarget':{'out':str(ROOT/'output/dance_pi_plus.npz')},'view':{'enabled':False}}
+(ROOT/'pi_plus.json').write_text(json.dumps(config,indent=2))
+lock={'repository':'https://github.com/hanyang9/UMR','commit':json.loads((ROOT/'sources.json').read_text())['commit'],'robot_original':str(src),'robot_original_sha256':hashlib.sha256(src.read_bytes()).hexdigest(),'anatomical_ankles':{'left':'l_ankle_pitch_joint','right':'r_ankle_pitch_joint'},'note':'Ankle sites are geometric audit markers. Official UMR learns dense surface correspondence; this is not a hand-written IK mapping or proof of learned correspondence accuracy.'}
+(ROOT/'sources.json').write_text(json.dumps(lock,indent=2))
+print('Fresh Pi+ model and independent configuration prepared')

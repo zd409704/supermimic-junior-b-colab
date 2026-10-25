@@ -1,0 +1,33 @@
+The Colab scaffold is built and passes all CPU smoke tests on this box. No Colab or GPU training has run: this box has no NVIDIA GPU, and the GPU steps are written down for you to run.
+
+**Method boot:** the v1.1 pin's sha256 (`9bdc872e…590afc0`) matches `CURRENT`. The existing `method/local/README.md` already covers this program's special rules, so I added no new overlay. This wake was a single-model engineering scaffold, not a contest, so no `roster.md` was needed.
+
+**What was built:**
+- `code/attention_policy.py`: the attention decoder. One token per joint, described by its default-pose geometry rather than its array index; a root token for the unactuated base; the motion latent z goes in as a token and into every query; each actuator gets its action from shared query, attention and readout networks. It drops into the decoder slot of the public mjlab reproduction (`CuboiLeo/SuperMimic-Reproduced@d9be385b`, MIT license); the world model, motion encoder and training loop are unchanged.
+- `code/mlp_baseline.py`: an MLP sized to the same parameter count (468k vs 463k, +1%), plus the upstream-width MLP.
+- `code/train_entry.py` and `code/eval_entry.py`: a CPU smoke mode and an upstream mode that swaps in our decoder without editing upstream files. The eval also runs the B2 token-mask tests.
+- `configs/colab_smoke.yaml`: 512 envs, horizon 16, 30 minutes per arm, 4 placeholder clips.
+- `notebooks/colab_smoke.ipynb`: GPU cells are marked and off by default.
+- `docs/COLAB_RUNBOOK.md` and `code/vendor/NOTES.md`: Colab steps, success/kill metrics, risks, and data licensing. LAFAN1 motion is CC BY-NC-ND, so it is downloaded on Colab only and never stored in this tree.
+- `progress.md` and `program-ledger.md`: B0 and B2 recorded as planned.
+
+**CPU smoke results** (log: `logs/smoke-cpu-attempt2-20261025-1417-EDT.log`):
+- 6 of 6 tests pass.
+- Reordering the joints changes the attention decoder's output by only ~2e-6 relative, against ~5–8 for the MLPs.
+- Upstream mode refuses cleanly with no GPU.
+- The upstream hook was tested only against a mock of the upstream module layout, not the real package, which needs CUDA builds.
+
+**Design-review amendment (dated, the scheme itself is unchanged):**
+- **Same parameter count does not mean same compute.** The attention decoder costs ~25.7 MFLOP per sample, against 0.94 for the matched MLP, which is 27×. On CPU a forward+backward pass took 302 ms against 3 ms. So the kill clause "and slower to train" will almost always be true. In practice the kill rule becomes "no return gain and no B2 gain". I added the upstream-width MLP as a heavier comparison arm.
+- **The reordering test passes by design**, so the real B2 signal is how much return survives when 10–20% of joint tokens are masked.
+
+**New input mid-wake:** a second home-humanoid model appeared in `assets/home_humanoid_mjcf/` at 14:11. It loads with 22 joints, and the same decoder weights produce 22 actions. Before B1 can use it, it needs actuators (its model file defines none), motion retargets for that body, and its own world model and critic.
+
+**Blockers and risks:**
+- Every GPU step waits on you running Colab.
+- The upstream package requires CUDA 13 builds, which may be too new for Colab's driver. The runbook has an untested fallback.
+- On the first run, check that the morphology rows follow the same joint order as the observations. If they don't, the comparison is unfair to the attention arm.
+
+**Decision ask (optional, not blocking):** please confirm the design-review amendment. I'm proceeding under it provisionally.
+
+`orch/STATUS.md` is written, with a dated copy at `orch/reports/STATUS-20261025-1419-EDT.md`. To start the Colab run, pack the code (`tar czf /tmp/junior_b_colab.tgz code configs notebooks docs/COLAB_RUNBOOK.md`), upload it, and open `notebooks/colab_smoke.ipynb` on an L4 runtime.

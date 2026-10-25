@@ -1,0 +1,135 @@
+# CPU smoke, research box, 2026-10-25 14:15:04 EDT
+# python Python 3.12.15, torch 2.14.1+cpu, cuda_available=False
+$ python code/attention_policy.py
+actions (4, 29) params 463489
+$ python code/mlp_baseline.py
+attention 463489 mlp_matched 468317 (384, 192, 96, 48) mlp_upstream 4733981
+$ python code/tests/test_smoke.py
+PASS test_shapes_and_distinct_morphology
+PASS test_permutation_equivariance
+PASS test_mask_and_grad
+PASS test_param_match_within_5pct
+PASS test_upstream_seam_with_fake_package
+$ python code/train_entry.py --policy attention
+{
+  "mode": "smoke",
+  "policy": "attention",
+  "params": 463489,
+  "obs_dim": 930,
+  "batch": 64,
+  "horizon": 8,
+  "steps": 20,
+  "device": "cpu",
+  "loss_first": 0.09606081992387772,
+  "loss_last": 0.09508170932531357,
+  "last_grad_norm": 0.0163812804967165,
+  "finite": true,
+  "wall_s": 3.503,
+  "note": "toy linear stand-in WM; verifies BPTT plumbing only, not tracking quality"
+}
+$ python code/train_entry.py --policy mlp_matched
+{
+  "mode": "smoke",
+  "policy": "mlp_matched",
+  "params": 468317,
+  "obs_dim": 930,
+  "batch": 64,
+  "horizon": 8,
+  "steps": 20,
+  "device": "cpu",
+  "loss_first": 0.09499428421258926,
+  "loss_last": 0.09467227011919022,
+  "last_grad_norm": 0.013355044648051262,
+  "finite": true,
+  "wall_s": 0.231,
+  "note": "toy linear stand-in WM; verifies BPTT plumbing only, not tracking quality"
+}
+$ python code/train_entry.py --policy mlp_upstream
+{
+  "mode": "smoke",
+  "policy": "mlp_upstream",
+  "params": 4733981,
+  "obs_dim": 930,
+  "batch": 64,
+  "horizon": 8,
+  "steps": 20,
+  "device": "cpu",
+  "loss_first": 0.09768498688936234,
+  "loss_last": 0.09607325494289398,
+  "last_grad_norm": 0.006286755204200745,
+  "finite": true,
+  "wall_s": 0.923,
+  "note": "toy linear stand-in WM; verifies BPTT plumbing only, not tracking quality"
+}
+$ python code/eval_entry.py
+[
+  {
+    "policy": "attention",
+    "action_mean_abs": 0.0004311462107580155,
+    "perm_max_abs_err": 9.604264050722122e-10,
+    "perm_rel_err": 2.2276118428215983e-06,
+    "mask": {
+      "0.1": {
+        "mean_abs_da": 5.848555520060472e-05,
+        "finite": true
+      },
+      "0.2": {
+        "mean_abs_da": 9.759424574440345e-05,
+        "finite": true
+      }
+    }
+  },
+  {
+    "policy": "mlp_matched",
+    "action_mean_abs": 0.00021176702284719795,
+    "perm_max_abs_err": 0.0010648701572790742,
+    "perm_rel_err": 5.028498502561653,
+    "mask": {
+      "0.1": {
+        "mean_abs_da": 1.5932659152895212e-05,
+        "finite": true
+      },
+      "0.2": {
+        "mean_abs_da": 2.2659254682366736e-05,
+        "finite": true
+      }
+    }
+  },
+  {
+    "policy": "mlp_upstream",
+    "action_mean_abs": 0.00010105867113452405,
+    "perm_max_abs_err": 0.0007821711478754878,
+    "perm_rel_err": 7.739772738890483,
+    "mask": {
+      "0.1": {
+        "mean_abs_da": 1.5596036973875016e-05,
+        "finite": true
+      },
+      "0.2": {
+        "mean_abs_da": 2.1517953427974135e-05,
+        "finite": true
+      }
+    }
+  },
+  {
+    "policy": "attention[id_mode=index]",
+    "action_mean_abs": 0.0005031710606999695,
+    "perm_max_abs_err": 0.0026760371401906013,
+    "perm_rel_err": 5.31834469269342,
+    "mask": {
+      "0.1": {
+        "mean_abs_da": 5.8481935411691666e-05,
+        "finite": true
+      },
+      "0.2": {
+        "mean_abs_da": 0.00012093329860363156,
+        "finite": true
+      }
+    }
+  }
+]
+$ python code/train_entry.py --mode upstream (expected: refuse, no CUDA)
+[train_entry] --mode upstream requires a CUDA GPU (Colab T4/L4). Use --mode smoke on CPU.
+exit=1
+$ import check eval_entry upstream path
+entrypoints import OK

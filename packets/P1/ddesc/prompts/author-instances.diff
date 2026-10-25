@@ -1,0 +1,12 @@
+2c2
+< Your author slot: Author A. Program root: /srv/claude/research/supermimic-junior-b-colab (all paths below are relative to it).
+---
+> Your author slot: Author B. Program root: /srv/claude/research/supermimic-junior-b-colab (all paths below are relative to it).
+23c23
+< Write the proposal to: packets/P1/ddesc/drafts/A/proposal.md
+---
+> Write the proposal to: packets/P1/ddesc/drafts/B/proposal.md
+25c25
+< You may put scratch scripts in packets/P1/ddesc/drafts/A/scratch/ (they are not part of the deliverable).
+---
+> You may put scratch scripts in packets/P1/ddesc/drafts/B/scratch/ (they are not part of the deliverable).
