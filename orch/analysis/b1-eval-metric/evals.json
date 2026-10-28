@@ -1,0 +1,5462 @@
+[
+ {
+  "arm": "H-A-frozen",
+  "seed": 0,
+  "it": 160,
+  "exec": 1,
+  "failed": 4,
+  "R": 0.5964874958165776,
+  "Rsw": 0.5991837955438174,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 46,
+    "nr": 0.5924397966136102,
+    "failed": true,
+    "fail_step": 46
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 47,
+    "nr": 0.585271196162447,
+    "failed": true,
+    "fail_step": 47
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 65,
+    "nr": 0.6305535389826848,
+    "failed": true,
+    "fail_step": 65
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 50,
+    "nr": 0.5776854515075683,
+    "failed": true,
+    "fail_step": 50
+   }
+  }
+ },
+ {
+  "arm": "H-A-frozen",
+  "seed": 0,
+  "it": 320,
+  "exec": 1,
+  "failed": 4,
+  "R": 0.6370878821645851,
+  "Rsw": 0.6426664303089009,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 62,
+    "nr": 0.6481427531088552,
+    "failed": true,
+    "fail_step": 62
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 59,
+    "nr": 0.6296808032666222,
+    "failed": true,
+    "fail_step": 59
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 113,
+    "nr": 0.6646961448466883,
+    "failed": true,
+    "fail_step": 113
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 56,
+    "nr": 0.6058318274361746,
+    "failed": true,
+    "fail_step": 56
+   }
+  }
+ },
+ {
+  "arm": "H-A-frozen",
+  "seed": 0,
+  "it": 480,
+  "exec": 1,
+  "failed": 4,
+  "R": 0.6312590507897816,
+  "Rsw": 0.6353377758112168,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 57,
+    "nr": 0.6391063907690215,
+    "failed": true,
+    "fail_step": 57
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 57,
+    "nr": 0.627093189641049,
+    "failed": true,
+    "fail_step": 57
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 96,
+    "nr": 0.658290535211563,
+    "failed": true,
+    "fail_step": 96
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 56,
+    "nr": 0.600546087537493,
+    "failed": true,
+    "fail_step": 56
+   }
+  }
+ },
+ {
+  "arm": "H-A-frozen",
+  "seed": 0,
+  "it": 640,
+  "exec": 1,
+  "failed": 4,
+  "R": 0.6415611549992651,
+  "Rsw": 0.6212972710035505,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 133,
+    "nr": 0.7109923111765007,
+    "failed": true,
+    "fail_step": 133
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 66,
+    "nr": 0.6455477801236239,
+    "failed": true,
+    "fail_step": 66
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 851,
+    "nr": 0.6065723674697965,
+    "failed": true,
+    "fail_step": 851
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 55,
+    "nr": 0.6031321612271395,
+    "failed": true,
+    "fail_step": 55
+   }
+  }
+ },
+ {
+  "arm": "H-A-frozen",
+  "seed": 0,
+  "it": 800,
+  "exec": 1,
+  "failed": 3,
+  "R": 0.5415082584070395,
+  "Rsw": 0.4573807632610703,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.4834247457570043,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 521,
+    "nr": 0.5961380810289145,
+    "failed": true,
+    "fail_step": 521
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4384759773509114,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 71,
+    "nr": 0.6479942294913278,
+    "failed": true,
+    "fail_step": 71
+   }
+  }
+ },
+ {
+  "arm": "H-A-frozen",
+  "seed": 0,
+  "it": 960,
+  "exec": 1,
+  "failed": 2,
+  "R": 0.5690221274092052,
+  "Rsw": 0.5307375148142447,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 1656,
+    "nr": 0.6425421710175592,
+    "failed": true,
+    "fail_step": 1656
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 524,
+    "nr": 0.5971833585782815,
+    "failed": true,
+    "fail_step": 524
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.43869674280968796,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5976662372312921,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-frozen",
+  "seed": 0,
+  "it": 1120,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5171673906081945,
+  "Rsw": 0.5204033787133034,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5111514181568884,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5128986631433071,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4427233384722426,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6018961426603398,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-frozen",
+  "seed": 0,
+  "it": 1280,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5182358540646395,
+  "Rsw": 0.5215014659922417,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5120377776504814,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5141260081237983,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4438038111314492,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6029758193528288,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-frozen",
+  "seed": 0,
+  "it": 1440,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5174807531531183,
+  "Rsw": 0.5207200537677877,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5114391504199072,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5133085605107592,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4430161183320105,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6021591833497961,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-frozen",
+  "seed": 0,
+  "it": 1600,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5177850830420094,
+  "Rsw": 0.5210463617964798,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5116575661449061,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.513950573249059,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4428478623046053,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6026843304694675,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 0,
+  "it": 160,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.512436680395492,
+  "Rsw": 0.5158010135324481,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5054748969814409,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5104778316637006,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4379117704402226,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5958822224966037,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 0,
+  "it": 320,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5165376510190652,
+  "Rsw": 0.5204612339831346,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5060145594012075,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5121947263387743,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4469187547797441,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.601022563556535,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 0,
+  "it": 480,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.46251250310811576,
+  "Rsw": 0.46508001986775804,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.4599950410079384,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.4522182219275436,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.39356814592903766,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5442686035679435,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 0,
+  "it": 640,
+  "exec": 1,
+  "failed": 4,
+  "R": 0.6053907558355449,
+  "Rsw": 0.6092791230070824,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 95,
+    "nr": 0.6456594969096937,
+    "failed": true,
+    "fail_step": 95
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 79,
+    "nr": 0.5967990054359918,
+    "failed": true,
+    "fail_step": 79
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 69,
+    "nr": 0.6118421969206437,
+    "failed": true,
+    "fail_step": 69
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 63,
+    "nr": 0.5672623240758502,
+    "failed": true,
+    "fail_step": 63
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 0,
+  "it": 800,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.4882114699831721,
+  "Rsw": 0.49216257414088227,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.4776783075289748,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.48135094821326296,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.41947141285951556,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5743452113309352,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 0,
+  "it": 960,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5057507456451016,
+  "Rsw": 0.5118855827768508,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.4823787065817677,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.49570324884813244,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44474934019820656,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6001716869522998,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 0,
+  "it": 1120,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.4877399466701705,
+  "Rsw": 0.4917663768026726,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.47630904853969497,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.47872212178538187,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4237299123450771,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5721987040105282,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 0,
+  "it": 1280,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5169270474427686,
+  "Rsw": 0.5202807197988025,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.509931401334245,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.511554061947078,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4454630167708245,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6007597097189269,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 0,
+  "it": 1440,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5242109914527325,
+  "Rsw": 0.528083385838546,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5142769534727265,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5205657115019279,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4520679127727903,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6099333880634853,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 0,
+  "it": 1600,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5210824837946886,
+  "Rsw": 0.5246094927204,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5132445831527596,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5158085449298652,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4488164343371562,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6064603727589736,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 1,
+  "it": 160,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5189185987617326,
+  "Rsw": 0.5222750110484903,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5121072657640906,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5152257096258284,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4449360746178832,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6034053450391282,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 1,
+  "it": 320,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.20355343806806744,
+  "Rsw": 0.20926753563080674,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.1822832499308207,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.19988552986785482,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.13936570269958634,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.2926792697740079,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 1,
+  "it": 480,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5212354564944981,
+  "Rsw": 0.5247700590393647,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5135338024042178,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5169945905532799,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44705626481556426,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6073571682049307,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 1,
+  "it": 640,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5057788149105411,
+  "Rsw": 0.5094591715217238,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.4966537384078956,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.4998698895466423,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.43688827282385306,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5897033588637732,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 1,
+  "it": 800,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.47343982559489584,
+  "Rsw": 0.4751377780900398,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.47550593180277534,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.46989294847086704,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.40095821961593847,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5474022024900026,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 1,
+  "it": 960,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5176712367069914,
+  "Rsw": 0.5211639027448033,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5098874207915574,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5130612637559319,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44581508147246335,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6019211808080132,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 1,
+  "it": 1120,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5185200717162967,
+  "Rsw": 0.5219287551544308,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5113622845559642,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5149463022463334,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4448398843203368,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6029318157425522,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 1,
+  "it": 1280,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.508361558459883,
+  "Rsw": 0.5115489455008525,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5017778433781156,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5041384552606212,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.43937828751130054,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5881516476894946,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 1,
+  "it": 1440,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5125500992817607,
+  "Rsw": 0.5158688606801459,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5054895380983824,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5105714169057335,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4403381886609357,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.593801253461991,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 1,
+  "it": 1600,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5024968924079146,
+  "Rsw": 0.5050019756928621,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.49929726070192443,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.4971393378583446,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.436753329231404,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5767976418399854,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 2,
+  "it": 160,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.56263568394577,
+  "Rsw": 0.5172042713816822,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 146,
+    "nr": 0.7087043866719285,
+    "failed": true,
+    "fail_step": 146
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5104139599857072,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.437184594375473,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5942397947499712,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 2,
+  "it": 320,
+  "exec": 1,
+  "failed": 2,
+  "R": 0.524589206155763,
+  "Rsw": 0.4815059080010464,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5054851915167904,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5096761147610354,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4409801074768995,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 60,
+    "nr": 0.6422154108683268,
+    "failed": true,
+    "fail_step": 60
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 2,
+  "it": 480,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.43595720558411305,
+  "Rsw": 0.43770813899896543,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.43750742922301056,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.4295253987750061,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.36702467969965463,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5097713146387809,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 2,
+  "it": 640,
+  "exec": 1,
+  "failed": 4,
+  "R": 0.5726267186741185,
+  "Rsw": 0.577497690739807,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 2233,
+    "nr": 0.6142079429780214,
+    "failed": true,
+    "fail_step": 2233
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 3635,
+    "nr": 0.5106909330806181,
+    "failed": true,
+    "fail_step": 3635
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 1608,
+    "nr": 0.5658909811902402,
+    "failed": true,
+    "fail_step": 1608
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 8080,
+    "nr": 0.5997170174475943,
+    "failed": true,
+    "fail_step": 8080
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 2,
+  "it": 800,
+  "exec": 1,
+  "failed": 4,
+  "R": 0.5609983987712144,
+  "Rsw": 0.5689013871279629,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 79,
+    "nr": 0.5379723898972136,
+    "failed": true,
+    "fail_step": 79
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 82,
+    "nr": 0.5557942971950623,
+    "failed": true,
+    "fail_step": 82
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 170,
+    "nr": 0.6043758392333984,
+    "failed": true,
+    "fail_step": 170
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 109,
+    "nr": 0.5458510687591832,
+    "failed": true,
+    "fail_step": 109
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 2,
+  "it": 960,
+  "exec": 1,
+  "failed": 4,
+  "R": 0.5253809688765287,
+  "Rsw": 0.5115478167791883,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 287,
+    "nr": 0.589968784345567,
+    "failed": true,
+    "fail_step": 287
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 418,
+    "nr": 0.5091636602958424,
+    "failed": true,
+    "fail_step": 418
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 814,
+    "nr": 0.4770245657506094,
+    "failed": true,
+    "fail_step": 814
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 477,
+    "nr": 0.525366865114096,
+    "failed": true,
+    "fail_step": 477
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 2,
+  "it": 1120,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5055076737896995,
+  "Rsw": 0.5079391283889694,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.503384191235681,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5029602000842487,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4333300530765126,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5823562507623555,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 2,
+  "it": 1280,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5133849792212217,
+  "Rsw": 0.5166275040564727,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5065924831773566,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.510870849729228,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44255261865920126,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.593523965319101,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 2,
+  "it": 1440,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.4895809149797374,
+  "Rsw": 0.4932437391122986,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.47980821829685744,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.4870397723495541,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.42316619305862885,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5683094762139091,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-scratch",
+  "seed": 2,
+  "it": 1600,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5178034417675483,
+  "Rsw": 0.5218170356234564,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5068235383040901,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.513831119727745,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4476667190357991,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.602892390002559,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 0,
+  "it": 160,
+  "exec": 1,
+  "failed": 3,
+  "R": 0.6018225194335028,
+  "Rsw": 0.44191495013628873,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 71,
+    "nr": 0.6666993423247001,
+    "failed": true,
+    "fail_step": 71
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 74,
+    "nr": 0.6583028870659905,
+    "failed": true,
+    "fail_step": 74
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.43801791853804867,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 71,
+    "nr": 0.644269929805272,
+    "failed": true,
+    "fail_step": 71
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 0,
+  "it": 320,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.4982672158972874,
+  "Rsw": 0.5010149723695865,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.49322417114806855,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.4919668305936528,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.43654755180191424,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.571330310045514,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 0,
+  "it": 480,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5008895504022907,
+  "Rsw": 0.5043957802347333,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.49206895270626405,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.4955325082171238,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4358999354816668,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.580056805204108,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 0,
+  "it": 640,
+  "exec": 1,
+  "failed": 4,
+  "R": 0.5665255231584162,
+  "Rsw": 0.5114212453039617,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 1181,
+    "nr": 0.6602392753840098,
+    "failed": true,
+    "fail_step": 1181
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 3404,
+    "nr": 0.5039023232375973,
+    "failed": true,
+    "fail_step": 3404
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 4516,
+    "nr": 0.4399139634057206,
+    "failed": true,
+    "fail_step": 4516
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 1147,
+    "nr": 0.6620465306063371,
+    "failed": true,
+    "fail_step": 1147
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 0,
+  "it": 800,
+  "exec": 1,
+  "failed": 4,
+  "R": 0.6317975258871061,
+  "Rsw": 0.46412270285866475,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 392,
+    "nr": 0.6961374866719148,
+    "failed": true,
+    "fail_step": 392
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 288,
+    "nr": 0.6829257806142172,
+    "failed": true,
+    "fail_step": 288
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 7545,
+    "nr": 0.4337666627189985,
+    "failed": true,
+    "fail_step": 7545
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 300,
+    "nr": 0.7143601735432943,
+    "failed": true,
+    "fail_step": 300
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 0,
+  "it": 960,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.49540136825595843,
+  "Rsw": 0.4986277462159494,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.48808879938082717,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.4874093691351916,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4325094071441899,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.573597897363625,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 0,
+  "it": 1120,
+  "exec": 1,
+  "failed": 4,
+  "R": 0.6678049533636905,
+  "Rsw": 0.6691860072202193,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 75,
+    "nr": 0.6737778345743816,
+    "failed": true,
+    "fail_step": 75
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 73,
+    "nr": 0.6580446191030005,
+    "failed": true,
+    "fail_step": 73
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 108,
+    "nr": 0.6810658066361038,
+    "failed": true,
+    "fail_step": 108
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 75,
+    "nr": 0.658331553141276,
+    "failed": true,
+    "fail_step": 75
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 0,
+  "it": 1280,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5043494890380128,
+  "Rsw": 0.5067295871677643,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5024366936404844,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.496580722854407,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4363944891192656,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5819860505378941,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 0,
+  "it": 1440,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.51949756387556,
+  "Rsw": 0.5230226073701929,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5113248810775276,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5138070991826982,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4498042583906683,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.603054016851346,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 0,
+  "it": 1600,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5067770182488133,
+  "Rsw": 0.5096747075251015,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5024460731060251,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.49619509572581716,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.43802305142479075,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5904438527386202,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 1,
+  "it": 160,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.518027613009969,
+  "Rsw": 0.521265307384618,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5119068082840904,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5147884957549654,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44347191867470664,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6019432293261135,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 1,
+  "it": 320,
+  "exec": 1,
+  "failed": 4,
+  "R": 0.5851527688706794,
+  "Rsw": 0.5852547883987427,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 41,
+    "nr": 0.5940232625821741,
+    "failed": true,
+    "fail_step": 41
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 40,
+    "nr": 0.5729547142982483,
+    "failed": true,
+    "fail_step": 40
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 40,
+    "nr": 0.5959329605102539,
+    "failed": true,
+    "fail_step": 40
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 39,
+    "nr": 0.577700138092041,
+    "failed": true,
+    "fail_step": 39
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 1,
+  "it": 480,
+  "exec": 1,
+  "failed": 4,
+  "R": 0.5864323568429114,
+  "Rsw": 0.5898104587976502,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 100,
+    "nr": 0.5918359756469727,
+    "failed": true,
+    "fail_step": 100
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 75,
+    "nr": 0.5708723704020182,
+    "failed": true,
+    "fail_step": 75
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 119,
+    "nr": 0.6125721811246471,
+    "failed": true,
+    "fail_step": 119
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 77,
+    "nr": 0.5704489001980075,
+    "failed": true,
+    "fail_step": 77
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 1,
+  "it": 640,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5114232266029496,
+  "Rsw": 0.515029521405129,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5026976029197315,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.507935798806072,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4408452152133178,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5942142894726771,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 1,
+  "it": 800,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.4984031390548754,
+  "Rsw": 0.5026075212195328,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.4849952343164355,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.49333285551924805,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.43812493922662094,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5771595271571971,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 1,
+  "it": 960,
+  "exec": 1,
+  "failed": 4,
+  "R": 0.5738628630734095,
+  "Rsw": 0.574017548101796,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 185,
+    "nr": 0.5777072906494141,
+    "failed": true,
+    "fail_step": 185
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 145,
+    "nr": 0.5676021575927734,
+    "failed": true,
+    "fail_step": 145
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 117,
+    "nr": 0.5759643081925873,
+    "failed": true,
+    "fail_step": 117
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 124,
+    "nr": 0.574177695858863,
+    "failed": true,
+    "fail_step": 124
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 1,
+  "it": 1120,
+  "exec": 1,
+  "failed": 4,
+  "R": 0.6300045958920661,
+  "Rsw": 0.6313468274021647,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 92,
+    "nr": 0.6416261714437733,
+    "failed": true,
+    "fail_step": 92
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 101,
+    "nr": 0.636241837303237,
+    "failed": true,
+    "fail_step": 101
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 84,
+    "nr": 0.5972064109075637,
+    "failed": true,
+    "fail_step": 84
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 105,
+    "nr": 0.6449439639136905,
+    "failed": true,
+    "fail_step": 105
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 1,
+  "it": 1280,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5184596440296491,
+  "Rsw": 0.5217665809470738,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5108627136321976,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5132482844237083,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.45252622822999006,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5972013498327002,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 1,
+  "it": 1440,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.49036992888014974,
+  "Rsw": 0.49191592477930585,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.49319637590262483,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.47953986903099943,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.42361598792383676,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5651274826631381,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 1,
+  "it": 1600,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5277693502811283,
+  "Rsw": 0.5317961939444166,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5168214766518108,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5245942715204907,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4563698364801898,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6132918164720218,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 2,
+  "it": 160,
+  "exec": 1,
+  "failed": 4,
+  "R": 0.6030048374385393,
+  "Rsw": 0.6029395488877369,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 46,
+    "nr": 0.6175737795622451,
+    "failed": true,
+    "fail_step": 46
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 47,
+    "nr": 0.5988205240127887,
+    "failed": true,
+    "fail_step": 47
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 53,
+    "nr": 0.6033328794083505,
+    "failed": true,
+    "fail_step": 53
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 47,
+    "nr": 0.5922921667707727,
+    "failed": true,
+    "fail_step": 47
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 2,
+  "it": 320,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.487734205690959,
+  "Rsw": 0.49067837471655223,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.48286878365626756,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.48416684524768344,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.41577609370729435,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5681251001525907,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 2,
+  "it": 480,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.48417116962804085,
+  "Rsw": 0.4872190028404497,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.4795525706690112,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.4776160281216761,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.40898451461451935,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5705315651069569,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 2,
+  "it": 640,
+  "exec": 1,
+  "failed": 2,
+  "R": 0.5095317237459975,
+  "Rsw": 0.4727446744772759,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.49891344610897675,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.49836977904214735,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4336569666331153,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 89,
+    "nr": 0.6071867031997509,
+    "failed": true,
+    "fail_step": 89
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 2,
+  "it": 800,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5063771188256782,
+  "Rsw": 0.5097176467588646,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.49886334603694243,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5025234356622535,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4377059930107329,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5864157005927837,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 2,
+  "it": 960,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.520285950191886,
+  "Rsw": 0.5237461499686692,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5129297419466536,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5158191818864036,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4466885448093621,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6057063321251243,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 2,
+  "it": 1120,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5205973225472078,
+  "Rsw": 0.5238606043455251,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5140034047917448,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5156302136068667,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4494694915173503,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6032861802728694,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 2,
+  "it": 1280,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5185133942095814,
+  "Rsw": 0.5224050418441469,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5083697203217239,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5132876361690241,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44818806634219155,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6042081540053861,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 2,
+  "it": 1440,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5069937010906204,
+  "Rsw": 0.5100777060876492,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5006384098905137,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5005397181759839,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4418507990549575,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5849458772410263,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer",
+  "seed": 2,
+  "it": 1600,
+  "exec": 1,
+  "failed": 2,
+  "R": 0.5281534442365302,
+  "Rsw": 0.5223302870247746,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.48978945662056667,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.48837488518079586,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 59,
+    "nr": 0.5672707396038508,
+    "failed": true,
+    "fail_step": 59
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5671786955409076,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer-noscale",
+  "seed": 0,
+  "it": 160,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.501584336671557,
+  "Rsw": 0.5060080831420711,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.48747147041103467,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.4935250698183859,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44015361005369075,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5851871964031168,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer-noscale",
+  "seed": 0,
+  "it": 320,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5004740914145973,
+  "Rsw": 0.5031502625107499,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.4967625173314222,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.4932448134799184,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4332524438289725,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5786365910180764,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer-noscale",
+  "seed": 0,
+  "it": 480,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.45320732740911496,
+  "Rsw": 0.4558533246021165,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.44946230154881056,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.44350535599226804,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.38907366197550924,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5307879901198721,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer-noscale",
+  "seed": 0,
+  "it": 640,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.501576119262005,
+  "Rsw": 0.5039608320684611,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.49981993713836437,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.4945939591035888,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.43185881374963203,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5800317670564346,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer-noscale",
+  "seed": 0,
+  "it": 800,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.52870910159703,
+  "Rsw": 0.5329951187953884,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5168886198990348,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5243574619059125,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4545176856281799,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6190726389549929,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer-noscale",
+  "seed": 0,
+  "it": 960,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5102552709344282,
+  "Rsw": 0.5128490668275166,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.50692076447128,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5053243510677466,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44188267428162575,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5868932939170605,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer-noscale",
+  "seed": 0,
+  "it": 1120,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5108595409896509,
+  "Rsw": 0.5143891224282973,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5026662617787786,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5016475097576347,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4436670710286403,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.59545732139355,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer-noscale",
+  "seed": 0,
+  "it": 1280,
+  "exec": 1,
+  "failed": 3,
+  "R": 0.5857104706707197,
+  "Rsw": 0.49863227084841827,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.49701118755197593,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.4947761856501084,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 165,
+    "nr": 0.6793441772460938,
+    "failed": true,
+    "fail_step": 165
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 150,
+    "nr": 0.6717103322347006,
+    "failed": true,
+    "fail_step": 150
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer-noscale",
+  "seed": 0,
+  "it": 1440,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5054263057454923,
+  "Rsw": 0.5081693722642927,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5009799596966653,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.49890941731611027,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4401063361667963,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5817095098023973,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-A-xfer-noscale",
+  "seed": 0,
+  "it": 1600,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5265635840719906,
+  "Rsw": 0.5301698794382314,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5185482705729655,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5184029635499765,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.45466936243140815,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.614633739733612,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 0,
+  "it": 160,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.519435700884761,
+  "Rsw": 0.5228495368477486,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.512390193910613,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5159643039319465,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44475688554171744,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6046314201547671,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 0,
+  "it": 320,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5192415438423772,
+  "Rsw": 0.522684548835705,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5119791559908522,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5156532853154148,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44501804681915413,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6043156872440877,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 0,
+  "it": 480,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5182982574081979,
+  "Rsw": 0.5218777693006329,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5100692337242023,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5143684608186058,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4457400899971617,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.603015245092822,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 0,
+  "it": 640,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5184379887656245,
+  "Rsw": 0.5219091733707956,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5108907948369565,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5146355333236172,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4452223870403561,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6030032398615681,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 0,
+  "it": 800,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.517171113318696,
+  "Rsw": 0.5207101049583602,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5091029771979244,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5130149205837833,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4451832744433815,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6013832810496947,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 0,
+  "it": 960,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.517634186796677,
+  "Rsw": 0.5212258279821276,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5093021764569375,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5132672611536829,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44562865502599125,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6023386545500966,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 0,
+  "it": 1120,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.4989300240259276,
+  "Rsw": 0.5030329656169146,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.4866266894018811,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.4954669386211851,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4339011380554358,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5797253300252085,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 0,
+  "it": 1280,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5168294757473391,
+  "Rsw": 0.5205070300900233,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5078349764021798,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5116567859827564,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4466524606155653,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6011736799888546,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 0,
+  "it": 1440,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5191695636572038,
+  "Rsw": 0.5229276917085329,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5098737519362877,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5143752025516231,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44778764984744235,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.604641650293462,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 0,
+  "it": 1600,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5190807321940182,
+  "Rsw": 0.52268243848219,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5106839890601574,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5146352336910387,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4471933128915776,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6038103931332991,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 1,
+  "it": 160,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.519410525138146,
+  "Rsw": 0.5228300340229184,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5123358044488497,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5159774877654025,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44469108193368406,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6046377264046475,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 1,
+  "it": 320,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5193303227590728,
+  "Rsw": 0.5227503861229125,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.512229999502202,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5158611304474001,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4447852190765337,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6044449420101551,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 1,
+  "it": 480,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5179655327523376,
+  "Rsw": 0.5214236054324577,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5104285701997634,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5139038305668058,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44534326652313194,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6021864637196492,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 1,
+  "it": 640,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5169807029082351,
+  "Rsw": 0.5203364431808994,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5099432400498969,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5130439849439024,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4446852817716655,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6002503048674757,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 1,
+  "it": 800,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5169386587643134,
+  "Rsw": 0.5203341031290427,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5096567088160021,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5126775842391026,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4450480228777279,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6003723191244211,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 1,
+  "it": 960,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5172778370984569,
+  "Rsw": 0.5206556162048505,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5101481584952152,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5129125960582096,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44509945440288345,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6009511394375191,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 1,
+  "it": 1120,
+  "exec": 1,
+  "failed": 4,
+  "R": 0.2744980421147791,
+  "Rsw": 0.27516674304354016,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 36,
+    "nr": 0.25938476125399273,
+    "failed": true,
+    "fail_step": 36
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 35,
+    "nr": 0.30311996596200125,
+    "failed": true,
+    "fail_step": 35
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 33,
+    "nr": 0.18061267607139816,
+    "failed": true,
+    "fail_step": 33
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 34,
+    "nr": 0.35487476517172417,
+    "failed": true,
+    "fail_step": 34
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 1,
+  "it": 1280,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5165239900001067,
+  "Rsw": 0.5199577065057002,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.508985562303077,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5118199858605383,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4452540056226873,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6000364062141244,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 1,
+  "it": 1440,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5168422633874523,
+  "Rsw": 0.5203263292757886,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5090476726663523,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5122561010786133,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4453510685109799,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6007142112938638,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 1,
+  "it": 1600,
+  "exec": 1,
+  "failed": 2,
+  "R": 0.5402130056812446,
+  "Rsw": 0.5159092961706068,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.49936526182709423,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 91,
+    "nr": 0.6304649206308218,
+    "failed": true,
+    "fail_step": 91
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44079034465404504,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5902314956130175,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 2,
+  "it": 160,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5194101357193591,
+  "Rsw": 0.5228297468999911,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5123441544608555,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5160277760998353,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4445930951257778,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6046755171909679,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 2,
+  "it": 320,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5195557659481014,
+  "Rsw": 0.52300993807103,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5122919382898883,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5161274538709653,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44482279180748563,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6049808798240662,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 2,
+  "it": 480,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5185443795558415,
+  "Rsw": 0.5219970473426657,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5111213924287856,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5145199250870612,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44534111071070026,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6031950899968189,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 2,
+  "it": 640,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5180181293092367,
+  "Rsw": 0.5214572418833793,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5105834457649104,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5138271745654608,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44550187272346203,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6021600241831135,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 2,
+  "it": 800,
+  "exec": 1,
+  "failed": 4,
+  "R": 0.574424313310997,
+  "Rsw": 0.5760063356407699,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 163,
+    "nr": 0.5644204426396844,
+    "failed": true,
+    "fail_step": 163
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 151,
+    "nr": 0.555888106491392,
+    "failed": true,
+    "fail_step": 151
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 197,
+    "nr": 0.5909930388939562,
+    "failed": true,
+    "fail_step": 197
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 190,
+    "nr": 0.5863956652189556,
+    "failed": true,
+    "fail_step": 190
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 2,
+  "it": 960,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5173825728367145,
+  "Rsw": 0.5207601791968643,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5102631713318145,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5130234101735088,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4451384643421232,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6011052454994116,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 2,
+  "it": 1120,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5184228120598501,
+  "Rsw": 0.5218609080067329,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5110651156355416,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5141897299855026,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4454671230802182,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6029692795381381,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 2,
+  "it": 1280,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5173280637855939,
+  "Rsw": 0.5208829744947555,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5091275125071741,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5130249083364016,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4457409112590404,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6014189230397596,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 2,
+  "it": 1440,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5183380636206228,
+  "Rsw": 0.5218989589726603,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5102002030905933,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5143161249948862,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44591994634860393,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6029159800484081,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-scratch",
+  "seed": 2,
+  "it": 1600,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5162844111321713,
+  "Rsw": 0.5198937355175196,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.507655622719646,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5126605551208886,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4450577240336704,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5997637426544801,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 0,
+  "it": 160,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5075881116543491,
+  "Rsw": 0.511389053920767,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.497461401897928,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5003796145015137,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44185736914998736,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5906540610679674,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 0,
+  "it": 320,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5157443806288388,
+  "Rsw": 0.5194244761614467,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5069549080135225,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5101242652210154,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44444798841757943,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6014503608632376,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 0,
+  "it": 480,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5128066765121395,
+  "Rsw": 0.5166666460895235,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5025290584993147,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5070713088782012,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44487478795018287,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5967515507208594,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 0,
+  "it": 640,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5128677886788969,
+  "Rsw": 0.5165177728517693,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5041011484309115,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5064694469054267,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44306970566959775,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5978308537096519,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 0,
+  "it": 800,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5189711860081292,
+  "Rsw": 0.5225718171964123,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5109583384272219,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5130918262789437,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4456270638311012,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.60620751549525,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 0,
+  "it": 960,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5162459298160106,
+  "Rsw": 0.5198149489862952,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5079183621385108,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5108262044750246,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4457859266757684,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6004532259747387,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 0,
+  "it": 1120,
+  "exec": 1,
+  "failed": 2,
+  "R": 0.4857502594060339,
+  "Rsw": 0.49923130460389586,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.4833807080224536,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.480396019185434,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 6007,
+    "nr": 0.4190285487244048,
+    "failed": true,
+    "fail_step": 6007
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5601957616918433,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 0,
+  "it": 1280,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5143696066800717,
+  "Rsw": 0.5177231938589688,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5072766122431948,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5080711827928122,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.444213826124406,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5979168055598738,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 0,
+  "it": 1440,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.47936214182204323,
+  "Rsw": 0.4823315030586631,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.47218036794590984,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.47041995223776795,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4255918670107644,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5492563800937308,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 0,
+  "it": 1600,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.517388060440588,
+  "Rsw": 0.5208009291183076,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5102182757193181,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5113958559456052,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4453725239775618,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6025655861198673,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 1,
+  "it": 160,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5194781545480804,
+  "Rsw": 0.5230469123259804,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5114575661998102,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5150900260065098,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44626708347897037,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6050979425070315,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 1,
+  "it": 320,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5624853363592657,
+  "Rsw": 0.5213091874939901,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 103,
+    "nr": 0.6951184411650722,
+    "failed": true,
+    "fail_step": 103
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5139788385889686,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44056680743642773,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6002772582465942,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 1,
+  "it": 480,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5164663107205959,
+  "Rsw": 0.5200968390981491,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5077451279853237,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5119168171221721,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4457451202261689,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6004581775487189,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 1,
+  "it": 640,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5162161715256778,
+  "Rsw": 0.5197287331493295,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5081803580631559,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5122124046609086,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4448625203508693,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5996094030277772,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 1,
+  "it": 800,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.4702063160904498,
+  "Rsw": 0.4722324996278886,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.47013043999850657,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.4644457280704109,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.40152994620570437,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5447191500871775,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 1,
+  "it": 960,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5095911003593959,
+  "Rsw": 0.5124144560306839,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5055831039863369,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5041070937173999,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4377403320230373,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5909338717108095,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 1,
+  "it": 1120,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5077748070632426,
+  "Rsw": 0.5106202033243782,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5032853065044626,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5027913071874744,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.43793471444395965,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5870879001170738,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 1,
+  "it": 1280,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5089909333695624,
+  "Rsw": 0.5121890788889767,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5023624014103788,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5032268730791554,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4410200926646203,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5893543663240949,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 1,
+  "it": 1440,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5152574030692856,
+  "Rsw": 0.5188475815980388,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5067884225001756,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5109167933912718,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.444186981126745,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5991374152589497,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 1,
+  "it": 1600,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5155008054633746,
+  "Rsw": 0.5189783373790868,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.507815702744331,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5112138790929011,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44331079735987294,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5996628426563935,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 2,
+  "it": 160,
+  "exec": 1,
+  "failed": 4,
+  "R": 0.6224824123982842,
+  "Rsw": 0.6223964197030338,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 48,
+    "nr": 0.6350789467493692,
+    "failed": true,
+    "fail_step": 48
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 47,
+    "nr": 0.6268233948565544,
+    "failed": true,
+    "fail_step": 47
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 50,
+    "nr": 0.6163546085357666,
+    "failed": true,
+    "fail_step": 50
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 48,
+    "nr": 0.6116726994514464,
+    "failed": true,
+    "fail_step": 48
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 2,
+  "it": 320,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5025036593906262,
+  "Rsw": 0.506901875280232,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.48943252220325384,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.4947193053989476,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.43494598848065236,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5909168214796513,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 2,
+  "it": 480,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5191692518710809,
+  "Rsw": 0.5227698458793036,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5109418671706627,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5148370362326901,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4461265450399724,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6047715590409986,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 2,
+  "it": 640,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5165283206096549,
+  "Rsw": 0.5201451044622118,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5079734379026307,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5113007226019166,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44569748703720247,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6011416348968697,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 2,
+  "it": 800,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.51750974601817,
+  "Rsw": 0.5210285673530665,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5097316301566014,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5135617500396313,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44419421849705126,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6025513853793959,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 2,
+  "it": 960,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5209110383380119,
+  "Rsw": 0.5248333265763738,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.510821993025704,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5186747302987185,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.4469703402915019,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6071770897361233,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 2,
+  "it": 1120,
+  "exec": 1,
+  "failed": 4,
+  "R": 0.6631245086111162,
+  "Rsw": 0.6627883118056457,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 749,
+    "nr": 0.6558102249940023,
+    "failed": true,
+    "fail_step": 749
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 451,
+    "nr": 0.6332631756091065,
+    "failed": true,
+    "fail_step": 451
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 471,
+    "nr": 0.6979138481642283,
+    "failed": true,
+    "fail_step": 471
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 734,
+    "nr": 0.6655107856771276,
+    "failed": true,
+    "fail_step": 734
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 2,
+  "it": 1280,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5012450434886995,
+  "Rsw": 0.5056614970566454,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.487925230652496,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.4958362357742442,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.43295709752583356,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.5882616100022242,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 2,
+  "it": 1440,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.518493844578787,
+  "Rsw": 0.5224716687194041,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.507996486223441,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.514438175331881,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.44653671401953154,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6050040027402944,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ },
+ {
+  "arm": "H-M-xfer",
+  "seed": 2,
+  "it": 1600,
+  "exec": 1,
+  "failed": 1,
+  "R": 0.5245121746976575,
+  "Rsw": 0.5281830390285046,
+  "clips": {
+   "dance1_subject1": {
+    "frames": 6574,
+    "steps": 5336,
+    "nr": 0.5160841591533335,
+    "failed": true,
+    "fail_step": 5336
+   },
+   "jumps1_subject1": {
+    "frames": 12222,
+    "steps": 12222,
+    "nr": 0.5203048813423028,
+    "failed": false,
+    "fail_step": -1
+   },
+   "run1_subject2": {
+    "frames": 11891,
+    "steps": 11891,
+    "nr": 0.45015704169645104,
+    "failed": false,
+    "fail_step": -1
+   },
+   "walk1_subject1": {
+    "frames": 13066,
+    "steps": 13066,
+    "nr": 0.6115026165985429,
+    "failed": false,
+    "fail_step": -1
+   }
+  }
+ }
+]

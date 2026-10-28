@@ -1,0 +1,2 @@
+part=1 0f18b8bbca7f7ef13fffb0bcf51b2370e997580a5b5f8f6ed2cffc4dd1eb8d87  /srv/claude/research/supermimic-junior-b-colab/packets/P6/junior_b_colab-P6-B1ARMS.tgz
+part=2 0f18b8bbca7f7ef13fffb0bcf51b2370e997580a5b5f8f6ed2cffc4dd1eb8d87  /srv/claude/research/supermimic-junior-b-colab/packets/P6/junior_b_colab-P6-B1ARMS.tgz

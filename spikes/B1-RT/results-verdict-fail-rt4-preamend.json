@@ -1,0 +1,76 @@
+{
+  "tool": "spikes/B1-RT/verdict_rt.py",
+  "tool_sha256": "2341a93d4acb857dae3933d38e5dedb49e03841533abdd9cb71482909616443a",
+  "cpu_results": "results-cpu-attempt1.json",
+  "cpu_results_sha256": "197b6c6556551ee9994f54126767192175d3aa9a75c5011d6f573cfa4947eeab",
+  "checks": {
+    "RT-1": {
+      "pass": true,
+      "source": "cpu"
+    },
+    "RT-2": {
+      "pass": true,
+      "source": "cpu"
+    },
+    "RT-3": {
+      "pass": true,
+      "source": "cpu"
+    },
+    "RT-4": {
+      "pass": false,
+      "source": "cpu"
+    },
+    "RT-5": {
+      "recorded": true,
+      "source": "cpu"
+    },
+    "RT-6": {
+      "pass": null,
+      "status": "not_run"
+    },
+    "RT-7": {
+      "pass": null,
+      "status": "not_run"
+    },
+    "RT-8": {
+      "pass": null,
+      "status": "not_run"
+    }
+  },
+  "verdict": "FAIL",
+  "failing_ids": [
+    "RT-4"
+  ],
+  "not_run": [
+    "RT-6",
+    "RT-7",
+    "RT-8"
+  ],
+  "waived": [],
+  "rt5_recorded": true,
+  "pass": false,
+  "RT-1": {
+    "pass": true
+  },
+  "RT-2": {
+    "pass": true
+  },
+  "RT-3": {
+    "pass": true
+  },
+  "RT-4": {
+    "pass": false
+  },
+  "RT-6": {
+    "pass": null
+  },
+  "RT-7": {
+    "pass": null
+  },
+  "RT-8": {
+    "pass": null
+  },
+  "RT-5": {
+    "recorded": true
+  }
+}

@@ -1,0 +1,4 @@
+aid=b1HAxfer_attention_s2_a1 src=attention_s2
+expected_sha256=155370dc20fa9abef032afaafc19be4d72cd80db5b35d8e9cb4d215c4ececaaf
+candidate=/home/box/.srv-claude/research/supermimic-junior-b-colab/packets/P6/b1arms_mock/run4/ckroot/logs/b0_attention_s2/ckpt_0001600.pt sha256=155370dc20fa9abef032afaafc19be4d72cd80db5b35d8e9cb4d215c4ececaaf match=true
+used=/home/box/.srv-claude/research/supermimic-junior-b-colab/packets/P6/b1arms_mock/run4/ckroot/logs/b0_attention_s2/ckpt_0001600.pt

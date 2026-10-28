@@ -1,0 +1,64 @@
+{
+  "job_id": "p4-b0-compare-video",
+  "program": "supermimic-junior-b-colab",
+  "packet": "P4-B0-compare-video",
+  "state": "DEPOSITED",
+  "venue": "xn-4090-gpu2",
+  "ssh_alias": "xn-4090-gpu2",
+  "workdir": "/tmp/supermimic-junior-b-colab-p4-b0-compare-video",
+  "upload": [
+    {
+      "src": "packets/P4/render_compare_b0.py",
+      "sha256": "055570d996c76c5b34d0851acccd5fe322b496ecdeb1806137847f7315c5c87a"
+    },
+    {
+      "src": "orch/jobs/p4-b0-compare-video/run.sh",
+      "sha256": "5082f359cad3c233839437c401c660a7fb5856141dde20d13d200e897c8023e4"
+    }
+  ],
+  "command": "bash ./run.sh",
+  "env": {
+    "CUDA_VISIBLE_DEVICES": "0",
+    "MUJOCO_GL": "egl",
+    "MAX_STEPS": "3600",
+    "TZ": "America/Toronto",
+    "LANG": "en_US.UTF-8",
+    "LC_ALL": "en_US.UTF-8",
+    "HF_ENDPOINT": "https://hf-mirror.com",
+    "HF_HUB_ENABLE_HF_TRANSFER": "0"
+  },
+  "timeout_hours": 1,
+  "mutex": "gpu0",
+  "deposit": {
+    "remote_glob": "/content/b0-compare-videos*.tgz",
+    "local_dir": "logs/xn4090/2026-10-26",
+    "seal_event": "DEPOSIT xn4090"
+  },
+  "success_hint": "COMPARE_VIDEO_DONE and mp4s under /content/b0-compare-videos/",
+  "plan_ref": {
+    "path": "spikes/B0/PLAN.md",
+    "note": "visual artifact only; does not reopen B0 scoring or amend PLAN",
+    "owner_auth": "t177u produce compare videos"
+  },
+  "created_by": "Grok Bot executor (owner t177u)",
+  "stamp": "2026-10-26 08:23 EDT",
+  "notes": "Headless OffscreenRenderer compare for attention vs mlp_matched vs mlp_upstream s0; walk1+dance1; mask 0.",
+  "started_utc": "2026-10-26T12:24:03Z",
+  "started_stamp": "2026-10-26 08:24 ",
+  "deposited_utc": "2026-10-26T12:31:29Z",
+  "deposits": [
+    {
+      "path": "logs/xn4090/2026-10-26/b0-compare-videos-20261026-1225.tgz",
+      "sha256": "a0d775246062957fa2132ac5ed0e7220845bcc4cc35bcaeb5cd332323b5d4fd5",
+      "kind": "COMPARE_VIDEO_DONE",
+      "run_log": "logs/xn4090/2026-10-26/run-compare-video-20261026T122510Z.log",
+      "remote_workdir": "/data/muchuan/p4-b0-compare-video/workdir"
+    }
+  ],
+  "remote": {
+    "host": "XN-4090-GPU2",
+    "workdir": "/data/muchuan/p4-b0-compare-video/workdir",
+    "log": "/data/muchuan/p4-b0-compare-video/workdir/logs/run-20261026T122510Z.log",
+    "cuda_visible_devices": "0"
+  }
+}

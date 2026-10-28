@@ -1,0 +1,31 @@
+# P5 PRESTART — pre-start gate record PS-B2-1…PS-B2-4 (P5-prep)
+
+**Packet:** P5-prep (CPU, research box only). **Written by:** Orchestrator (Claude Code, `claude-opus-5-5`), 2026-10-26 EDT (America/Toronto). UTC/epoch of every seal: `logs/seal.log`.
+**Binding PLAN:** `spikes/B2/PLAN.md` sha256 `5d1f26f776a3ea56c2becd3ec2fa2cf8e88bd62c43a20f79415a96e82a3da11d` (seal `SEAL spikes/B2/PLAN.md` 2026-10-26T10:48:30Z), re-verified before sealing. The PLAN was **not edited**. `spikes/B0/PLAN.md`, the P4 deposits and the P4 verdict were not touched.
+**Method:** v1.1 `9bdc872ea3f92e33893cb71de4db488bf05ca3bce6f78e9ef3fd7e214590afc0` (sha verified at boot) + `method/local/OVERLAY-001-owner-colab-runner.md`. No new overlay was needed. P5-prep is a single-author engineering packet, not a contest, so A.7 allocation does not apply and the P1 `roster.md` was not edited (PLAN §11). Cross-family review: `codex-astra` `gpt-6-astra` high, read-only, objections only (`packets/P5/review/BINDING.md`). **Decision cap:** Provisional.
+**Spend:** none. No Colab, no XN-4090 job, no training, no GPU.
+
+## Gate table
+
+| Gate | State | Evidence |
+|---|---|---|
+| **PS-B2-1** CR-B2-1 (a)–(g) sealed; CPU test log shows every (g) item passing | **true (held)** | Tarball `packets/P5/junior_b_colab-CR-B2-1.tgz` sha256 `53a898e9b635d1317bebabe884f1450e52be2980165811859445c1b9b53ce851` (30 files: 12 D-004 + 6 CR-B0-1 unchanged + 12 new), `packets/P5/MANIFEST_ADDENDUM.md` `96a61859a0f37bbbddb6422b6e13530477d542ab8f6141ecd0b4186f58767db9`. CPU log `logs/p5prep/cpu-tests-attempt1.log` `cac574632072b1a96634f6327d1cfe9140df170dc62610ad88351f7891a88aab`: `CPU_TESTS attempt=1 result=PASS freeze=ok crb01_rebuild=ok crb21_tarball=ok p5_tests_tree=ok p5_tests_tarball=ok frozen_smoke=ok verdict_tests=ok`. (g) items: mlp_mind shapes / params (467 491, +0.75%) / indicator = mask; identical streams for attention, mlp_matched and mlp_mind under the same seed and call sequence; exactly k True per row; nesting 0.1 ⊆ 0.2; PERM script on CPU: attention 2.38e-6 < 1e-4, break for mlp_matched (5.85) and attention[id_mode=index] (4.34); frozen 14-test smoke passes (14/0 on the box, 14/3 from the unpacked tarball, the venue rule). All seals: events `CR-B2-1-*`, `TARBALL-P5`, `MANIFEST-ADDENDUM-P5`, `CPU-TEST-LOG-P5` |
+| **PS-B2-2** VERDICT-TOOL-B2 sealed, fixture tests passing | **true (held)** | `spikes/B2/verdict/verdict_b2.py` `cd2ac741d2ffad7353c7cf62ca5f325a5402ec4d7e6a6c6f5887ecff511c994c` (+ `make_fixture_b2.py` `e6c01c09…`, `test_verdict_b2.py` `b88b7ad9…`, `IMPLEMENTATION_NOTES.md` `af8edb15…`), seal event `VERDICT-TOOL-B2`, sealed **before any P5 deposit exists** (no `b2-*.tgz` under `logs/xn4090/` or `logs/colab/`). Fixture tests: 71/71 OK (in the CPU log above). It imports the sealed `verdict_b0.py` (`9caa744a…`) unchanged and checks that sha at start-up |
+| **PS-B2-3** job JSON + `run.sh` sealed, `state = READY`, `env.HF_ENDPOINT = https://hf-mirror.com`, mutex `gpu0`, upload list = CR-B2-1 tarball + `run.sh` with sha256 | **open** | `orch/jobs/p5-b2-attempt1/run.sh` `2ae9af24b03ce83b346a3331a568cd3b4a1cd882e03f3ac3431475d71ee32717` and `orch/jobs/p5-b2-attempt1.json` `564a203dba34a170a09f27596cd489e8fc380f6981b9f10ff20d34827dd6071d` are written and sealed (`JOB-RUNSH`, `JOB-JSON`) with HF_ENDPOINT, mutex `gpu0`, venue `xn-4090-gpu2` and the two-item upload list, but **state = DRAFT**. The READY flip is a separate sealed step after PS-B2-4 |
+| **PS-B2-4** Manager START cites the PLAN sha256 and the CR-B2-1 tarball sha256 | **open** | Awaiting Manager. START must cite PLAN `5d1f26f776a3ea56c2becd3ec2fa2cf8e88bd62c43a20f79415a96e82a3da11d` and tarball `53a898e9b635d1317bebabe884f1450e52be2980165811859445c1b9b53ce851` |
+
+**Result: P5 attempt 1 must not start.** PS-B2-1 and PS-B2-2 hold. PS-B2-3 and PS-B2-4 are open.
+
+## Review record (not a gate)
+
+Four rounds (`packets/P5/review/`): 0 BLOCKER in every round. All MAJOR objections were accepted and fixed, each with a regression test or a mock run (`REVIEW-DISPOSITION.md`). The round-4 MAJOR (r4 #9, isolation of report-only evidence) was fixed after the final round and checked by the author with fuzz tests. The reviewer did not see it. One MINOR remains open for the Manager (below).
+
+## Asks for the Manager (decisions, not signed here)
+
+1. **PLAN §9.1 vs PS-B2-3 (review r1 #8, MINOR).** §9.1 lists "job JSON and remote runner stdout" inside the archive, while PS-B2-3 fixes the upload list to the tarball and `run.sh`. As built, the bundle has a runner-stdout snapshot (`run.sh` tees its own output) and includes a job JSON only if the runner places one in its workdir. The authoritative job JSON (`orch/jobs/p5-b2-attempt1.json`, sealed) and the relay's stdout log are deposited and sealed beside the archive, as in P4 (`RELAY-LOG`). Options: (i) accept this reading; (ii) have the relay copy the job JSON into the job workdir as `job.json` (no code change: `run.sh` already picks it up); (iii) a sealed amendment adding the job JSON to the upload list.
+2. **P4 checkpoints must survive until the job runs.** PLAN §2.2: the six P4 `ckpt_0001600.pt` must still be at `/content/SuperMimic-Reproduced/logs/b0_*` or `/data/muchuan/p4-b0-attempt1/workdir/SuperMimic-Reproduced/logs/b0_*` on XN-4090-GPU2. If they were cleaned up, step 0 writes `BLOCKED.md p4_ckpts_unavailable` before any spend (PLAN §7.3 options i–iii).
+3. **Reading choices** in `packets/P5/IMPLEMENTATION_NOTES.md` (18 items) and `spikes/B2/verdict/IMPLEMENTATION_NOTES.md` (25 items). None changes a scoring input. The one to check is item 9 (§9.3 write scope): setup writes `.venv` / `data/` in the reused P4 clone, as P4 did, and nothing under `logs/b0_*`.
+
+## Evidence that is plumbing only
+
+`logs/p5prep/driver-mock-attempt1..12` hold the driver run on the box against a relocated `/content` with a fake trainer, fake PERM and a fake upstream package (the real eval wrapper and frozen `eval_entry`). Their expected verdict is `BLOCKED [U-ID, U-REPRO]`, because the mock root is not a PLAN root and fake evals do not reproduce P4. Attempts 1 (mock bug), 4 and 7 (abort-path bugs found and fixed) are kept, as method §12.4 requires. Attempt 12 uses the sealed tarball bytes. This is not evidence about B2.

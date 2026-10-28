@@ -1,0 +1,81 @@
+# spikes/B0-smoke/runs.log — append-only run record (P2 B0 Colab smoke, owner-run)
+# Each block records one deposited bundle. Written by the verdict process (OVERLAY-001 rule 6). Numbers below are copied from the bundle by script output, not estimated.
+
+=== RUN-RECORD deposit=logs/colab/2026-10-26/b0smoke-20261026-0238.tgz  written=2026-10-26T02:47:03Z
+deposit_sha256: 71bd8a1b634ee9893eccc9b026eeba556cf409353b11225181fd369c827d4e03
+seal_check: logs/seal.log line 68 "DEPOSIT colab" (2026-10-26T02:43:10Z), sha256 recomputed before open -> exact match. Archive was not modified (mode 0444, sha re-checked after extract).
+plan: spikes/B0-smoke/PLAN.md sha256 512a3eb40b45cc4e5fabc30836e8b21cb9b2fe15739cd74a693a188ea4ce1987 (matches SEAL-PLAN)
+extract: logs/colab/2026-10-26/extract-verdict/ (read-only); tar member paths checked (no absolute or ../ paths)
+runner: owner (human), venue Colab, GPU "NVIDIA L4" 23034MiB, driver 580.82.07, CUDA 13.0 (meta/nvidia-smi.txt, Mon Oct 26 01:27:31 2026; byte-identical to the relay copy at logs/colab/2026-10-26/meta/nvidia-smi.txt)
+
+attempts in bundle (one per arm; no extra attempt logs are present, and deviations.md is empty):
+  up_sanity     train_up_sanity.log       num_envs 256 (runbook s5 value), stopped at "max_hours reached" after it 300 (0.11 h), params: world model 8.82M, policy 8.89M, critic 0.235M
+  attention s0  train_attention_s0.log    num_envs 512, stopped at "max_hours reached" after it 1350 (tb time/hours 0.505), updates 524, params: world model 8.82M, policy 4.64M, critic 0.237M; sidecar policy params 464001
+  mlp_matched s0 train_mlp_matched_s0.log num_envs 512, stopped at "max_hours reached" after it 1400 (tb time/hours 0.504), updates 544, params: world model 8.82M, policy 4.64M, critic 0.237M; sidecar policy params 468317
+  eval          logs/eval/*.json          6 files = 2 arms x masks 0.00/0.10/0.20
+
+seams (train_attention_s0.log; mlp_matched log prints the same values):
+  S4 default_pose_source=env_init_state | S1 joint_order_match=true | S5 env_action_scale_match=true (29 joints, rel_tol 1e-06) | S3 compile=None (both arms) | S2 obs_policy_dim=930 term_major_ok=true | no "unverified" seam line
+
+machine verdict (logs/colab/2026-10-26/verdict-tools/verdict.py sha256 c247967e9accc0e72502f87fccb6055142fb136699d3b623d0d6164991ba1d17):
+  P-1 true  | P-2 true | P-3 true | P-4 FALSE | P-5 true* | P-6 true | S1 true | S2 true | S3 true | S4 true | S5 true
+  OVERALL = FAIL   failing_ids = [P-4]   S1/S4/S5 change-request path: not triggered
+  P-3 wm/loss    attention 58.298 (it50) -> 3.880 (it1350); mlp_matched 58.471 (it50) -> 1.915 (it1400)
+  P-4 train/episode_norm_return  attention 0.3838 (it50, updates=4) -> 0.3150 (it1350); mlp_matched 0.3839 (it50) -> 0.3572 (it1400)
+      "after warmup" is not defined numerically in PLAN. Taken as the first logged point with updates > 0. Measured against it100 instead (0.3833 / 0.3840), both arms still fail.
+  *P-5: junior_policy.json is present for both arms. There is no 'ls' output in the bundle, so the checkpoint evidence is indirect: upstream eval loads ckpt_latest.pt before it writes the eval JSONs, and those JSONs exist.
+
+reported, no threshold (PLAN s6 / s7; copied, not judged):
+  eval (all 4 clips terminated early in every file):
+    attention   mask0.00 mean_norm_return 0.3571 fail_steps [321,193,379,219] | mask0.10 0.3423 [127,94,89,186] | mask0.20 0.3605 [116,148,90,96]
+    mlp_matched mask0.00 0.4630 [44,45,63,51] | mask0.10 0.4524 [45,44,59,51] | mask0.20 0.4421 [44,45,58,51]
+  timing (log, per 50 it, steady state): attention t sim/wm/pi ~1.8/9.8/57.4 s, 0.7 it/s; mlp_matched ~1.7/9.7/54.7 s, 0.8 it/s
+  policy_grad_norm series: present in tb (policy/policy_grad_norm). Not captured: clip fraction (M-6), peak GPU memory, env-steps/s as a direct metric.
+bundle extras / gaps:
+  deviations.md (in bundle): empty (0 bytes)
+  meta/pip-freeze.txt (in bundle): EMPTY (0 bytes). The PLAN s6 capture is missing; the relay note says "No module named pip" in the upstream venv
+  deviations-relay.md (outside archive, relay-authored, not sealed with the deposit): says R1 was not needed (cu130), pip-freeze was skipped, eval clips terminated early, and the browser monitor was interrupted once while the Colab cell kept running
+  meta/cpu_test_smoke.log: 14 PASS lines, 3 preceded by SKIP (matches PLAN s4 expectation)
+  ls output for checkpoints: absent
+=== END RUN-RECORD
+
+=== RUN-RECORD attempt=2 deposit=logs/colab/2026-10-26/b0smoke-20261026-0400-attempt2.tgz  written=2026-10-26T04:03:50Z
+deposit_sha256: c04a62880babad5261b34481b7e122fe66d33ac7a8786f86118cc1c3453c570d
+seal_check: logs/seal.log line 74 "DEPOSIT colab" (2026-10-26T04:01:58Z), sha256 recomputed before open -> exact match. Archive not modified (mode 0444, sha re-checked after extract).
+plan: spikes/B0-smoke/PLAN.md sha256 512a3eb40b45cc4e5fabc30836e8b21cb9b2fe15739cd74a693a188ea4ce1987 (unchanged since attempt 1; no amendment)
+extract: logs/colab/2026-10-26/extract-verdict-attempt2/ (read-only); tar member paths checked (no absolute or ../ paths). Attempt-1 extract-verdict/ untouched.
+runner: owner (human), venue Colab, GPU "NVIDIA L4" 23034MiB, driver 580.82.07, CUDA 13.0 (meta/nvidia-smi.txt, Mon Oct 26 02:50:39 2026; byte-identical to relay copy logs/colab/2026-10-26/meta-attempt2/nvidia-smi.txt)
+frozen input: same tarball f69dd11e... per deviations.md (in bundle) and relay note
+
+arms in bundle (one log per arm; no resume lines in any log):
+  up_sanity      train_up_sanity.log       stopped at "max_hours reached" after it 350 (log 0.12 h), params: world model 8.82M, policy 8.89M, critic 0.235M
+  attention s0   train_attention_s0.log    num_envs 512, batch 512, stopped at "max_hours reached" after it 1350 (log 0.51 h), updates 524, params: world model 8.82M, policy 4.64M, critic 0.237M; sidecar policy params 464001
+  mlp_matched s0 train_mlp_matched_s0.log  num_envs 512, batch 512, stopped at "max_hours reached" after it 1400 (log 0.51 h), updates 544, params: world model 8.82M, policy 4.64M, critic 0.237M; sidecar policy params 468317
+  eval           logs/eval/*.json          6 files = 2 arms x masks 0.00/0.10/0.20
+
+seams (train_attention_s0.log; mlp_matched log prints the same values):
+  S4 default_pose_source=env_init_state | S1 joint_order_match=true | S5 env_action_scale_match=true (29 joints, rel_tol 1e-06) | S3 compile=None (both arms) | S2 obs_policy_dim=930 term_major_ok=true | no "unverified" seam line | no BLOCKED.md
+
+machine verdict (same sealed verdict.py sha256 c247967e9accc0e72502f87fccb6055142fb136699d3b623d0d6164991ba1d17; raw output logs/colab/2026-10-26/verdict-attempt2-raw.json sha256 762c9ce240b70ef7a7228f4655580dbed0f673a7c64363b3d1d614fbabd1ada3):
+  P-1 true  | P-2 true | P-3 true | P-4 FALSE | P-5 true | P-6 true | S1 true | S2 true | S3 true | S4 true | S5 true
+  OVERALL = FAIL   failing_ids = [P-4]   S1/S4/S5 change-request path: not triggered
+  P-3 wm/loss    attention 58.293 (it50) -> 4.065 (it1350); mlp_matched 58.467 (it50) -> 1.911 (it1400)
+  P-4 train/episode_norm_return  attention 0.3838 (it50, updates=4) -> 0.3048 (it1350); mlp_matched 0.3839 (it50) -> 0.3507 (it1400)
+      same "after warmup" rule as attempt 1 (first logged point with updates > 0). Vs it100 (0.3835 / 0.3839) both arms still fail.
+  P-5: junior_policy.json present for both arms; meta/ckpt_dirs_ls.txt now lists ckpt_latest.pt (and ckpt_0001000.pt) for both arms -> direct checkpoint evidence (attempt-1 gap closed). verdict.py field ls_output_in_bundle is hard-coded false; superseded by results.json P-5.p5_ckpt_ls_attempt2.
+
+reported, no threshold (PLAN s6 / s7; copied, not judged):
+  eval (all 4 clips terminated early in every file):
+    attention   mask0.00 mean_norm_return 0.3303 fail_steps [285,228,115,92] | mask0.10 0.3142 [155,124,99,168] | mask0.20 0.3536 [146,142,100,188]
+    mlp_matched mask0.00 0.4205 [42,46,56,52] | mask0.10 0.4325 [47,44,66,54] | mask0.20 0.4275 [47,45,60,54]
+  timing (log, per 50 it, final lines): attention t sim/wm/pi 1.8/9.8/58.0 s, 0.7 it/s; mlp_matched 1.7/9.8/55.2 s, 0.7 it/s
+  policy_grad_norm series: present in tb (policy/policy_grad_norm). Not captured: clip fraction (M-6), peak GPU memory, env-steps/s as a direct metric.
+bundle extras / gaps:
+  deviations.md (in bundle): 105 B — "attempt=2 / extras: uv pip freeze; ckpt dir ls in meta/ckpt_dirs_ls.txt / no PLAN amend; same frozen tarball". No R1 / num_envs / restart deviation listed.
+  meta/pip-freeze.txt (in bundle): NON-EMPTY, 156 lines (via uv pip freeze); byte-identical to relay copy meta-attempt2/pip-freeze.txt. Attempt-1 gap closed.
+  meta/ckpt_dirs_ls.txt (in bundle): present; ckpt dirs for attention, mlp_matched, up_sanity (.pt not packaged, per PLAN s7)
+  meta/nvidia-smi.txt: present (above)
+  meta/cpu_test_smoke.log: 14 PASS lines, 3 SKIP (matches PLAN s4 expectation)
+  deviations-relay-attempt2.md (outside archive, relay-authored, not sealed with deposit): UI reconnect/Save failed during run; cell reached DONE_DRIVER; eval clips early fail
+attempts used: 2 of 3 (both FAIL on P-4 only)
+=== END RUN-RECORD

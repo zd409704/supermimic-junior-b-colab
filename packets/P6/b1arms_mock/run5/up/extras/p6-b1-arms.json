@@ -1,0 +1,72 @@
+{
+  "job_id": "p6-b1-arms",
+  "program": "supermimic-junior-b-colab",
+  "packet": "P6d-B1-arms",
+  "state": "DRAFT",
+  "state_note": "DRAFT only. Do NOT flip to READY until (1) the p6-b1-rt deposit is SCORED with verdict_rt PASS (RT-6, RT-7, RT-8 pass; RT-4 waived; RT-5 recorded), and (2) every item in ready_prereqs is done and sealed. Owner decision 934b3c9b\u2026 item 4: then READY without another Manager START.",
+  "venue": "xn-4090-gpu2",
+  "ssh_alias": "xn-4090-gpu2",
+  "workdir": "/tmp/supermimic-junior-b-colab-p6-b1-arms",
+  "upload": [
+    {
+      "src": "packets/P6/junior_b_colab-P6-B1ARMS.tgz",
+      "sha256": "TBD (not built)"
+    },
+    {
+      "src": "orch/jobs/p6-b1-arms/run.sh",
+      "sha256": "TBD (not written)"
+    }
+  ],
+  "command": "UPLOAD_TGZ=\"$PWD/junior_b_colab-P6-B1ARMS.tgz\" bash ./run.sh",
+  "env": {
+    "CUDA_VISIBLE_DEVICES": "0",
+    "TZ": "America/Toronto",
+    "LANG": "en_US.UTF-8",
+    "LC_ALL": "en_US.UTF-8",
+    "HF_ENDPOINT": "https://hf-mirror.com",
+    "HF_HUB_ENABLE_HF_TRANSFER": "0"
+  },
+  "slot_rule": "first",
+  "timeout_hours": 10,
+  "spend_cap_gpu_hours": 9.0,
+  "mutex": "gpu0",
+  "deposit": {
+    "remote_glob": "/content/b1arms-*.tgz",
+    "local_dir": "logs/xn4090/<UTC date of the deposit, YYYY-MM-DD>",
+    "seal_event": "DEPOSIT xn4090",
+    "also_deposit": "runner stdout log and this job JSON, sealed beside the archive (RELAY-LOG)"
+  },
+  "success_hint": "DONE_DRIVER line and a b1arms-*.tgz under /content; 9 primary runs at it 1600 with 10 eval points each, or SPEND_CAP / BLOCKED.md",
+  "plan_ref": {
+    "path": "spikes/B1/PLAN.md",
+    "sha256": "1088752ba26a8798d721aa93d6e10d1b7bdb7fb924d9d72879acc78d8c2304c8",
+    "gate": {
+      "job": "orch/jobs/p6-b1-rt.json",
+      "rule": "verdict_rt PASS with waived=[RT-4]"
+    },
+    "rt_plan": {
+      "path": "spikes/B1-RT/PLAN.md",
+      "sha256": "b7365b4f2e382344151c64be979e5e2aff102fbaba6dc6826d8a429b3b9852a5"
+    },
+    "amendment": {
+      "path": "spikes/B1-RT/AMENDMENT-C2-rt4.json",
+      "sha256": "32143be4687ca6de270165a848eaf4aa8292a21a40e8255c142c32f9f048c591"
+    },
+    "decision": {
+      "path": "orch/owner-decisions/20261026-1931-EDT-p6-rt4-class2-c-waive.md",
+      "sha256": "934b3c9b85231ecedc2704b06e9abd9ccf41b92a871fcc09f8e622b4d294c262"
+    }
+  },
+  "ready_prereqs": [
+    "p6-b1-rt deposit sealed (DEPOSIT xn4090) and SCORED: B1RT_VERDICT verdict=PASS waived=[RT-4]",
+    "packets/P6/b1arms_driver.sh implementing spikes/B1/PLAN.md \u00a73-\u00a78 (arm order, harness stop at it 1600 per B0 PLAN \u00a74.3, 10-point eval, spend cap 9.0 h, source ckpt sha check, gpu_used.csv); CPU-mocked; sealed",
+    "spikes/B1/verdict_b1.py implementing PLAN \u00a75-\u00a76; CPU-tested on fixtures; sealed before the arms deposit is opened",
+    "tarball + manifest built and sealed; run.sh written with the tarball sha; upload[] shas filled",
+    "gpu0 mutex free (p6-b1-rt DEPOSITED/SCORED)"
+  ],
+  "p4_checkpoints": {
+    "note": "All six P4 ckpt_0001600.pt read-only (PLAN \u00a74 identities). Do not clean /content/SuperMimic-Reproduced or /content/p5_p4ckpts."
+  },
+  "created_by": "Claude Orchestrator (claude-opus-5-5), P6 C2 apply wake",
+  "stamp": "2026-10-26 19:49 EDT"
+}

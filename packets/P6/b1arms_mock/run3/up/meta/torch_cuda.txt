@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import torch, mujoco; print('cuda', torch.cuda.is_available(), torch.__version__, 'mujoco', mujoco.__version__)
+    ^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'torch'
+part=1 torch/mujoco import failed
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import torch, mujoco; print('cuda', torch.cuda.is_available(), torch.__version__, 'mujoco', mujoco.__version__)
+    ^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'torch'
+part=2 torch/mujoco import failed

@@ -1,0 +1,134 @@
+{
+  "job_id": "p5-b2-attempt1",
+  "program": "supermimic-junior-b-colab",
+  "packet": "P5-B2-attempt1",
+  "state": "SCORED",
+  "state_note": "SCORED (machine BLOCKED; Class-2 amended PASS/NO_GAIN, see class2_amendment). SCORED: VERDICT-TOOL-B2 verdict=BLOCKED outcome=null gate_b1=Go blocked=[gpu_mismatch,U-REPRO,B2-V-2]. Prior: DEPOSITED: remote DONE_DRIVER 2026-10-26T16:11:04Z; relay pulled b2-20261026-1611.tgz + run log; seal before open. Mutex gpu0 released (gpu stays free; no relaunch).",
+  "venue": "xn-4090-gpu2",
+  "ssh_alias": "xn-4090-gpu2",
+  "workdir": "/tmp/supermimic-junior-b-colab-p5-b2-attempt1",
+  "upload": [
+    {
+      "src": "packets/P5/junior_b_colab-CR-B2-1.tgz",
+      "sha256": "53a898e9b635d1317bebabe884f1450e52be2980165811859445c1b9b53ce851"
+    },
+    {
+      "src": "orch/jobs/p5-b2-attempt1/run.sh",
+      "sha256": "2ae9af24b03ce83b346a3331a568cd3b4a1cd882e03f3ac3431475d71ee32717"
+    }
+  ],
+  "command": "UPLOAD_TGZ=\"$PWD/junior_b_colab-CR-B2-1.tgz\" bash ./run.sh",
+  "env": {
+    "B2_TARBALL_SHA": "53a898e9b635d1317bebabe884f1450e52be2980165811859445c1b9b53ce851",
+    "TZ": "America/Toronto",
+    "LANG": "en_US.UTF-8",
+    "LC_ALL": "en_US.UTF-8",
+    "HF_ENDPOINT": "https://hf-mirror.com",
+    "HF_HUB_ENABLE_HF_TRANSFER": "0"
+  },
+  "timeout_hours": 8,
+  "mutex": "gpu0",
+  "deposit": {
+    "remote_glob": "/content/b2-*.tgz",
+    "local_dir": "logs/xn4090/<UTC date of the deposit, YYYY-MM-DD>",
+    "seal_event": "DEPOSIT xn4090",
+    "also_deposit": "runner stdout log and this job JSON, sealed beside the archive (RELAY-LOG), as in P4"
+  },
+  "success_hint": "DONE_DRIVER line and a b2-*.tgz under /content; every scheduled item done (driver_state DONE) or SPEND_CAP_HIT / BLOCKED.md",
+  "spend_cap_gpu_hours": 6,
+  "plan_ref": {
+    "path": "spikes/B2/PLAN.md",
+    "sha256": "5d1f26f776a3ea56c2becd3ec2fa2cf8e88bd62c43a20f79415a96e82a3da11d",
+    "tarball_sha256": "53a898e9b635d1317bebabe884f1450e52be2980165811859445c1b9b53ce851",
+    "base_tarball_sha256": "763867682e3cfa05ca8eb6382ffc9124be2347b898531c60b904061776c33bff",
+    "manifest_addendum": "packets/P5/MANIFEST_ADDENDUM.md",
+    "prestart": "packets/P5/PRESTART.md",
+    "verdict_tool": "spikes/B2/verdict/verdict_b2.py (VERDICT-TOOL-B2)"
+  },
+  "p4_checkpoints": {
+    "note": "PLAN \u00a72.2: the six P4 ckpt_0001600.pt must still exist on XN-4090-GPU2 under /content/SuperMimic-Reproduced or /data/muchuan/p4-b0-attempt1/workdir/SuperMimic-Reproduced; the driver checks at step 0 and BLOCKs otherwise. Do not clean those trees before this job runs."
+  },
+  "created_by": "Claude Orchestrator (claude-opus-5-5), P5-prep",
+  "stamp": "2026-10-26 09:04 EDT",
+  "ready_stamp": "2026-10-26 09:02 EDT",
+  "ready_by": "Claude Manager (relay executor); DECISION-r1-8-P5-START-20261026",
+  "started_utc": "2026-10-26T13:04:49Z",
+  "started_stamp": "2026-10-26 09:04 EDT",
+  "remote": {
+    "host": "XN-4090-GPU2",
+    "tmux_session": "p5-b2-attempt1",
+    "workdir": "/data/muchuan/p5-b2-attempt1/workdir",
+    "log": "/data/muchuan/p5-b2-attempt1/workdir/logs/run-20261026T130428Z.log",
+    "cuda_visible_devices": "0",
+    "gpu_uuid": "GPU-fb0522c7-d42b-41f1-f24b-4729e2c2174c",
+    "launch_utc": "2026-10-26T13:04:49Z",
+    "hf_endpoint": "https://hf-mirror.com",
+    "upload_verified": {
+      "junior_b_colab-CR-B2-1.tgz": "53a898e9b635d1317bebabe884f1450e52be2980165811859445c1b9b53ce851",
+      "run.sh": "2ae9af24b03ce83b346a3331a568cd3b4a1cd882e03f3ac3431475d71ee32717"
+    },
+    "p4_ckpt_root": "/content/SuperMimic-Reproduced",
+    "p4_ckpt_check": "six gate ckpt_0001600.pt + sidecars match PLAN \u00a72.2",
+    "p4_ckpt_staged": "/content/p5_p4ckpts (6 ckpt_0001600.pt)"
+  },
+  "deposited_utc": "2026-10-26T21:14:53Z",
+  "deposit_local": {
+    "tarball": "logs/xn4090/2026-10-26/b2-20261026-1611.tgz",
+    "tarball_sha256": "a869b8fcb9d66e20b9938b7aa2df9f0896d754e24b8a56877c22275d9058ef86",
+    "run_log": "logs/xn4090/2026-10-26/run-20261026T130428Z.log",
+    "relay_dir": "logs/xn4090/2026-10-26/RELAY-p5-b2-attempt1",
+    "remote_done_utc": "2026-10-26T16:11:04Z"
+  },
+  "scored": {
+    "scored_utc": "2026-10-26T21:17Z",
+    "stamp": "2026-10-26 17:17 EDT",
+    "open_tree": "logs/xn4090/2026-10-26/open-b2-20261026-1611",
+    "verdict_line": "B2_VERDICT verdict=BLOCKED outcome=null drho_u=-0.5570149528058929 g_u=0.43792569029292255 drho_t=0.9423446992931261 g_t=1.1404454055571487 t_status=ok gate_b1=Go failing_ids=[] blocked=[gpu_mismatch,U-REPRO,B2-V-2]",
+    "results": {
+      "path": "orch/reports/VERDICT-P5-b2-attempt1-results.json",
+      "sha256": "c184bb889d0f101eb24eed66a76b278807ebb5101011a64c47118a1a2df5b29a"
+    },
+    "stdout": {
+      "path": "orch/reports/VERDICT-P5-b2-attempt1.stdout",
+      "sha256": "b7ffee4060c457decafed983d791bb269789ca06e1a18e407efb5dc69f818aa0"
+    },
+    "runs_log": {
+      "path": "orch/reports/VERDICT-P5-b2-attempt1.runs.log",
+      "sha256": "c8e950b1c47d0b7021addd57bbb4b90bdf0c2e3de87e914c637db78b4c3f6137"
+    },
+    "report": {
+      "path": "orch/reports/VERDICT-P5-b2-attempt1-20261026.md",
+      "sha256": "79fda4e6f16cf04e5bc12bb63f9089140b74343f2a309620251171f5c7224af1"
+    },
+    "mutex_note": "gpu0 free; no READY flip; await Manager"
+  },
+  "class2_amendment": {
+    "stamp": "2026-10-26 17:20 EDT",
+    "utc": "2026-10-26T21:20Z",
+    "decision": {
+      "path": "orch/owner-decisions/20261026-1719-EDT-p5-b2-class2-iv-gpu-waive.md",
+      "sha256": "9985fc8fcd3a391b9577895a3bedf0c3643970b6ec701b7d96c4082ed0a3ef86"
+    },
+    "results": {
+      "path": "orch/reports/VERDICT-P5-b2-attempt1-class2-results.json",
+      "sha256": "d62dc0b7e565d372558fbaf3a5f9b9b4b0440ae69aa5586751460145183d7798"
+    },
+    "report": {
+      "path": "orch/reports/VERDICT-P5-b2-attempt1-class2-20261026.md",
+      "sha256": "67f0424e3689cec81911fcd720f8811c04938b461ad0b5167f8d2bf6688ed476"
+    },
+    "cr_note": {
+      "path": "orch/reports/CR-verdict-b2-gpu-name-parse.md",
+      "sha256": "11569dcc143a6777384d8a5f09153501f48d132f6e5301d0bb4c0260e5ac9763"
+    },
+    "verdict": "PASS",
+    "b2_outcome": "NO_GAIN",
+    "gate_b1": "Go",
+    "machine_was": "BLOCKED",
+    "waivers": [
+      "U-REPRO:iv",
+      "gpu_mismatch/B2-V-2(c)"
+    ],
+    "note": "No GPU, no relaunch; gpu0 free; await Manager. Provisional."
+  }
+}

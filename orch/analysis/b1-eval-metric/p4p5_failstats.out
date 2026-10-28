@@ -1,0 +1,2 @@
+orch/reports/VERDICT-P4-b0-attempt1-relaunch3-results.json mask0 clip-evals 112 failed 112 median fail_step 61.0 max 2089
+orch/reports/VERDICT-P5-b2-attempt1-results.json mask0 clip-evals 168 failed 168 median fail_step 59.0 max 2566

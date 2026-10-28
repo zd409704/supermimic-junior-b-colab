@@ -1,0 +1,33 @@
+[b1arms_driver 2026-10-27T01:40:00Z] start part=1 resume=false mock=1 J=/home/box/.srv-claude/research/supermimic-junior-b-colab/packets/P6/b1arms_mock/run1/junior U=/home/box/.srv-claude/research/supermimic-junior-b-colab/packets/P6/b1arms_mock/run1/up prior_hours=0.0000 cap=9.0
+[b1arms_driver 2026-10-27T01:40:08Z] started b1HAscratch_attention_s0_a1 pid=2609167 (primary, 0.0022 h)
+[b1arms_driver 2026-10-27T01:40:16Z] b1HAscratch_attention_s0_a1 class=COMPLETED completed=true exit=130
+[b1arms_driver 2026-10-27T01:40:20Z] started b1HAxfer_attention_s0_a1 pid=2609727 (primary, 0.0056 h)
+[b1arms_driver 2026-10-27T01:40:28Z] b1HAxfer_attention_s0_a1 class=COMPLETED completed=true exit=130
+[b1arms_driver 2026-10-27T01:40:33Z] started b1HMxfer_mlp_matched_s0_a1 pid=2610218 (primary, 0.0092 h)
+[b1arms_driver 2026-10-27T01:40:41Z] b1HMxfer_mlp_matched_s0_a1 class=COMPLETED completed=true exit=130
+[b1arms_driver 2026-10-27T01:40:50Z] started b1HAscratch_attention_s1_a1 pid=2610815 (primary, 0.0139 h)
+[b1arms_driver 2026-10-27T01:40:58Z] b1HAscratch_attention_s1_a1 class=COMPLETED completed=true exit=130
+[b1arms_driver 2026-10-27T01:41:04Z] started b1HAxfer_attention_s1_a1 pid=2611186 (primary, 0.0175 h)
+[b1arms_driver 2026-10-27T01:41:09Z] b1HAxfer_attention_s1_a1 class=INFRA completed=false exit=1
+[b1arms_driver 2026-10-27T01:41:10Z] started b1HAxfer_attention_s1_a2 pid=2611328 (primary, 0.0194 h)
+[b1arms_driver 2026-10-27T01:41:17Z] b1HAxfer_attention_s1_a2 class=COMPLETED completed=true exit=130
+[b1arms_driver 2026-10-27T01:41:21Z] started b1HMxfer_mlp_matched_s1_a1 pid=2611668 (primary, 0.0225 h)
+[b1arms_driver 2026-10-27T01:41:29Z] b1HMxfer_mlp_matched_s1_a1 class=COMPLETED completed=true exit=130
+[b1arms_driver 2026-10-27T01:41:34Z] started b1HAscratch_attention_s2_a1 pid=2612073 (primary, 0.0261 h)
+[b1arms_driver 2026-10-27T01:41:42Z] b1HAscratch_attention_s2_a1 class=COMPLETED completed=true exit=130
+[b1arms_driver 2026-10-27T01:41:48Z] started b1HAxfer_attention_s2_a1 pid=2612666 (primary, 0.0300 h)
+[b1arms_driver 2026-10-27T01:41:56Z] b1HAxfer_attention_s2_a1 class=COMPLETED completed=true exit=130
+[b1arms_driver 2026-10-27T01:42:03Z] started b1HMxfer_mlp_matched_s2_a1 pid=2613004 (primary, 0.0342 h)
+[b1arms_driver 2026-10-27T01:42:11Z] b1HMxfer_mlp_matched_s2_a1 class=COMPLETED completed=true exit=130
+[b1arms_driver 2026-10-27T01:42:16Z] started b1HMscratch_mlp_matched_s0_a1 pid=2613394 (secondary, 0.0378 h)
+[b1arms_driver 2026-10-27T01:42:24Z] b1HMscratch_mlp_matched_s0_a1 class=COMPLETED completed=true exit=130
+[b1arms_driver 2026-10-27T01:42:30Z] started b1HMscratch_mlp_matched_s1_a1 pid=2613749 (secondary, 0.0417 h)
+[b1arms_driver 2026-10-27T01:42:38Z] b1HMscratch_mlp_matched_s1_a1 class=COMPLETED completed=true exit=130
+[b1arms_driver 2026-10-27T01:42:43Z] started b1HMscratch_mlp_matched_s2_a1 pid=2614102 (secondary, 0.0453 h)
+[b1arms_driver 2026-10-27T01:42:51Z] b1HMscratch_mlp_matched_s2_a1 class=COMPLETED completed=true exit=130
+[b1arms_driver 2026-10-27T01:42:56Z] started b1HAfrozen_attention_s0_a1 pid=2614578 (diagnostic, 0.0489 h)
+[b1arms_driver 2026-10-27T01:43:03Z] b1HAfrozen_attention_s0_a1 class=COMPLETED completed=true exit=130
+[b1arms_driver 2026-10-27T01:43:08Z] started b1HAxfernoscale_attention_s0_a1 pid=2614829 (diagnostic, 0.0522 h)
+[b1arms_driver 2026-10-27T01:43:16Z] b1HAxfernoscale_attention_s0_a1 class=COMPLETED completed=true exit=130
+[b1arms_driver 2026-10-27T01:43:24Z] BUNDLE /home/box/.srv-claude/research/supermimic-junior-b-colab/packets/P6/b1arms_mock/run1/out/b1arms-20261027-0143.tgz sha256=300ee0c7c9a7289d92d856112f0d6f44e4e8a7b666befcbb85810ed087a4908f
+DONE_DRIVER utc=2026-10-27T01:43:24Z bundle=/home/box/.srv-claude/research/supermimic-junior-b-colab/packets/P6/b1arms_mock/run1/out/b1arms-20261027-0143.tgz state=DONE

@@ -1,0 +1,273 @@
+diff -ruN '--exclude=__pycache__' /tmp/pr2/code/eval_entry.py code/eval_entry.py
+--- /tmp/pr2/code/eval_entry.py	2026-10-25 15:22:22.000000000 -0400
++++ code/eval_entry.py	2026-10-25 15:35:04.186065601 -0400
+@@ -77,7 +77,8 @@
+     info = install_upstream_policy(arm, cfg, ("supermimic.eval.benchmark",))
+     want = (meta.get("descriptor") or {}).get("sha256")
+     got = (info.get("descriptor") or {}).get("sha256")
+-    if want and want != got:  # descriptor rebuilt from the upstream loaders must equal the trained one
++    # only the attention arm consumes the descriptor; MLP arms record it but are not gated by it
++    if arm == "attention" and want and want != got:  # descriptor rebuilt from the upstream loaders must equal the trained one
+         raise RuntimeError(f"[eval_entry] descriptor sha256 mismatch: sidecar {want} vs rebuilt {got}")
+     orig_load = bench.load_policy_from_checkpoint
+     up, ev = cfg["upstream"], cfg.get("eval", {})
+diff -ruN '--exclude=__pycache__' /tmp/pr2/code/tests/test_smoke.py code/tests/test_smoke.py
+--- /tmp/pr2/code/tests/test_smoke.py	2026-10-25 15:23:19.000000000 -0400
++++ code/tests/test_smoke.py	2026-10-25 15:35:18.110152115 -0400
+@@ -184,18 +184,39 @@
+     assert not joint_order_match(names, names[::-1], names)[0]
+     assert not joint_order_match(names, names, ["a", "c", "b"])[0]
+     assert not joint_order_match(None, names, names)[0]
++    # O-2 truth table: action order missing is "unverified", never True
++    assert joint_order_match(names, names, None)[0] == "unverified"
++    assert joint_order_match(names, names, names)[0] is True
++    assert joint_order_match(names, names[::-1], None)[0] is False
+     dims = [H * J, H * J, H * 3, H * 3, H * J]
+-    assert obs_layout_check(H * (3 * J + 6), dims, J, H)[0]
+-    assert obs_layout_check(H * (3 * J + 6), [J, J, 3, 3, J], J, H)[0]
+-    assert not obs_layout_check(H * (3 * J + 6), [J, 3, J, 3, J], J, H)[0]
+-    assert not obs_layout_check(H * (3 * J + 5), dims, J, H)[0]
+-    assert not obs_layout_check(H * (3 * J + 6), None, J, H)[0]
++    good = ["joint_pos", "joint_vel", "base_ang_vel", "projected_gravity", "actions"]
++    D = H * (3 * J + 6)
++    assert obs_layout_check(D, dims, J, H, good)[0] is True
++    assert obs_layout_check(D, [J, J, 3, 3, J], J, H, good)[0] == "unverified"  # flattening not inspectable
++    assert obs_layout_check(D, [J, 3, J, 3, J], J, H, good)[0] is False
++    assert obs_layout_check(H * (3 * J + 5), dims, J, H, good)[0] is False
++    assert obs_layout_check(D, None, J, H, good)[0] == "unverified"
++    assert obs_layout_check(D, dims, J, H, None)[0] == "unverified"
++    # O-3 reviewer case: swapped term order with identical dims must not pass
++    swapped = ["actions", "joint_vel", "base_ang_vel", "projected_gravity", "joint_pos"]
++    assert obs_layout_check(D, [H * J, H * J, H * 3, H * 3, H * J], J, H, swapped)[0] is False
++    swapped_probe = SeamProbe({}, "None", emit=lambda _t: None)
++    swapped_probe.term_dims, swapped_probe.term_names = [H * J, H * J, H * 3, H * 3, H * J], swapped
++    try:
++        swapped_probe.on_first_decoder_call(torch.zeros(1, D))
++        raise AssertionError("swapped term order must raise")
++    except RuntimeError:
++        assert swapped_probe.seam["S2_term_major_ok"] is False
+ 
+     class Robot:
+         joint_names = names
+ 
+     class Env:
+         scene = {"robot": Robot()}
++        action_manager = types.SimpleNamespace(_terms={"joint_pos": types.SimpleNamespace(target_names=names)})
++        observation_manager = types.SimpleNamespace(
++            group_obs_term_dim={"policy": [(H * J,), (H * J,), (H * 3,), (H * 3,), (H * J,)]},
++            active_terms={"policy": ["joint_pos", "joint_vel", "base_ang_vel", "projected_gravity", "actions"]})
+ 
+     class Trainer:
+         def __init__(self):
+@@ -215,8 +236,17 @@
+     text = "\n".join(lines)
+     assert "[seam] S4 default_pose_source=env_init_state" in text
+     assert "[seam] S1 joint_order_match=true" in text and "[seam] S3 compile=None" in text
+-    assert f"[seam] S2 obs_policy_dim={H * (3 * J + 6)} term_major_ok=false" in text  # fake env exposes no term spec
+-    assert probe.seam["S1_joint_order_match"] is True
++    assert f"[seam] S2 obs_policy_dim={H * (3 * J + 6)} term_major_ok=true" in text
++    assert probe.seam["S1_joint_order_match"] is True and probe.seam["S2_term_major_ok"] is True
++    # S1 unverified (action order not exposed): printed as `unverified`, recorded, and raises
++    Env.action_manager = None
++    lines.clear()
++    p2 = SeamProbe(info, "None", emit=lines.append)
++    try:
++        p2.on_trainer_ready(Trainer())
++        raise AssertionError("S1 unverified must raise")
++    except RuntimeError:
++        assert "[seam] S1 joint_order_match=unverified" in lines and p2.seam["S1_joint_order_match"] == "unverified"
+     # S1 mismatch: line is printed first, then it raises
+     Robot.joint_names = names[::-1]
+     lines.clear()
+@@ -227,6 +257,47 @@
+         assert "[seam] S1 joint_order_match=false" in lines
+ 
+ 
++def test_o1_eval_descriptor_hash_only_gates_attention():
++    import json
++    import eval_entry as e
++    import train_entry as t
++    from pathlib import Path
++    from unittest.mock import patch
++
++    class Stop(Exception):
++        pass
++
++    mods = {n: types.ModuleType(n) for n in ("supermimic", "supermimic.eval", "supermimic.eval.benchmark")}
++    mods["supermimic.eval.benchmark"].load_policy_from_checkpoint = lambda *a, **k: None
++
++    def run(arm, rebuilt):
++        meta = {"policy": arm, "descriptor": {"sha256": "trained-hash"}}
++        info = {"descriptor": {"sha256": rebuilt}} if rebuilt else {}
++        saved = {k: sys.modules.get(k) for k in mods}
++        try:
++            with patch.dict(sys.modules, mods), patch.object(t, "install_upstream_policy", return_value=info), \
++                    patch.object(e, "install_upstream_policy", return_value=info), \
++                    patch.object(e.torch.cuda, "is_available", return_value=True), \
++                    patch.object(Path, "exists", return_value=True), patch.object(Path, "read_text", return_value=json.dumps(meta)), \
++                    patch.object(Path, "mkdir", side_effect=Stop):
++                e.run_upstream(Path("/virtual/run/ckpt_latest.pt"), CFG, None)
++        except Stop:
++            return "proceeded"
++        except RuntimeError as ex:
++            return str(ex)
++        finally:
++            for k, v in saved.items():
++                if v is None:
++                    sys.modules.pop(k, None)
++                else:
++                    sys.modules[k] = v
++
++    assert run("mlp_matched", None) == "proceeded"  # reviewer scenario: MLP sidecar hash, nothing rebuilt
++    assert run("attention", "trained-hash") == "proceeded"
++    assert "sha256 mismatch" in run("attention", "other-hash")
++    assert "sha256 mismatch" in run("attention", None)
++
++
+ def _fake_robot_cfg(names):
+     ref, _ = ref29_actuator_params(names)
+     groups = [types.SimpleNamespace(target_names_expr=(n,), effort_limit=a.effort_limit, stiffness=a.stiffness, damping=a.damping)
+diff -ruN '--exclude=__pycache__' /tmp/pr2/code/train_entry.py code/train_entry.py
+--- /tmp/pr2/code/train_entry.py	2026-10-25 15:22:15.000000000 -0400
++++ code/train_entry.py	2026-10-25 15:35:04.186065601 -0400
+@@ -269,8 +269,14 @@
+     return None if x is None else [str(n) for n in x]
+ 
+ 
+-def joint_order_match(descriptor, entity, action) -> tuple[bool, str]:
+-    """S1: all available joint-name sequences must be identical (descriptor rows / robot entity / action order)."""
++def _tri(v) -> str:
++    return v if isinstance(v, str) else str(bool(v)).lower()
++
++
++def joint_order_match(descriptor, entity, action) -> tuple[bool | str, str]:
++    """S1: descriptor rows, robot entity AND action order must all be compared and identical.
++
++    Returns True / False / "unverified" (action order not exposed, everything else equal). Only True passes."""
+     seqs = {"descriptor": _names(descriptor), "entity": _names(entity), "action": _names(action)}
+     avail = {k: v for k, v in seqs.items() if v is not None}
+     if "descriptor" not in avail or "entity" not in avail:
+@@ -278,24 +284,38 @@
+     ref = avail["descriptor"]
+     bad = [k for k, v in avail.items() if v != ref]
+     detail = f"compared={sorted(avail)}" + (f" mismatch={bad}" if bad else "")
++    if bad:
++        return False, detail
+     if "action" not in avail:
+-        detail += " (action order not exposed; unchecked)"
+-    return not bad, detail
++        return "unverified", detail + " (action order not exposed; S1 unverified)"
++    return True, detail
++
++
++EXPECTED_POLICY_TERMS = ["joint_pos", "joint_vel", "base_ang_vel", "projected_gravity", "actions"]
++# Upstream names: packets/P1/ddesc/context/upstream-d9be385/src_supermimic_envs_tracking_env_cfg.py (policy_terms dict, lines 98-104).
++
+ 
++def obs_layout_check(obs_dim: int, term_dims, num_joints: int, history: int, term_names=None) -> tuple[bool | str, str]:
++    """S2: term NAMES must be exactly EXPECTED_POLICY_TERMS in order, and dims must carry the history (term-major).
+ 
+-def obs_layout_check(obs_dim: int, term_dims, num_joints: int, history: int) -> tuple[bool, str]:
+-    """S2: dim must equal H*(3J+6) and the env's policy-group term dims must follow the term-major order."""
++    Returns True / False / "unverified". Unknown names, or per-frame term dims (flattening not inspectable), are
++    "unverified"; only True passes."""
+     expected = history * (3 * num_joints + 6)
+     if obs_dim != expected:
+         return False, f"obs_dim {obs_dim} != expected {expected}"
++    if term_names is None:
++        return "unverified", "policy observation term names not exposed by env; order unverified"
++    names = [str(n) for n in term_names]
++    if names != EXPECTED_POLICY_TERMS:
++        return False, f"term names {names} != expected order {EXPECTED_POLICY_TERMS}"
+     if term_dims is None:
+-        return False, "term spec not exposed by env; layout unverified beyond total dim"
+-    per_frame = [num_joints, num_joints, 3, 3, num_joints]  # term-major order: pos, vel, ang_vel, gravity, actions
++        return "unverified", "term dims not exposed by env; layout unverified beyond total dim"
++    per_frame = [num_joints, num_joints, 3, 3, num_joints]
+     td = [int(x) for x in term_dims]
+     if td == [history * d for d in per_frame]:
+-        return True, "terms carry the history (term-major)"
++        return True, "names in upstream order; terms carry the history (term-major)"
+     if td == per_frame:
+-        return True, "per-frame terms in term-major order; history flattened by upstream"
++        return "unverified", "per-frame term dims; history flattening cannot be inspected"
+     return False, f"term dims {td} do not match term-major {per_frame} (x{history})"
+ 
+ 
+@@ -383,6 +403,16 @@
+         return None
+ 
+ 
++def policy_term_names(env) -> list[str] | None:
++    om = getattr(env, "observation_manager", None)
++    for attr in ("active_terms", "group_obs_term_names"):
++        try:
++            return [str(n) for n in getattr(om, attr)["policy"]]
++        except Exception:  # noqa: BLE001
++            continue
++    return None
++
++
+ class SeamProbe:
+     """Prints/records seams S1-S5 on the upstream path; observation-only except that S1 mismatch raises."""
+ 
+@@ -390,6 +420,7 @@
+         self.morph_info, self.compile_value, self.j, self.h, self.emit = morph_info, compile_value, num_joints, history, emit
+         self.seam: dict = {}
+         self.term_dims = None
++        self.term_names = None
+ 
+     def _line(self, text: str) -> None:
+         self.emit(f"[seam] {text}")
+@@ -422,12 +453,13 @@
+             raise RuntimeError("[seam] S1: upstream env not found on trainer; cannot verify joint order")
+         ok, detail = joint_order_match(self.morph_info.get("joint_names"), entity_joint_names(env), action_joint_names(env))
+         self.seam.update(S1_joint_order_match=ok, S1_detail=detail)
+-        self._line(f"S1 joint_order_match={str(ok).lower()}")
++        self._line(f"S1 joint_order_match={_tri(ok)}")
+         self._line(f"S1 detail {detail}")
+-        if not ok:
+-            raise RuntimeError(f"[seam] S1 joint order mismatch between descriptor rows / robot entity / action order: {detail}")
++        if ok is not True:
++            raise RuntimeError(f"[seam] S1 joint order {_tri(ok)} (descriptor rows / robot entity / action order): {detail}")
+         self.report_s5(env)
+         self.term_dims = policy_term_dims(env)
++        self.term_names = policy_term_names(env)
+         tcfg = getattr(getattr(trainer, "cfg", None), "policy_trainer", None)
+         comp = getattr(tcfg, "compile", self.compile_value)
+         self.seam["S3_compile"] = str(comp)
+@@ -435,10 +467,12 @@
+ 
+     def on_first_decoder_call(self, obs_hist: torch.Tensor) -> None:
+         dim = int(obs_hist.shape[-1])
+-        ok, detail = obs_layout_check(dim, self.term_dims, self.j, self.h)
++        ok, detail = obs_layout_check(dim, self.term_dims, self.j, self.h, self.term_names)
+         self.seam.update(S2_obs_policy_dim=dim, S2_term_major_ok=ok, S2_detail=detail)
+-        self._line(f"S2 obs_policy_dim={dim} term_major_ok={str(ok).lower()}")
++        self._line(f"S2 obs_policy_dim={dim} term_major_ok={_tri(ok)}")
+         self._line(f"S2 detail {detail}")
++        if ok is not True:
++            raise RuntimeError(f"[seam] S2 term_major_ok={_tri(ok)}: {detail}")
+ 
+     def attach_decoder(self, dec: torch.nn.Module) -> None:
+         def pre_hook(_m, args, kwargs):
+--- /tmp/pr2/docs/COLAB_RUNBOOK.md	2026-10-25 15:22:30.000000000 -0400
++++ docs/COLAB_RUNBOOK.md	2026-10-25 15:35:32.354240613 -0400
+@@ -102,13 +102,15 @@
+ 
+ ```bash
+ grep '^\[seam\]' logs/train_attention_s0.log
+-# [seam] S1 joint_order_match=<true|false>      (false raises: descriptor rows vs robot entity vs action order)
+-# [seam] S2 obs_policy_dim=<int> term_major_ok=<true|false>
++# [seam] S1 joint_order_match=<true|false|unverified>  (only true passes; false or unverified raises: descriptor rows vs robot entity vs action order, all three must be compared)
++# [seam] S2 obs_policy_dim=<int> term_major_ok=<true|false|unverified>  (only true passes; false or unverified raises: policy term names must be exactly joint_pos, joint_vel, base_ang_vel, projected_gravity, actions, in that order, with history-carrying dims)
+ # [seam] S3 compile=<value>
+ # [seam] S4 default_pose_source=<env_init_state|qpos0-fallback>
+ # [seam] S5 env_action_scale_match=<true|false>  (false raises: env action scale/offset per joint name vs sidecar sigma/q_def, rel tol 1e-6; `na` only with attention.descriptor: v1)
+ ```
+ 
++**`unverified` means STOP.** If S1 or S2 prints `unverified` the run has raised on purpose: the env did not expose the action order (S1), or the policy observation term names or per-term history flattening (S2), so the check could not be made. Do not continue to the comparison runs; file the log and hand it back to P1 (the duck-typed upstream attribute names need fixing). `false` is a real mismatch and also stops the run. Evaluation checks the descriptor sha256 only for the attention arm.
++
+ **S4 default pose source == env init state.** The descriptor default-angle column must come from the upstream robot entity config's initial joint positions (`upstream.robot_cfg_loader` in the config), not from the model `qpos0`. Expect `S4 default_pose_source=env_init_state`. `qpos0-fallback` means the loader key was removed and the descriptor does not match the env start pose. If the configured loader cannot be imported, the run fails loudly (the identifier in the config is unverified). **S5 env action scale match.** The production descriptor is v2 (`attention.descriptor: v2`, 16-d; `v1` is 12-d). Its actuator parameters (effort limit, stiffness, damping) come from the robot entity config (`upstream.robot_cfg_loader`) and the action scale sigma from `upstream.action_scale_loader`; both identifiers are unverified and the run fails loudly if they cannot be imported or do not cover all 29 joints. Expect `S5 env_action_scale_match=true`: the env action manager's per-joint scale and offset equal the sidecar `sigma` and `q_def` (`junior_policy.json` key `descriptor`, which also records the descriptor matrix sha256; eval re-checks it). The reference-table actuator values are a CPU fixture only. The trainer prints `params: world model …, policy …`. Policy params differ between arms only by the decoder: attention decoder about 0.46 M vs mlp_matched about 0.47 M.
+ 
+ ## 7. Eval (Appendix-F style whole-clip benchmark + B2 mask)

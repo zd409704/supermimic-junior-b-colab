@@ -1,0 +1,570 @@
+diff -ruN -x __pycache__ -x '*.pyc' pristine/src/supermimic/body.py SuperMimic-Reproduced/src/supermimic/body.py
+--- pristine/src/supermimic/body.py	1969-12-31 19:00:00.000000000 -0500
++++ SuperMimic-Reproduced/src/supermimic/body.py	2026-10-26 19:15:29.051909056 -0400
+@@ -0,0 +1,69 @@
++"""Body selection for the B1 cross-embodiment packet (program patch on top of pin d9be385b).
++
++``SM_BODY_MODULE`` unset -> the 29-DoF reference body with the upstream constants, unchanged.
++``SM_BODY_MODULE=<module>`` -> a second body. The module must define NUM_JOINTS, JOINT_NAMES, TRACKED_BODIES,
++ANCHOR_BODY, ROOT_BODY, COM_BODY, FOOT_GEOM_REGEX, ACTION_SCALE, ROOT_HEIGHT_THRESHOLD, COM_RANGES,
++get_robot_cfg() (mjlab EntityCfg) and load_model() (CPU MjModel used for FK and motion conversion).
++Every dimension below follows from NJ exactly as the upstream literals follow from 29.
++"""
++
++from __future__ import annotations
++
++import importlib
++import os
++
++BODY_MODULE = os.environ.get("SM_BODY_MODULE") or None
++
++if BODY_MODULE is None:
++    NAME = "reference29"
++    NJ = 29
++    TRACKED_BODIES: tuple[str, ...] = (
++        "pelvis", "left_hip_roll_link", "left_knee_link", "left_ankle_roll_link", "right_hip_roll_link",
++        "right_knee_link", "right_ankle_roll_link", "torso_link", "left_shoulder_roll_link", "left_elbow_link",
++        "left_wrist_yaw_link", "right_shoulder_roll_link", "right_elbow_link", "right_wrist_yaw_link",
++    )
++    ANCHOR_BODY = "torso_link"
++    ROOT_BODY = "pelvis"
++    COM_BODY = "torso_link"
++    FOOT_GEOM_REGEX = r"^(left|right)_foot[1-7]_collision$"
++    ROOT_HEIGHT_THRESHOLD = 0.25
++    COM_RANGES = {0: (-0.025, 0.025), 1: (-0.05, 0.05), 2: (-0.05, 0.05)}
++
++    def get_robot_cfg():
++        from mjlab.asset_zoo.robots import get_g1_robot_cfg
++
++        return get_g1_robot_cfg()
++
++    def action_scale():
++        from mjlab.asset_zoo.robots import G1_ACTION_SCALE
++
++        return G1_ACTION_SCALE
++
++    def load_model():
++        from supermimic.data.motion_convert import load_g1_model
++
++        return load_g1_model()
++else:
++    _b = importlib.import_module(BODY_MODULE)
++    NAME = getattr(_b, "BODY_NAME", BODY_MODULE)
++    NJ = int(_b.NUM_JOINTS)
++    TRACKED_BODIES = tuple(_b.TRACKED_BODIES)
++    ANCHOR_BODY = _b.ANCHOR_BODY
++    ROOT_BODY = _b.ROOT_BODY
++    COM_BODY = _b.COM_BODY
++    FOOT_GEOM_REGEX = _b.FOOT_GEOM_REGEX
++    ROOT_HEIGHT_THRESHOLD = float(_b.ROOT_HEIGHT_THRESHOLD)
++    COM_RANGES = dict(_b.COM_RANGES)
++    get_robot_cfg = _b.get_robot_cfg
++    load_model = _b.load_model
++
++    def action_scale():
++        return dict(_b.ACTION_SCALE)
++
++NQ = 7 + NJ  # root pos 3 + root quat 4 + hinges
++NV = 6 + NJ
++STATE_DIM = NQ + NV  # 71 for NJ = 29
++DELTA_DIM = 12 + 2 * NJ  # 70
++OBS_FRAME = 3 * NJ + 6  # 93
++GOAL_FRAME = 2 * NJ + 10  # 68
++XI_DIM = 1 + NJ + 3  # 33
+diff -ruN -x __pycache__ -x '*.pyc' pristine/src/supermimic/data/recorder.py SuperMimic-Reproduced/src/supermimic/data/recorder.py
+--- pristine/src/supermimic/data/recorder.py	2026-10-26 19:14:20.235481516 -0400
++++ SuperMimic-Reproduced/src/supermimic/data/recorder.py	2026-10-26 19:15:46.836019541 -0400
+@@ -18,6 +18,7 @@
+ import torch
+ from mjlab.managers.recorder_manager import RecorderTerm, RecorderTermCfg
+ 
++from supermimic import body as B
+ from supermimic.data.replay_buffer import ReplayBuffer
+ from supermimic.envs.sim_context import XI_DIM, SimContext
+ from supermimic.envs.state_io import STATE_DIM, StateIO
+@@ -35,7 +36,7 @@
+         self.command_name = p.get("command_name", "motion")
+         self.action_name = p.get("action_name", "joint_pos")
+         n = env.num_envs
+-        self.buffer = ReplayBuffer(n, int(p["capacity"]), STATE_DIM, 29, XI_DIM, env.device)
++        self.buffer = ReplayBuffer(n, int(p["capacity"]), STATE_DIM, B.NJ, XI_DIM, env.device)
+         self.prev_s = torch.zeros(n, STATE_DIM, device=env.device)
+         self.prev_xi = torch.zeros(n, XI_DIM, device=env.device)
+         self.prev_frame = torch.zeros(n, dtype=torch.long, device=env.device)
+@@ -91,7 +92,7 @@
+         # Terminal row: the state reached by the last action (no transition out of it).
+         cmd = self.command
+         s_next = self.state_io.read()[env_ids]
+-        zeros_a = torch.zeros(env_ids.numel(), 29, device=env.device)
++        zeros_a = torch.zeros(env_ids.numel(), B.NJ, device=env.device)
+         self.buffer.add(
+             env_ids,
+             s=s_next,
+diff -ruN -x __pycache__ -x '*.pyc' pristine/src/supermimic/envs/mdp/motion_library.py SuperMimic-Reproduced/src/supermimic/envs/mdp/motion_library.py
+--- pristine/src/supermimic/envs/mdp/motion_library.py	2026-10-26 19:14:20.235481516 -0400
++++ SuperMimic-Reproduced/src/supermimic/envs/mdp/motion_library.py	2026-10-26 19:15:55.376072598 -0400
+@@ -28,10 +28,12 @@
+ import numpy as np
+ import torch
+ 
++from supermimic import body as B
+ from supermimic.kinematics.rotations import projected_gravity, quat_apply_inverse, yaw_quat
+ 
+-GOAL_FEAT_DIM = 68
+-REF_DIM = 71
++GOAL_FEAT_DIM = B.GOAL_FRAME
++REF_DIM = B.STATE_DIM
++NJ = B.NJ
+ 
+ 
+ @dataclass
+@@ -115,7 +117,7 @@
+                 if body_idx is None:
+                     names = [str(n) for n in d["body_names"]]
+                     body_idx = np.array([names.index(n) for n in self.body_names])
+-                    root_idx = names.index("pelvis")
++                    root_idx = names.index(B.ROOT_BODY)
+                 n = int(d["joint_pos"].shape[0])
+                 bp, bq, blv, bav = d["body_pos_w"], d["body_quat_w"], d["body_lin_vel_w"], d["body_ang_vel_w"]
+                 ref = np.concatenate(
+@@ -147,10 +149,9 @@
+             del body_chunks
+             self.goal_feat = goal_features(self._split(self._ref), q0)
+         else:
+-            from supermimic.data.motion_convert import load_g1_model
+             from supermimic.kinematics.g1_fk import G1Kinematics
+ 
+-            self._fk = G1Kinematics(load_g1_model(), device=self.device, dtype=dtype)
++            self._fk = G1Kinematics(B.load_model(), device=self.device, dtype=dtype)
+             self._tracked_idx = self._fk.body_indices(self.body_names)
+ 
+         self.clip_start = torch.tensor([c.start for c in clips], device=self.device, dtype=torch.long)
+@@ -171,7 +172,7 @@
+ 
+     @staticmethod
+     def _split(r: torch.Tensor) -> RefState:
+-        return RefState(r[..., 0:3], r[..., 3:7], r[..., 7:36], r[..., 36:39], r[..., 39:42], r[..., 42:71])
++        return RefState(r[..., 0:3], r[..., 3:7], r[..., 7 : 7 + NJ], r[..., 7 + NJ : 10 + NJ], r[..., 10 + NJ : 13 + NJ], r[..., 13 + NJ : 13 + 2 * NJ])
+ 
+     def ref(self, frame: torch.Tensor) -> RefState:
+         return self._split(self._ref[frame].to(self.dtype))
+@@ -200,19 +201,19 @@
+ 
+     @property
+     def joint_pos(self) -> torch.Tensor:
+-        return self._ref[:, 7:36].to(self.dtype)
++        return self._ref[:, 7 : 7 + NJ].to(self.dtype)
+ 
+     @property
+     def root_lin_vel_w(self) -> torch.Tensor:
+-        return self._ref[:, 36:39].to(self.dtype)
++        return self._ref[:, 7 + NJ : 10 + NJ].to(self.dtype)
+ 
+     @property
+     def root_ang_vel_w(self) -> torch.Tensor:
+-        return self._ref[:, 39:42].to(self.dtype)
++        return self._ref[:, 10 + NJ : 13 + NJ].to(self.dtype)
+ 
+     @property
+     def joint_vel(self) -> torch.Tensor:
+-        return self._ref[:, 42:71].to(self.dtype)
++        return self._ref[:, 13 + NJ : 13 + 2 * NJ].to(self.dtype)
+ 
+     # ------------------------------------------------------------------ queries
+ 
+diff -ruN -x __pycache__ -x '*.pyc' pristine/src/supermimic/envs/sim_context.py SuperMimic-Reproduced/src/supermimic/envs/sim_context.py
+--- pristine/src/supermimic/envs/sim_context.py	2026-10-26 19:14:20.235481516 -0400
++++ SuperMimic-Reproduced/src/supermimic/envs/sim_context.py	2026-10-26 19:15:46.836019541 -0400
+@@ -5,7 +5,9 @@
+ import numpy as np
+ import torch
+ 
+-XI_DIM = 33
++from supermimic import body as B
++
++XI_DIM = B.XI_DIM
+ 
+ 
+ class SimContext:
+diff -ruN -x __pycache__ -x '*.pyc' pristine/src/supermimic/envs/state_io.py SuperMimic-Reproduced/src/supermimic/envs/state_io.py
+--- pristine/src/supermimic/envs/state_io.py	2026-10-26 19:14:20.235481516 -0400
++++ SuperMimic-Reproduced/src/supermimic/envs/state_io.py	2026-10-26 19:15:46.836019541 -0400
+@@ -4,9 +4,11 @@
+ 
+ import torch
+ 
+-STATE_DIM = 36 + 35
+-NQ = 36
+-NV = 35
++from supermimic import body as B
++
++STATE_DIM = B.STATE_DIM
++NQ = B.NQ
++NV = B.NV
+ 
+ 
+ class StateIO:
+diff -ruN -x __pycache__ -x '*.pyc' pristine/src/supermimic/envs/tracking_env_cfg.py SuperMimic-Reproduced/src/supermimic/envs/tracking_env_cfg.py
+--- pristine/src/supermimic/envs/tracking_env_cfg.py	2026-10-26 19:14:20.235481516 -0400
++++ SuperMimic-Reproduced/src/supermimic/envs/tracking_env_cfg.py	2026-10-26 19:15:46.836019541 -0400
+@@ -15,7 +15,6 @@
+ 
+ from dataclasses import dataclass, field
+ 
+-from mjlab.asset_zoo.robots import G1_ACTION_SCALE, get_g1_robot_cfg
+ from mjlab.envs import ManagerBasedRlEnv, ManagerBasedRlEnvCfg
+ from mjlab.envs import mdp as base_mdp
+ from mjlab.envs.mdp import dr
+@@ -31,6 +30,7 @@
+ from mjlab.utils.noise import UniformNoiseCfg as Unoise
+ from mjlab.viewer import ViewerConfig
+ 
++from supermimic import body as B
+ from supermimic.data.recorder import ReplayRecorderCfg
+ from supermimic.envs.actions import NoisyJointPositionActionCfg
+ from supermimic.envs.mdp import observations as sm_obs
+@@ -46,25 +46,10 @@
+         wp_opt.warn_overflow = 0
+ 
+ 
+-TRACKED_BODIES = (
+-    "pelvis",
+-    "left_hip_roll_link",
+-    "left_knee_link",
+-    "left_ankle_roll_link",
+-    "right_hip_roll_link",
+-    "right_knee_link",
+-    "right_ankle_roll_link",
+-    "torso_link",
+-    "left_shoulder_roll_link",
+-    "left_elbow_link",
+-    "left_wrist_yaw_link",
+-    "right_shoulder_roll_link",
+-    "right_elbow_link",
+-    "right_wrist_yaw_link",
+-)
+-ANCHOR_BODY = "torso_link"
+-ROOT_BODY = "pelvis"
+-FOOT_GEOM_REGEX = r"^(left|right)_foot[1-7]_collision$"
++TRACKED_BODIES = B.TRACKED_BODIES
++ANCHOR_BODY = B.ANCHOR_BODY
++ROOT_BODY = B.ROOT_BODY
++FOOT_GEOM_REGEX = B.FOOT_GEOM_REGEX
+ 
+ 
+ @dataclass
+@@ -82,7 +67,7 @@
+     replay_capacity: int = 1000
+     record_transitions: bool = True
+     seed: int | None = 0
+-    root_height_threshold: float = 0.25
++    root_height_threshold: float = B.ROOT_HEIGHT_THRESHOLD
+     root_tilt_threshold: float = 0.8
+     joint_limit_weight: float = -2.0
+     bin_frames: int = 50
+@@ -132,7 +117,7 @@
+         "joint_pos": NoisyJointPositionActionCfg(
+             entity_name="robot",
+             actuator_names=(".*",),
+-            scale=G1_ACTION_SCALE,
++            scale=B.action_scale(),
+             use_default_offset=True,
+             noise_std=a.action_noise_std,
+         )
+@@ -167,9 +152,9 @@
+             mode="startup",
+             func=dr.body_com_offset,
+             params={
+-                "asset_cfg": SceneEntityCfg("robot", body_names=("torso_link",)),
++                "asset_cfg": SceneEntityCfg("robot", body_names=(B.COM_BODY,)),
+                 "operation": "add",
+-                "ranges": {0: (-0.025, 0.025), 1: (-0.05, 0.05), 2: (-0.05, 0.05)},
++                "ranges": dict(B.COM_RANGES),
+             },
+         )
+         events["encoder_bias"] = EventTermCfg(
+@@ -222,10 +207,10 @@
+ 
+     recorders = {}
+     if a.record_transitions:
+-        recorders["replay"] = ReplayRecorderCfg(params={"capacity": a.replay_capacity, "foot_geom_regex": FOOT_GEOM_REGEX, "com_body_name": "torso_link"})
++        recorders["replay"] = ReplayRecorderCfg(params={"capacity": a.replay_capacity, "foot_geom_regex": FOOT_GEOM_REGEX, "com_body_name": B.COM_BODY})
+ 
+     cfg = ManagerBasedRlEnvCfg(
+-        scene=SceneCfg(terrain=TerrainEntityCfg(terrain_type="plane"), num_envs=a.num_envs, entities={"robot": get_g1_robot_cfg()}),
++        scene=SceneCfg(terrain=TerrainEntityCfg(terrain_type="plane"), num_envs=a.num_envs, entities={"robot": B.get_robot_cfg()}),
+         observations=observations,
+         actions=actions,
+         commands=commands,
+@@ -233,7 +218,7 @@
+         rewards=rewards,
+         terminations=terminations,
+         recorders=recorders,
+-        viewer=ViewerConfig(origin_type=ViewerConfig.OriginType.ASSET_BODY, entity_name="robot", body_name="torso_link", distance=2.8, fovy=55.0, elevation=-5.0, azimuth=120.0),
++        viewer=ViewerConfig(origin_type=ViewerConfig.OriginType.ASSET_BODY, entity_name="robot", body_name=B.ANCHOR_BODY, distance=2.8, fovy=55.0, elevation=-5.0, azimuth=120.0),
+         sim=QuietSimulationCfg(nconmax=35, njmax=250, mujoco=MujocoCfg(timestep=0.005, iterations=10, ls_iterations=20)),
+         decimation=4,
+         episode_length_s=a.episode_length_s,
+diff -ruN -x __pycache__ -x '*.pyc' pristine/src/supermimic/imagination/rollout.py SuperMimic-Reproduced/src/supermimic/imagination/rollout.py
+--- pristine/src/supermimic/imagination/rollout.py	2026-10-26 19:14:20.235481516 -0400
++++ SuperMimic-Reproduced/src/supermimic/imagination/rollout.py	2026-10-26 19:15:29.071909180 -0400
+@@ -6,6 +6,7 @@
+ 
+ import torch
+ 
++from supermimic import body as B
+ from supermimic.data.replay_buffer import StartBatch
+ from supermimic.envs.mdp.motion_library import MotionLibrary
+ from supermimic.imagination.compiled import REWARD_TERM_NAMES, ImagStep
+@@ -15,7 +16,7 @@
+ from supermimic.world_model.world_model import WorldModel
+ 
+ # Paper Table A.1 sensor noise (uniform half-widths) in the 93-d observation order.
+-OBS_NOISE_HALF = torch.tensor([0.01] * 29 + [0.5] * 29 + [0.2] * 3 + [0.05] * 3 + [0.0] * 29)
++OBS_NOISE_HALF = torch.tensor([0.01] * B.NJ + [0.5] * B.NJ + [0.2] * 3 + [0.05] * 3 + [0.0] * B.NJ)
+ ANCHOR_NOISE_HALF = torch.tensor([0.25] * 3 + [0.05] * 6)
+ 
+ 
+diff -ruN -x __pycache__ -x '*.pyc' pristine/src/supermimic/policy/nets.py SuperMimic-Reproduced/src/supermimic/policy/nets.py
+--- pristine/src/supermimic/policy/nets.py	2026-10-26 19:14:20.239481541 -0400
++++ SuperMimic-Reproduced/src/supermimic/policy/nets.py	2026-10-26 19:15:29.071909180 -0400
+@@ -7,12 +7,13 @@
+ import torch
+ import torch.nn as nn
+ 
++from supermimic import body as B
+ from supermimic.world_model.dynamics import MLP
+ from supermimic.world_model.heads import OBS_TERMS
+ 
+-GOAL_DIM = 680
++GOAL_DIM = 10 * B.GOAL_FRAME
+ LATENT_DIM = 32
+-ACT_DIM = 29
++ACT_DIM = B.NJ
+ 
+ 
+ @dataclass
+@@ -42,9 +43,9 @@
+ 
+ 
+ def _goal_scale_vector(cfg: PolicyCfg, goal_dim: int) -> torch.Tensor:
+-    sizes = (29, 29, 3, 3, 3, 1)
++    sizes = (B.NJ, B.NJ, 3, 3, 3, 1)
+     per_frame = torch.cat([torch.full((n,), 1.0 / s) for n, s in zip(sizes, cfg.goal_term_scale)])
+-    k, extra = divmod(goal_dim, 68)
++    k, extra = divmod(goal_dim, B.GOAL_FRAME)
+     return torch.cat([per_frame.repeat(k), torch.ones(extra)])
+ 
+ 
+@@ -60,7 +61,7 @@
+ 
+ 
+ class Decoder(nn.Module):
+-    def __init__(self, cfg: PolicyCfg, obs_dim: int = 930):
++    def __init__(self, cfg: PolicyCfg, obs_dim: int = 10 * B.OBS_FRAME):
+         super().__init__()
+         self.mlp = MLP(cfg.latent_dim + obs_dim, cfg.decoder_hidden, ACT_DIM, last_gain=cfg.decoder_last_gain)
+         self.register_buffer("scale", _obs_scale_vector(cfg))
+@@ -85,7 +86,7 @@
+ class Critic(nn.Module):
+     """V(canonical state 71, goal 680, xi 33, root error 4) -> scalar (one per interface)."""
+ 
+-    def __init__(self, cfg: CriticCfg, feat_dim: int = 71, goal_dim: int | None = None, xi_dim: int = 33, pcfg: PolicyCfg | None = None):
++    def __init__(self, cfg: CriticCfg, feat_dim: int = B.STATE_DIM, goal_dim: int | None = None, xi_dim: int = B.XI_DIM, pcfg: PolicyCfg | None = None):
+         super().__init__()
+         pcfg = pcfg or PolicyCfg()
+         goal_dim = goal_dim or pcfg.goal_dim
+diff -ruN -x __pycache__ -x '*.pyc' pristine/src/supermimic/training/loop.py SuperMimic-Reproduced/src/supermimic/training/loop.py
+--- pristine/src/supermimic/training/loop.py	2026-10-26 19:14:20.239481541 -0400
++++ SuperMimic-Reproduced/src/supermimic/training/loop.py	2026-10-26 19:15:46.836019541 -0400
+@@ -10,8 +10,8 @@
+ import torch
+ from torch.utils.tensorboard import SummaryWriter
+ 
++from supermimic import body as B
+ from supermimic.config import TrainConfig
+-from supermimic.data.motion_convert import load_g1_model
+ from supermimic.envs import SuperMimicEnvCfgArgs, make_env
+ from supermimic.envs.mdp.motion_library import discover_npz
+ from supermimic.envs.tracking_env_cfg import ANCHOR_BODY, ROOT_BODY, TRACKED_BODIES
+@@ -25,10 +25,15 @@
+ from supermimic.world_model.world_model import WorldModel
+ 
+ 
++def _sync() -> None:
++    if torch.cuda.is_available():
++        torch.cuda.synchronize()
++
++
+ class Trainer:
+     def __init__(self, cfg: TrainConfig):
+         self.cfg = cfg
+-        cfg.policy.goal_dim = cfg.env.future_frames * 68 + (9 if cfg.env.anchor_obs else 0)
++        cfg.policy.goal_dim = cfg.env.future_frames * B.GOAL_FRAME + (9 if cfg.env.anchor_obs else 0)
+         cfg.policy_trainer.anchor_obs = cfg.env.anchor_obs
+         self.rank, local_rank, self.world = init_distributed()
+         self.is_main = self.rank == 0
+@@ -78,7 +83,7 @@
+         self.buffer = self.recorder.buffer
+         robot = env.scene["robot"]
+ 
+-        fk = G1Kinematics(load_g1_model(), device=self.device)
++        fk = G1Kinematics(B.load_model(), device=self.device)
+         heads = AnalyticHeads(fk, TRACKED_BODIES, ANCHOR_BODY, ROOT_BODY, robot.data.soft_joint_pos_limits[0].clone(), robot.data.default_joint_pos[0].clone())
+         self.wm = WorldModel(cfg.world_model, heads, self.device)
+         self.policy = Policy(cfg.policy).to(self.device)
+@@ -172,7 +177,7 @@
+                 finished_lens.extend(lens.tolist())
+                 self.ep_reward_sum[ids] = 0.0
+                 self.ep_len[ids] = 0.0
+-            torch.cuda.synchronize()
++            _sync()
+             timers["sim"] += time.perf_counter() - t0
+             self.iteration += 1
+ 
+@@ -186,12 +191,12 @@
+                     self.policy_trainer.set_lr(lr * cfg.policy_trainer.lr / cfg.wm_trainer.lr)
+                     t0 = time.perf_counter()
+                     m_wm = self.wm_trainer.update(self.buffer)
+-                    torch.cuda.synchronize()
++                    _sync()
+                     timers["wm"] += time.perf_counter() - t0
+                     t0 = time.perf_counter()
+                     for _ in range(sch.policy_updates_per_wm_update):
+                         m_pi = self.policy_trainer.update(self.buffer)
+-                    torch.cuda.synchronize()
++                    _sync()
+                     timers["policy"] += time.perf_counter() - t0
+                     self.num_updates += 1
+                     for k, v in m_wm.items():
+diff -ruN -x __pycache__ -x '*.pyc' pristine/src/supermimic/world_model/dynamics.py SuperMimic-Reproduced/src/supermimic/world_model/dynamics.py
+--- pristine/src/supermimic/world_model/dynamics.py	2026-10-26 19:14:20.239481541 -0400
++++ SuperMimic-Reproduced/src/supermimic/world_model/dynamics.py	2026-10-26 19:15:29.071909180 -0400
+@@ -5,6 +5,8 @@
+ import torch
+ import torch.nn as nn
+ 
++from supermimic import body as B
++
+ 
+ class MLP(nn.Module):
+     def __init__(self, in_dim: int, hidden: tuple[int, ...], out_dim: int, act=nn.SiLU, zero_last: bool = False, last_gain: float | None = None):
+@@ -31,7 +33,7 @@
+ class DynamicsMLP(nn.Module):
+     """delta = f(canonical(s), a, xi_norm) -> (…, 70). Zero-initialised last layer (identity dynamics at init)."""
+ 
+-    def __init__(self, feat_dim: int = 71, act_dim: int = 29, xi_dim: int = 33, hidden=(2048, 2048, 2048), out_dim: int = 70):
++    def __init__(self, feat_dim: int = B.STATE_DIM, act_dim: int = B.NJ, xi_dim: int = B.XI_DIM, hidden=(2048, 2048, 2048), out_dim: int = B.DELTA_DIM):
+         super().__init__()
+         self.mlp = MLP(feat_dim + act_dim + xi_dim, tuple(hidden), out_dim, zero_last=True)
+ 
+diff -ruN -x __pycache__ -x '*.pyc' pristine/src/supermimic/world_model/heads.py SuperMimic-Reproduced/src/supermimic/world_model/heads.py
+--- pristine/src/supermimic/world_model/heads.py	2026-10-26 19:14:20.239481541 -0400
++++ SuperMimic-Reproduced/src/supermimic/world_model/heads.py	2026-10-26 19:15:29.071909180 -0400
+@@ -13,18 +13,20 @@
+ 
+ import torch
+ 
++from supermimic import body as B
+ from supermimic.envs.mdp.rewards import TrackingRewardCfg, tracking_reward_terms
+ from supermimic.kinematics.g1_fk import G1Kinematics
+ from supermimic.kinematics.rotations import projected_gravity, quat_apply_inverse
+ 
+-OBS_DIM = 93
++OBS_DIM = B.OBS_FRAME
+ # Term layout of the ``policy`` observation group (order matters: term-major history).
+-OBS_TERMS = (("joint_pos", 29), ("joint_vel", 29), ("base_ang_vel", 3), ("projected_gravity", 3), ("actions", 29))
++OBS_TERMS = (("joint_pos", B.NJ), ("joint_vel", B.NJ), ("base_ang_vel", 3), ("projected_gravity", 3), ("actions", B.NJ))
+ 
+ 
+ def split_state(s: torch.Tensor):
+     """-> root_pos (…,3), root_quat (…,4), joint_pos (…,29), root_lin_vel_w (…,3), root_ang_vel_b (…,3), joint_vel (…,29)."""
+-    return s[..., 0:3], s[..., 3:7], s[..., 7:36], s[..., 36:39], s[..., 39:42], s[..., 42:71]
++    nj = B.NJ
++    return s[..., 0:3], s[..., 3:7], s[..., 7 : 7 + nj], s[..., 7 + nj : 10 + nj], s[..., 10 + nj : 13 + nj], s[..., 13 + nj : 13 + 2 * nj]
+ 
+ 
+ def analytic_observation(
+@@ -35,7 +37,7 @@
+     xi[..., 1:30] is the encoder bias: observed joint positions are ``q + bias - q0``.
+     """
+     _, root_quat, q, _, ang_b, qd = split_state(s)
+-    bias = xi[..., 1:30]
++    bias = xi[..., 1 : 1 + B.NJ]
+     return torch.cat([q + bias - default_joint_pos, qd, ang_b, projected_gravity(root_quat), prev_action], dim=-1)
+ 
+ 
+@@ -99,7 +101,7 @@
+         self.reward_cfg = reward_cfg or TrackingRewardCfg()
+ 
+     def robot_bodies(self, s: torch.Tensor) -> dict[str, torch.Tensor]:
+-        out = self.fk(s[..., :36], s[..., 36:])
++        out = self.fk(s[..., : B.NQ], s[..., B.NQ :])
+         idx = self.tracked_idx
+         return {
+             "pos": out["pos"][..., idx, :],
+@@ -125,7 +127,7 @@
+             anchor_index=self.anchor_index,
+             action=action,
+             prev_action=prev_action,
+-            joint_pos=s_next[..., 7:36],
++            joint_pos=s_next[..., 7 : 7 + B.NJ],
+             soft_limits=self.soft_limits,
+             cfg=self.reward_cfg,
+         )
+diff -ruN -x __pycache__ -x '*.pyc' pristine/src/supermimic/world_model/state_spec.py SuperMimic-Reproduced/src/supermimic/world_model/state_spec.py
+--- pristine/src/supermimic/world_model/state_spec.py	2026-10-26 19:14:20.239481541 -0400
++++ SuperMimic-Reproduced/src/supermimic/world_model/state_spec.py	2026-10-26 19:15:29.071909180 -0400
+@@ -25,6 +25,8 @@
+ 
+ import torch
+ 
++from supermimic import body as B
++
+ from supermimic.kinematics.rotations import (
+     heading_quat,
+     quat_apply,
+@@ -37,10 +39,10 @@
+     rotvec_from_quat,
+ )
+ 
+-STATE_DIM = 71
+-FEAT_DIM = 71
+-DELTA_DIM = 70
+-NJ = 29
++STATE_DIM = B.STATE_DIM
++FEAT_DIM = B.STATE_DIM
++DELTA_DIM = B.DELTA_DIM
++NJ = B.NJ
+ 
+ 
+ @dataclass
+@@ -54,8 +56,8 @@
+     in_scale: tuple[float, ...] = (1.0, 1.0, 1.0, 2.0, 1.0, 5.0)
+     explicit_integration: bool = True
+     # xi normalisation: (offset, scale) for friction, encoder bias, com offset.
+-    xi_offset: tuple[float, ...] = field(default_factory=lambda: (0.75,) + (0.0,) * 29 + (0.0,) * 3)
+-    xi_scale: tuple[float, ...] = field(default_factory=lambda: (0.45,) + (0.01,) * 29 + (0.05,) * 3)
++    xi_offset: tuple[float, ...] = field(default_factory=lambda: (0.75,) + (0.0,) * NJ + (0.0,) * 3)
++    xi_scale: tuple[float, ...] = field(default_factory=lambda: (0.45,) + (0.01,) * NJ + (0.05,) * 3)
+ 
+ 
+ class StateSpec:
+@@ -73,7 +75,7 @@
+ 
+     @staticmethod
+     def split(s: torch.Tensor):
+-        return s[..., 0:3], s[..., 3:7], s[..., 7:36], s[..., 36:39], s[..., 39:42], s[..., 42:71]
++        return s[..., 0:3], s[..., 3:7], s[..., 7 : 7 + NJ], s[..., 7 + NJ : 10 + NJ], s[..., 10 + NJ : 13 + NJ], s[..., 13 + NJ : 13 + 2 * NJ]
+ 
+     def canonical(self, s: torch.Tensor) -> torch.Tensor:
+         """Heading-invariant, scaled network input features (…, 71)."""
+@@ -93,7 +95,7 @@
+     def integrate(self, s: torch.Tensor, delta: torch.Tensor) -> torch.Tensor:
+         """Apply the (unscaled) network output ``delta`` (…, 70) to state ``s`` (…, 71)."""
+         d = delta * self.out_scale
+-        dv_h, dw_b, dqd, dp_h, dth_b, dq = d[..., 0:3], d[..., 3:6], d[..., 6:35], d[..., 35:38], d[..., 38:41], d[..., 41:70]
++        dv_h, dw_b, dqd, dp_h, dth_b, dq = d[..., 0:3], d[..., 3:6], d[..., 6 : 6 + NJ], d[..., 6 + NJ : 9 + NJ], d[..., 9 + NJ : 12 + NJ], d[..., 12 + NJ : 12 + 2 * NJ]
+         p, q, qj, v, w, qd = self.split(s)
+         q = quat_normalize(q)
+         hq = heading_quat(q)

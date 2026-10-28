@@ -1,0 +1,110 @@
+{
+  "script": "spikes/B1-RT/diag_source_baseline.py",
+  "rev": "ce1572906efe6157840e8474d5a0d7aa87481e74",
+  "clips": {
+    "walk1_subject1": {
+      "csv_sha256": "68c7887438e94f1f3d9ebacd3a8ce59251a22c7b05129a0f5d7cacaedc48c28d",
+      "frames_50fps": 13066,
+      "raw_lowest_sole_median_m": 0.004052680888742112,
+      "penetration_p95_m": 0.00849907927408938,
+      "skate_p50_mps": 0.05144945063831771,
+      "skate_p95_mps": 1.381415001184156,
+      "stance_frames": 13066,
+      "n_foot_geoms": {
+        "left": 7,
+        "right": 7
+      }
+    },
+    "walk1_subject2": {
+      "csv_sha256": "f8e6ccd5df574dcc5343a0a83d12efddfb5b34578b8b2f00582cb8098ed7fffc",
+      "frames_50fps": 13066,
+      "raw_lowest_sole_median_m": 0.0006064412169744524,
+      "penetration_p95_m": 0.008086007804306163,
+      "skate_p50_mps": 0.07022851433598014,
+      "skate_p95_mps": 1.395742313651615,
+      "stance_frames": 13049,
+      "n_foot_geoms": {
+        "left": 7,
+        "right": 7
+      }
+    },
+    "run1_subject2": {
+      "csv_sha256": "ec02af4447a62214a6fec6afff60c75d0ecc8f80f8fb45e3cd4119fed9ceac8d",
+      "frames_50fps": 11891,
+      "raw_lowest_sole_median_m": 0.0037428456473357855,
+      "penetration_p95_m": 0.009134667611802316,
+      "skate_p50_mps": 0.15388250328874123,
+      "skate_p95_mps": 1.3548103975922021,
+      "stance_frames": 11265,
+      "n_foot_geoms": {
+        "left": 7,
+        "right": 7
+      }
+    },
+    "run1_subject5": {
+      "csv_sha256": "eacc38d7d6f5d7f32bfefcdf5d91510fea5f815000be870f91cc6e3483a126f6",
+      "frames_50fps": 11891,
+      "raw_lowest_sole_median_m": 0.00361357856813899,
+      "penetration_p95_m": 0.00713955385089105,
+      "skate_p50_mps": 0.2279490638217709,
+      "skate_p95_mps": 2.737921155653358,
+      "stance_frames": 11427,
+      "n_foot_geoms": {
+        "left": 7,
+        "right": 7
+      }
+    },
+    "dance1_subject1": {
+      "csv_sha256": "e2a369e92e5ad076c5acffff7bce53157a0e6cd9e7e9f6a08dadfb1eb2928d8f",
+      "frames_50fps": 6574,
+      "raw_lowest_sole_median_m": 0.0041853901160524825,
+      "penetration_p95_m": 0.009482421456403673,
+      "skate_p50_mps": 0.10076056134852068,
+      "skate_p95_mps": 1.2883774025627739,
+      "stance_frames": 6430,
+      "n_foot_geoms": {
+        "left": 7,
+        "right": 7
+      }
+    },
+    "dance1_subject2": {
+      "csv_sha256": "3c2d37391ab08af18224f7a63ea55f1cd83480bdec779c320acb4d0b3062633e",
+      "frames_50fps": 6574,
+      "raw_lowest_sole_median_m": 0.0010373098234285928,
+      "penetration_p95_m": 0.009218163614585311,
+      "skate_p50_mps": 0.11255425283884866,
+      "skate_p95_mps": 0.8760507537761054,
+      "stance_frames": 6495,
+      "n_foot_geoms": {
+        "left": 7,
+        "right": 7
+      }
+    },
+    "jumps1_subject1": {
+      "csv_sha256": "3f55c1a0f87564044a71817d62dc2a40aa76332aa1cab3f1c817333a197c78c2",
+      "frames_50fps": 12222,
+      "raw_lowest_sole_median_m": 0.004076066850300943,
+      "penetration_p95_m": 0.007232422530220945,
+      "skate_p50_mps": 0.09722957309460509,
+      "skate_p95_mps": 1.8358092940018214,
+      "stance_frames": 10911,
+      "n_foot_geoms": {
+        "left": 7,
+        "right": 7
+      }
+    },
+    "jumps1_subject2": {
+      "csv_sha256": "fde765a738e3aa586be3694163795502d4dc932757178956f4512e7c9d317a58",
+      "frames_50fps": 12222,
+      "raw_lowest_sole_median_m": 0.0025933670335459777,
+      "penetration_p95_m": 0.010776711023126596,
+      "skate_p50_mps": 0.0749018021608232,
+      "skate_p95_mps": 1.4933999056029696,
+      "stance_frames": 10225,
+      "n_foot_geoms": {
+        "left": 7,
+        "right": 7
+      }
+    }
+  }
+}

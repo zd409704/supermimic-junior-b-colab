@@ -1,0 +1,21 @@
+1. **R1-1 — RESOLVED.** §3 correctly labels historical mask pairing unverified and specifies a dedicated generator for P5.
+
+2. **R1-2 — NOT RESOLVED — BLOCKER — §§4.2, 6, 7.1–7.3.** Only B2-V-1 explicitly exempts diverged attempts: an early divergence still fails B2-V-2(a)’s it-1600 requirement, while a completed-but-diverged checkpoint still faces eval/PERM gates that can fail because of divergence. **Smallest fix:** explicitly exempt diverged attempts from endpoint-dependent B2-V-2(a), B2-V-4 and PERM requirements, align required-set completeness with the divergence flag, and retain evidence-integrity, argv, GPU and seam checks.
+
+3. **R1-3 — RESOLVED.** §7.3 explicitly disables learning-gate failure when `t_status=diverged`, including multiple divergences.
+
+4. **R1-4 — RESOLVED.** §7.2 introduces `U_GAIN_T_UNEVALUABLE`; divergence no longer implies an established absence-representation advantage.
+
+5. **R1-5 — RESOLVED.** §7.3 assigns undefined primary U/T retention to BLOCKED and prohibits dropping or imputing seeds.
+
+6. **R1-6 — RESOLVED.** §6 disables automatic masks, specifies shared/permuted explicit masks, and restores the guarded denominator.
+
+7. **R1-7 — RESOLVED.** §5.4 identifies heuristic margins and discloses covariance and calibration limitations; the noise calculations and §5.5 values match the sealed results.
+
+8. **R1-8 — RESOLVED.** §§7.4/9.4 define incomplete-ablation status, partial aggregates and null labels.
+
+9. **NEW — MAJOR — §§5.2, 7.3, 9.4: Diverged T statistics remain undefined.** Diverged attempts are explicitly scored, and means must include exactly the scored seeds without omission, but an early divergence supplies no retention value; the required T means, SE, `g_t` and harness-line fields have no defined representation. **Smallest fix:** specify null propagation for unavailable T aggregates and thresholds, while retaining available per-run values and the explicit divergence outcome.
+
+10. **NEW — MINOR — §§5.1, 7.3–7.4: Zero-return ablations lack a reporting rule.** A complete, non-diverged `b2idx` run can have zero unmasked return and therefore null retention, but the zero-denominator rule covers only U/T and the ablation rules still require aggregates and labels. **Smallest fix:** propagate null to affected ablation retention statistics and labels, record the reason, and leave the spike verdict unaffected.
+
+REDTEAM-RESULT: REVISE

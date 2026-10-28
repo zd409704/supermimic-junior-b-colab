@@ -1,0 +1,41 @@
+Method boot (required order):
+1. Read the global pin named in /srv/claude/research/METHOD/CURRENT and verify its sha256.
+2. Read any overlays under this program's method/local/ (skip if empty / only .gitkeep).
+3. Read Appendix A: available-models catalog (A.6) and allocation preference (Claude family required; Codex Astra high as secondary preference when a second family is needed; remaining slots by documented characteristics).
+4. Analyze whether this program needs specials beyond the global method. If yes and overlays are missing, create append-only method/local/ files that name the global version+sha they extend, then continue. If no, use global only; do not invent a local full copy.
+
+Role: Orchestrator for program supermimic-junior-b-colab (home-humanoid Junior-B / SuperMimic-style loop). Decision cap Provisional.
+
+Scope: Stay under /srv/claude/research/supermimic-junior-b-colab/. Working directory: /srv/claude/research/supermimic-junior-b-colab
+
+Task: Apply Manager Fix path #2 (local cache / skip-if-present for LAFAN1 clip-fetch), reseal packet + run.sh, set p6-b1-rt READY for attempt-2 START. Do not SSH, do not START GPU, do not READY p6-b1-arms, do not reopen P4/P5, do not use Colab.
+
+Sealed decision (binding):
+- orch/owner-decisions/20261027-0752-AsiaShanghai-p6-lafan1-fetch-fix.md sha256=768d6a0a0e62a7f193e29620316dfdf90bfadba2614bbd047e398925fa036f22
+
+Prior score (do not re-score):
+- p6-b1-rt SCORED BLOCKED attempt 1/2; job sha256=eb7db827aae6b5f28b1697c5471d532fa3047ff32ff13967585766744d9c77bb
+- VERDICT-P6-b1-rt-attempt1-results.json sha256=c3a55e257b98b047f416ec9da1003d82f5c2ab8d55e3b589a162aae922239574
+- Deposit 36cc77dc…; Class-2 C amend 32143be4… still in force (waive RT-4, slot_rule=first)
+
+Required pins (first-slot CSVs; sha256 from bytes must match when local file used):
+| clip | sha256 |
+| walk1_subject1 | 68c7887438e94f1f3d9ebacd3a8ce59251a22c7b05129a0f5d7cacaedc48c28d |
+| run1_subject2 | ec02af4447a62214a6fec6afff60c75d0ecc8f80f8fb45e3cd4119fed9ceac8d |
+| dance1_subject1 | e2a369e92e5ad076c5acffff7bce53157a0e6cd9e7e9f6a08dadfb1eb2928d8f |
+| jumps1_subject1 | 3f55c1a0f87564044a71817d62dc2a40aa76332aa1cab3f1c817333a197c78c2 |
+
+Do:
+1. Record a short sealed note / amendment artifact under spikes/B1-RT/ (and orch/reports if needed) citing decision 768d6a0a… that this is NOT a byte-identical attempt-2 of the old tarball: rt_cpu.py + packet change is authorized by Fix#2. Keep Class-2 C amend bytes unchanged.
+2. Patch spikes/B1-RT/rt_cpu.py `fetch_clip` to:
+   - Prefer `LAFAN1_G1_DIR` (env; default candidates include `/content/SuperMimic-Reproduced/data/raw/lafan1/g1`) when `{name}.csv` exists; read bytes; sha256 from bytes; if a pin for that name is known/passed, require match.
+   - Fallback: `huggingface_hub.hf_hub_download` honoring HF_ENDPOINT.
+   - Last resort: existing urllib resolve URL.
+   - Motion stays in memory only (X-002). Never write CSVs into deposits or the upload tarball.
+3. Update orch/jobs/p6-b1-rt/run.sh and job env: `export LAFAN1_G1_DIR=/content/SuperMimic-Reproduced/data/raw/lafan1/g1` (and document that the P4 tree is read-only; do not clean it). Keep HF_ENDPOINT mirror. Update tarball sha comments after reseal.
+4. Rebuild/reseal packets/P6/junior_b_colab-P6-B1RT.tgz via the existing make_b1rt_tgz / seal path so MANIFEST includes the new rt_cpu.py sha; confirm no .csv inside the tarball (X-002).
+5. Update orch/jobs/p6-b1-rt.json: upload sha list, env LAFAN1_G1_DIR, state=READY, clear remote/deposit fields as appropriate for a fresh attempt, state_note naming Fix#2 + decision sha; mutex gpu0; venue xn-4090-gpu2; slot_rule=first; amendment C2 still referenced. Arms job stays DRAFT.
+6. Update orch/STATUS.md Jobs/Headline/Next: SCORED BLOCKED attempt1 retained; Fix#2 applied; p6-b1-rt READY for relay START. Append seal.log + progress as usual.
+7. Print short progress updates. Stop when READY sealed (job+STATUS+tarball+run.sh shas) or ASK if blocked.
+
+Print a final milestone line: P6_FIX2_READY tarball_sha=… run_sha=… job_sha=… rt_cpu_sha=… decision=768d6a0a…

@@ -1,0 +1,9 @@
+1. **R1-2 — RESOLVED.** §§4.2/7.3 explicitly exempt diverged attempts from endpoint-dependent checks, retain integrity checks, and align required-set completeness with divergence.
+
+2. **#9 — RESOLVED.** §7.3 defines null T aggregates and harness fields when T diverges, preserving available values and report-only partial statistics.
+
+3. **#10 — RESOLVED.** §7.4 propagates undefined ablation retention to null statistics and labels without affecting the verdict.
+
+No NEW BLOCKER or MAJOR objections.
+
+REDTEAM-RESULT: SEAL-OK

@@ -1,0 +1,73 @@
+Method boot (required order):
+1. Read the global pin named in /srv/claude/research/METHOD/CURRENT and verify its sha256.
+2. Read any overlays under this program's method/local/ (skip if empty / only .gitkeep).
+3. Read Appendix A: available-models catalog (A.6) and allocation preference (Claude family required; Codex Astra high as secondary preference when a second family is needed; remaining slots by documented characteristics).
+4. Analyze whether this program needs specials beyond the global method. If yes and overlays are missing, create append-only method/local/ files that name the global version+sha they extend, then continue. If no, use global only; do not invent a local full copy.
+5. Before Step 2 of a heterogeneous or high-stakes contest packet: allocate models from the catalog under A.7, write program-root roster.md (A.5 fields), and freeze. Do not copy another program's roster as methodology.
+6. In-flight packets keep the method hash they started under; adopt a newer global pin only at the next packet boundary (or explicit sealed amendment).
+Stay under this program's root for writes. Home-humanoid / plant-class wording only; Provisional unless explicitly authorized to Lock.
+
+---
+
+Role: Orchestrator. Packet: **P6 — B1 line (P6a → P6b → P6c PLAN → P6d on xn-4090)**.
+
+Working directory: /srv/claude/research/supermimic-junior-b-colab
+Stay under /srv/claude/research/supermimic-junior-b-colab/.
+
+## Authority (do not re-ask; do not reopen)
+
+- `orch/owner-decisions/20261026-1852-EDT-p6-start.md` sha256 `3a0254deeb435f2d56e5fddaaaddd02880c53d916e397bbaf94b85809ca325c3` (Manager START P6)
+- **Amend:** `orch/owner-decisions/20261026-1855-EDT-xn4090-free-p6d-proceed.md` sha256 `1408aeefe770462bd2210d3552b3b797c0b187bb930550b66ec5b21e7f8ea6f7` — xn-4090 is owned hardware; prefer xn-4090-gpu2 over Colab; after P6c PLAN seal proceed P6d without another Manager START for GPU; still seal PLAN + orch/jobs READY + seal-before-open; amend PLAN/overlay to name xn-4090 before READY if scheme text still says Colab (do not silently flip a sealed Colab-only PLAN)
+- P5 Class-2: `orch/reports/VERDICT-P5-b2-attempt1-class2-results.json` sha256 `d62dc0b7e565d372558fbaf3a5f9b9b4b0440ae69aa5586751460145183d7798` — PASS / **NO_GAIN** (u_deficit) / **gate_b1=Go**
+- Class-2 decision `9985fc8f…`; B0 PASS/NONINFERIOR; `orch/reports/DECISION-RV-BLK-20261026.md`
+- P1 freeze + D-DESC; METHOD pin v1.1 sha256 `9bdc872ea3f92e33893cb71de4db488bf05ca3bce6f78e9ef3fd7e214590afc0` + OVERLAY-001
+
+## Hard rules this wake
+
+1. Prefer **xn-4090-gpu2** (mutex gpu0, HF_ENDPOINT=https://hf-mirror.com as in P5) for P6b RT-6..8 and P6d arms.
+2. After **P6c** `spikes/B1/PLAN.md` is sealed, **proceed P6d** — write Job READY promptly so the 4090 is not idle. Relay starts READY jobs; you do not SSH.
+3. Before any READY flip: PLAN (and overlay amendment if needed) must name xn-4090 as venue.
+4. Carry P5 caveat (Δρ_U(0.2) ≈ −0.557, NO_GAIN, u_deficit; gate_b1 Go) into brief amendment and B1 PLAN.
+5. No reopen of P4/P5 scoring. Stay inside disclosed GPU-hour envelope (~P6b 1.5 + P6d 8–9).
+
+## Step 0 — Brief depth-2 raise (BLK-10 / RV-7)
+
+Append-only amendment to `briefs/B1-home-humanoid-cross-embodiment.md` citing sealed P6 START (3a0254de…) + xn-4090 amend (1408aeef…) for Provisional depth-2 raise. Do not Lock D-001. Record P-1..P-6 precondition status. Seal amended brief sha.
+
+## Step P6a — B1-P0 asset readiness (CPU)
+
+Per `docs/SCHEME_PLAN.md` §5:
+
+1. Read-only owner asset `assets/home_humanoid_mjcf/` (glob single `*.xml`). Verify XML sha256 `856ce7021f0adda213b598c6db8b6efe3d298360931a7e7612aba21787076d82` + mesh_manifest. Load-time overlay only under `code/` or `spikes/B1-RT/`.
+2. Clear BLK-1 (nu=0 → 22 actuators), floors/contacts, default pose, tracked bodies.
+3. `spikes/B1-RT/ASSUMPTIONS.md` with AS-1..AS-4.
+4. CPU tests; seal logs. Home-humanoid wording only.
+
+Print: `P6A_SEALED` + key shas.
+
+## Step P6b — B1-RT
+
+1. Harness under `spikes/B1-RT/` → `runs.log`, `results.json`, `ASSUMPTIONS.md`, `deviations.md`.
+2. Run **RT-1..RT-5** on box CPU (SCHEME_PLAN §5). No motion files committed (X-002).
+3. Implement RT-6..RT-8 under `packets/P6/`; write `orch/jobs/p6-b1-rt/` (run.sh + job JSON). Venue **xn-4090-gpu2**, mutex gpu0, HF_ENDPOINT mirror. After CPU RT + code seal: set job state **READY** (STATUS row READY too). Print `P6B_CPU_SEALED` and `P6B_GPU_JOB_READY` with shas.
+4. Do not SSH. Wait for relay deposit of RT-6..8 results if needed before calling full B1-RT PASS; if GPU RT still pending deposit, continue to P6c PLAN with RT gate status documented, then prepare P6d DRAFT — but prefer completing RT GPU path before P6d READY when deposit returns in-session. If deposit is not back before you would idle, seal P6c and leave P6d job DRAFT with clear NEXT for relay after RT SCORED.
+
+## Step P6c — Seal spikes/B1/PLAN.md
+
+Freeze mechanism, arms (H-A-scratch / H-A-xfer / H-M-xfer), AULC criteria, B1-RT gate, P5 caveat, claim-scope language, deposit paths, **venue xn-4090-gpu2** (amend overlay or PLAN section if SCHEME_PLAN still says Colab — explicit amendment, not silent flip), harness keys, Provisional.
+
+Seal: `logs/seal.log` event `SEAL spikes/B1/PLAN.md`; update STATUS; progress.md; STATUS copy under orch/reports/.
+Print exactly: `P6C_PLAN_SEALED sha256=<hex> path=spikes/B1/PLAN.md`
+
+## Step P6d — Transfer arms (after PLAN seal; xn-4090)
+
+Authorized by 1408aeef… — no further Manager START required for this venue.
+
+1. Implement arms driver + `orch/jobs/p6-b1-arms/` (or equivalent) run.sh + job JSON: venue xn-4090-gpu2, mutex gpu0, HF_ENDPOINT, upload list with shas, deposit globs, timeout within envelope, plan_ref = sealed PLAN sha.
+2. Only flip **READY** when: PLAN sealed naming xn-4090; B1-RT gate satisfied (or STATUS documents deferred RT with Class-2 — prefer RT pass first); uploads hashed; mutex free.
+3. Print `P6D_JOB_READY sha256=<job-json-hex> plan_sha256=<hex>`.
+4. Stop after READY + STATUS update. Do not SSH. Do not reopen P4/P5.
+
+## STATUS discipline
+
+Update `orch/STATUS.md` at each seal. Print milestone lines. Home-humanoid / plant-class only. Provisional.

@@ -1,0 +1,16 @@
+aid=b1HAfrozen_attention_s0_a1
+arm=H-A-frozen
+policy=attention
+init=frozen
+seed=0
+role=diagnostic
+attempt=1
+config=b1_home.yaml
+src_key=attention_s0
+src_ckpt=/home/box/.srv-claude/research/supermimic-junior-b-colab/packets/P6/b1arms_mock/run5/ckroot/logs/b0_attention_s0/ckpt_0001600.pt
+start_utc=2026-10-27T01:59:22Z
+hours_at_start=0.0503
+end_utc=2026-10-27T01:59:29Z
+exit_code=130
+class=COMPLETED completed=true
+evals=done

@@ -1,0 +1,30 @@
+Method boot (required order):
+1. Read the global pin named in /srv/claude/research/METHOD/CURRENT and verify its sha256.
+2. Read any overlays under this program's method/local/ (skip if empty / only .gitkeep).
+3. Read Appendix A: available-models catalog (A.6) and allocation preference (Claude family required; Codex Astra high as secondary preference when a second family is needed; remaining slots by documented characteristics).
+4. Analyze whether this program needs specials beyond the global method. If yes and overlays are missing, create append-only method/local/ files that name the global version+sha they extend, then continue. If no, use global only; do not invent a local full copy.
+5. Before Step 2 of a heterogeneous or high-stakes contest packet: allocate models from the catalog under A.7, write program-root roster.md (A.5 fields), and freeze. Do not copy another program's roster as methodology.
+6. In-flight packets keep the method hash they started under; adopt a newer global pin only at the next packet boundary (or explicit sealed amendment).
+Stay under this program's root for writes. Home-humanoid / plant-class wording only; Provisional unless explicitly authorized to Lock.
+
+---
+
+Role: Orchestrator (claude-opus, medium effort). Packet: P2 B0 deposit+verdict wake for **attempt 2 of 3** only.
+
+Working directory: /srv/claude/research/supermimic-junior-b-colab
+Stay under /srv/claude/research/supermimic-junior-b-colab/.
+
+Scope (do only this; do not start P3; do not change P1 freeze; do not amend PLAN; do not ask the Human lead):
+
+1. Confirm seal before open: in logs/seal.log find the DEPOSIT colab line for logs/colab/2026-10-26/b0smoke-20261026-0400-attempt2.tgz with sha256 c04a62880babad5261b34481b7e122fe66d33ac7a8786f86118cc1c3453c570d. Recompute sha256 of that archive and require exact match. Only then open/extract under a work dir you create (e.g. logs/colab/2026-10-26/extract-verdict-attempt2/). Do not modify the sealed .tgz. Do not overwrite attempt-1 extract-verdict/.
+
+2. Compute the machine harness verdict per spikes/B0-smoke/PLAN.md section 5 and method/local/OVERLAY-001-owner-colab-runner.md rule 6. Criteria IDs: P-1..P-6, S1, S2, S3, S4, S5. Prose never overrides the machine check. unverified seam => BLOCKED. S1/S4/S5 false => per PLAN change-request path.
+
+3. Append to spikes/B0-smoke/runs.log (keep attempt-1 RUN-RECORD; add a new RUN-RECORD for attempt 2). Update spikes/B0-smoke/results.json for this attempt (include attempt number, overall PASS|FAIL|BLOCKED, failing_ids). Update orch/STATUS.md.
+
+4. Note bundle extras: deviations.md, meta/pip-freeze.txt (should be non-empty), meta/ckpt_dirs_ls.txt, nvidia-smi. Do not invent numbers.
+
+5. After final, append sha256 of runs.log and results.json (and STATUS if sealed) to logs/seal.log.
+
+Stop when results.json and STATUS are written. Print: VERDICT=<PASS|FAIL|BLOCKED> failing=<ids or none> attempt=2
+

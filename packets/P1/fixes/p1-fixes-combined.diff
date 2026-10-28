@@ -1,0 +1,1546 @@
+diff -ruN '--exclude=__pycache__' /tmp/pre/code/attention_policy.py code/attention_policy.py
+--- /tmp/pre/code/attention_policy.py	2026-10-25 14:16:31.000000000 -0400
++++ code/attention_policy.py	2026-10-25 15:21:49.629129215 -0400
+@@ -72,7 +72,14 @@
+ # Upstream per-term scales (divide): joint_pos, joint_vel, base_ang_vel, projected_gravity, actions.
+ DEFAULT_OBS_TERM_SCALE: tuple[float, ...] = (1.0, 5.0, 2.0, 1.0, 1.0)
+ 
+-MORPH_DIM = 12  # anchor xyz (3) + axis xyz (3) + default angle (1) + depth (1) + side (1) + limb one-hot (3)
++# Tree depth is normalised by this fixed constant (not per-body max depth) so that the same depth
++# value means the same thing on every body (B1 transfer). Bodies deeper than 8 exceed 1.0.
++DEPTH_NORM = 8.0
++
++MORPH_DIM = 12  # v1: anchor xyz (3) + axis xyz (3) + default angle (1) + depth (1) + side (1) + limb one-hot (3)
++MORPH_DIM_V1 = MORPH_DIM
++MORPH_DIM_V2 = 16  # v2 (production): see code/descriptor_v2.py
++DESCRIPTOR_DIMS = {"v1": MORPH_DIM_V1, "v2": MORPH_DIM_V2}
+ 
+ 
+ @dataclass
+@@ -85,7 +92,7 @@
+     num_self_attn_layers: int = 1  # token self-attention before the per-actuator cross-attention
+     query_hidden: tuple[int, ...] = (256,)
+     readout_hidden: tuple[int, ...] = (256, 128)
+-    morph_dim: int = MORPH_DIM
++    morph_dim: int = MORPH_DIM_V2  # 16 = descriptor v2 (default), 12 = descriptor v1
+     # "morph": keys are morphology descriptors only (permutation-equivariant; the Junior-(B) arm).
+     # "index": learned per-index embedding added (breaks equivariance; ablation only).
+     id_mode: str = "morph"
+@@ -154,30 +161,59 @@
+             anchor = [0.0, (0.15 + 0.08 * depth) * side, z]
+         onehot = [0.0, 0.0, 0.0]
+         onehot[limb] = 1.0
+-        rows.append(anchor + axis + [0.0, depth / 6.0, side] + onehot)
++        rows.append(anchor + axis + [0.0, depth / DEPTH_NORM, side] + onehot)
+     return torch.tensor(rows, dtype=torch.float32)
+ 
+ 
+-def morphology_from_mjmodel(model, joint_names: tuple[str, ...] | None = None) -> torch.Tensor:
++def hinge_joint_names(model) -> tuple[str, ...]:
++    """Hinge joint names of a compiled ``mujoco.MjModel`` in model (joint) order."""
++    import mujoco  # noqa: PLC0415  (optional dependency)
++
++    return tuple(
++        mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_JOINT, j)
++        for j in range(model.njnt) if model.jnt_type[j] == mujoco.mjtJoint.mjJNT_HINGE
++    )
++
++
++def morphology_from_mjmodel(model, joint_names: tuple[str, ...] | None = None, default_qpos=None,
++                            info: dict | None = None) -> torch.Tensor:
+     """Default-pose morphology descriptor m_j from a compiled ``mujoco.MjModel`` (Colab path).
+ 
+     For each hinge joint: world anchor and axis at ``qpos0`` expressed relative to the root body,
+-    the default angle, normalised tree depth, lateral side sign and a coarse limb one-hot.
++    the default angle, tree depth / ``DEPTH_NORM``, lateral side sign and a coarse limb one-hot.
+     Requires ``mujoco`` (installed with the upstream reproduction, not on the research box).
++
++    ``default_qpos`` supplies the *env default pose* for the default-angle column: either a
++    per-hinge sequence/array in joint order, or a ``name -> angle`` mapping covering every hinge.
++    Only when it is ``None`` does the column fall back to the model's ``qpos0``; that fallback is
++    recorded in ``info["default_pose_source"] = "qpos0-fallback"`` (otherwise ``"default_qpos"``).
++    If ``info`` (a dict) is passed it is filled with ``default_pose_source`` and ``joint_names``.
++    The anchor/axis geometry is always evaluated at ``qpos0``.
+     """
+     import mujoco  # noqa: PLC0415  (optional dependency)
+     import numpy as np  # noqa: PLC0415
+ 
+     data = mujoco.MjData(model)
+     mujoco.mj_forward(model, data)
+-    names = joint_names or tuple(
+-        mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_JOINT, j)
+-        for j in range(model.njnt) if model.jnt_type[j] == mujoco.mjtJoint.mjJNT_HINGE
+-    )
++    names = tuple(joint_names or hinge_joint_names(model))
++    if default_qpos is None:
++        angles = [float(model.qpos0[model.jnt_qposadr[mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, n)]]) for n in names]
++        source = "qpos0-fallback"
++    elif hasattr(default_qpos, "keys"):
++        missing = [n for n in names if n not in default_qpos]
++        if missing:
++            raise KeyError(f"default_qpos mapping lacks hinge joints: {missing}")
++        angles, source = [float(default_qpos[n]) for n in names], "default_qpos"
++    else:
++        angles = [float(x) for x in np.asarray(default_qpos, dtype=float).reshape(-1)]
++        if len(angles) != len(names):
++            raise ValueError(f"default_qpos has {len(angles)} entries, expected {len(names)} (one per hinge, joint order)")
++        source = "default_qpos"
++    if info is not None:
++        info.update(default_pose_source=source, joint_names=list(names))
+     root_body = 1
+     root_pos = data.xpos[root_body].copy()
+     root_rot = data.xmat[root_body].reshape(3, 3).copy()
+-    max_depth = 1
+     depths = []
+     for n in names:
+         j = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, n)
+@@ -185,9 +221,8 @@
+         while b > root_body:
+             b, d = model.body_parentid[b], d + 1
+         depths.append(d)
+-        max_depth = max(max_depth, d)
+     rows = []
+-    for n, d in zip(names, depths):
++    for n, d, ang in zip(names, depths, angles):
+         j = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, n)
+         anchor = root_rot.T @ (data.xanchor[j] - root_pos)
+         axis = root_rot.T @ data.xaxis[j]
+@@ -197,7 +232,7 @@
+             limb = 0 if anchor[2] < -0.1 else (1 if abs(anchor[1]) < 0.05 else 2)
+         onehot = [0.0, 0.0, 0.0]
+         onehot[limb] = 1.0
+-        rows.append([*anchor, *axis, float(model.qpos0[model.jnt_qposadr[j]]), d / max_depth, side, *onehot])
++        rows.append([*anchor, *axis, ang, d / DEPTH_NORM, side, *onehot])
+     return torch.tensor(rows, dtype=torch.float32)
+ 
+ 
+@@ -228,7 +263,12 @@
+         super().__init__()
+         self.cfg = cfg
+         if morphology is None:
+-            morphology = synthetic_morphology(DEFAULT_JOINT_NAMES[: cfg.num_joints])
++            if cfg.morph_dim == MORPH_DIM_V2:
++                from descriptor_v2 import default_synthetic_v2  # noqa: PLC0415  (avoids an import cycle)
++
++                morphology = default_synthetic_v2(DEFAULT_JOINT_NAMES[: cfg.num_joints])
++            else:
++                morphology = synthetic_morphology(DEFAULT_JOINT_NAMES[: cfg.num_joints])
+         assert morphology.shape == (cfg.num_joints, cfg.morph_dim), morphology.shape
+         self.register_buffer("morphology", morphology.clone())
+         self.register_buffer("scale", obs_scale_vector(cfg) if apply_obs_scale else torch.ones(cfg.history * (3 * cfg.num_joints + 6)))
+diff -ruN '--exclude=__pycache__' /tmp/pre/code/descriptor_v2.py code/descriptor_v2.py
+--- /tmp/pre/code/descriptor_v2.py	1969-12-31 19:00:00.000000000 -0500
++++ code/descriptor_v2.py	2026-10-25 15:21:49.633129240 -0400
+@@ -0,0 +1,341 @@
++"""Descriptor v2 (production morphology descriptor of the attention arm; v1 stays selectable).
++
++Ported unchanged from the validated spike module (candidate Y): 16-d rows, every feature scale-free or
++divided by one body length L (hip-to-ankle vertical extent at ``qpos0``); the action scale sigma and the
++effort limit enter as ``ln(sigma/0.25)`` and ``ln(tau/(M g L)/0.5)``. Action scaling stays in the env only
++(``q* = q_def + sigma * u``); nothing here rescales the decoder output.
++
++Actuator parameters come from exactly one of:
++  * the upstream robot entity config (Colab path): :func:`actuator_params_from_robot_cfg`;
++  * the CPU-only reference table (:func:`ref29_actuator_params`, built from the pinned constants excerpt),
++    a fixture for the synthetic descriptor and tests. It is never used on the upstream path.
++"""
++from __future__ import annotations
++
++import hashlib
++import math
++import re
++import warnings
++from dataclasses import dataclass
++
++import numpy as np
++import torch
++
++from attention_policy import (  # noqa: F401
++    DEFAULT_JOINT_NAMES, MORPH_DIM_V2, _limb_from_name, _side_from_name,
++)
++
++DESC_V2 = dict(version="v2", sigma0=0.25, tau_hat0=0.5, depth_c=8.0, range_c=math.pi, g=9.81)
++BOUND = 3.5
++COLS = dict(anchor_hat=[0, 1, 2], axis=[3, 4, 5], q_def=[6], q_range=[7, 8], chain_depth=[9], side=[10],
++            limb=[11, 12, 13], log_sigma=[14], log_tau=[15])
++REF_TOTAL_MASS = 35.0  # kg, Y s5 ("M ~ 35 kg"); synthetic reference has no masses
++
++
++@dataclass(frozen=True)
++class ActuatorParams:
++    effort_limit: float
++    stiffness: float
++    damping: float
++    action_scale: float
++
++
++# ---------------------------------------------------------------- actuator parameter builders
++# CPU-only reference/test fixture: regex table built from the pinned constants excerpt (reference body).
++# NOT used on the upstream path (see actuator_params_from_robot_cfg).
++def _armature(r, g):
++    """Two-stage planetary reflected inertia (mjlab formula, reconstructed; reproduces the
++    pinned kp values: r1*(g1 g2 g3)^2 + r2*g3^2 + r3)."""
++    return r[0] * (g[0] * g[1] * g[2]) ** 2 + r[1] * g[2] ** 2 + r[2]
++
++
++_WN = 10 * 2.0 * 3.1415926535
++_A5020 = _armature((0.139e-4, 0.017e-4, 0.169e-4), (1, 1 + 46 / 18, 1 + 56 / 16))
++_A7520_14 = _armature((0.489e-4, 0.098e-4, 0.533e-4), (1, 4.5, 1 + 48 / 22))
++_A7520_22 = _armature((0.489e-4, 0.109e-4, 0.738e-4), (1, 4.5, 5))
++_A4010 = _armature((0.068e-4, 0.0, 0.0), (1, 5, 5))
++# (name regexes, effort, armature) -- groups exactly as in the pinned constants
++_REF_GROUPS = [
++    ((r".*_elbow_joint", r".*_shoulder_pitch_joint", r".*_shoulder_roll_joint", r".*_shoulder_yaw_joint",
++      r".*_wrist_roll_joint"), 25.0, _A5020),
++    ((r".*_hip_pitch_joint", r".*_hip_yaw_joint", r"waist_yaw_joint"), 88.0, _A7520_14),
++    ((r".*_hip_roll_joint", r".*_knee_joint"), 139.0, _A7520_22),
++    ((r".*_wrist_pitch_joint", r".*_wrist_yaw_joint"), 5.0, _A4010),
++    ((r"waist_pitch_joint", r"waist_roll_joint"), 50.0, 2 * _A5020),
++    ((r".*_ankle_pitch_joint", r".*_ankle_roll_joint"), 50.0, 2 * _A5020),
++]
++_KNEES_BENT = [(r".*_hip_pitch_joint", -0.312), (r".*_knee_joint", 0.669), (r".*_ankle_pitch_joint", -0.363),
++               (r".*_elbow_joint", 0.6), (r"left_shoulder_roll_joint", 0.2), (r"left_shoulder_pitch_joint", 0.2),
++               (r"right_shoulder_roll_joint", -0.2), (r"right_shoulder_pitch_joint", 0.2)]
++
++
++def ref29_actuator_params(joint_names):
++    """-> (list[ActuatorParams], default_qpos list). Each name must match exactly one group expression."""
++    out = []
++    for n in joint_names:
++        hits = [(e, a) for exprs, e, a in _REF_GROUPS for x in exprs if re.fullmatch(x, n)]
++        if len(hits) != 1:
++            raise ValueError(f"{n}: matched {len(hits)} actuator groups")
++        e, a = hits[0]
++        kp = a * _WN ** 2
++        out.append(ActuatorParams(e, kp, 2.0 * 2.0 * a * _WN, 0.25 * e / kp))
++    q = []
++    for n in joint_names:
++        v = [val for x, val in _KNEES_BENT if re.fullmatch(x, n)]
++        q.append(v[-1] if v else 0.0)  # keyframe joint_pos: later patterns do not overlap here
++    return out, q
++
++
++def _home_group(n):
++    if any(k in n for k in ("hip", "thigh", "calf", "knee", "ankle")):
++        return "leg"
++    if any(k in n for k in ("shoulder", "upper_arm", "elbow", "wrist")):
++        return "arm"
++    if any(k in n for k in ("head", "neck")):
++        return "head"
++    raise ValueError(n)
++
++
++def home_actuator_params(joint_names, effort_limits, inertia_by_group, wn=20 * math.pi, zeta=2.0):
++    out = []
++    for n, tau in zip(joint_names, effort_limits):
++        I = inertia_by_group[_home_group(n)]
++        kp = I * wn ** 2
++        out.append(ActuatorParams(float(tau), kp, 2 * zeta * I * wn, 0.25 * float(tau) / kp))
++    return out
++
++
++def home_default_qpos(joint_names):
++    """AS-2 placeholder default pose."""
++    pat = [(r".*_hip_pitch_joint", -0.2), (r".*_calf_joint", 0.4), (r".*_ankle_pitch_joint", -0.2),
++           (r"l_shoulder_roll_joint", 0.2), (r"r_shoulder_roll_joint", -0.2)]
++    return [next((v for x, v in pat if re.fullmatch(x, n)), 0.0) for n in joint_names]
++
++
++# ---------------------------------------------------------------- core builder
++def _onehot(limb):
++    o = [0.0, 0.0, 0.0]
++    o[limb] = 1.0
++    return o
++
++
++def _assemble(P, A, qdef, rng, depth, side, limb, tau, sig, M, *, scale_norm, ablate, names, extra_meta):
++    """P (J,3) root-frame anchors, A (J,3) axes; limb: list of int (resolved)."""
++    J = len(names)
++    limb = np.asarray(limb)
++    leg = limb == 0
++    assert leg.sum() >= 2
++    L = float(P[leg, 2].max() - P[leg, 2].min())
++    hip = leg & (depth == 1)
++    c = P[hip].mean(0)
++    L_a, c_a = (L, c) if scale_norm else (1.0, np.zeros(3))
++    g = DESC_V2["g"]
++    log_tau = (np.zeros(J) if tau is None else np.log(np.asarray(tau) / (M * g * L) / DESC_V2["tau_hat0"]))
++    log_sig = (np.zeros(J) if sig is None else np.log(np.asarray(sig) / DESC_V2["sigma0"]))
++    rows = np.concatenate([(P - c_a) / L_a, A, np.asarray(qdef, float)[:, None],
++                           np.asarray(rng, float) / DESC_V2["range_c"], depth[:, None] / DESC_V2["depth_c"],
++                           np.asarray(side, float)[:, None], np.array([_onehot(int(l)) for l in limb]),
++                           log_sig[:, None], log_tau[:, None]], axis=1)
++    for a in ablate:
++        rows[:, COLS[a]] = 0.0
++    assert np.isfinite(rows).all(), "non-finite descriptor"
++    nu = len({tuple(r) for r in np.round(rows, 5)})
++    assert nu == J, f"descriptor rows not distinct: {nu}/{J}"
++    assert np.abs(rows).max() <= BOUND, f"|x| bound exceeded: {np.abs(rows).max()}"
++    r32 = rows.astype(np.float32)
++    meta = dict(DESC_V2, L=L, c=c.tolist(), M=float(M), names=list(names), q_def=list(map(float, qdef)),
++                range=np.asarray(rng).tolist(), scale_norm=bool(scale_norm), ablate=list(ablate),
++                matrix=r32.tolist(), sha256=hashlib.sha256(r32.tobytes()).hexdigest(), **extra_meta)
++    return torch.tensor(r32), meta
++
++
++def morphology_v2(model, joint_names, default_qpos, actuator_params, *, scale_norm=True, ablate=()):
++    import mujoco
++    names = tuple(joint_names)
++    J = len(names)
++    d = mujoco.MjData(model)
++    mujoco.mj_forward(model, d)
++    R, p0 = d.xmat[1].reshape(3, 3).copy(), d.xpos[1].copy()
++    jid = [mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, n) for n in names]
++    P = np.stack([R.T @ (d.xanchor[j] - p0) for j in jid])
++    A = np.stack([R.T @ d.xaxis[j] for j in jid])
++    if hasattr(default_qpos, "keys"):
++        qdef = [float(default_qpos[n]) for n in names]
++    else:
++        qdef = [float(x) for x in default_qpos]
++        assert len(qdef) == J
++    rng = np.stack([model.jnt_range[j] for j in jid])
++    limb = [_limb_from_name(n) for n in names]
++    source = ["name" if l is not None else "geometry" for l in limb]
++    body_of = [int(model.jnt_bodyid[j]) for j in jid]
++    hinge_of_body = {b: i for i, b in enumerate(body_of)}
++
++    def depths(limb_arr):
++        out = np.zeros(J)
++        for i, b in enumerate(body_of):
++            k = 0
++            while b > 0:
++                h = hinge_of_body.get(b)
++                if h is not None and limb_arr[h] == limb_arr[i]:
++                    k += 1
++                b = int(model.body_parentid[b])
++            out[i] = k
++        return out
++
++    def stats(limb_arr, depth):
++        leg = np.array([l == 0 for l in limb_arr])
++        L = P[leg, 2].max() - P[leg, 2].min()
++        c = P[leg & (depth == 1)].mean(0)
++        return L, c
++
++    if any(l is None for l in limb):  # geometric fallback after L, c (iterate once)
++        tmp = [-1 if l is None else l for l in limb]
++        depth = depths(tmp)
++        L, c = stats(tmp, depth)
++        ah = (P - c) / L
++        for i, l in enumerate(limb):
++            if l is None:
++                limb[i] = 0 if ah[i, 2] <= 0.1 else (1 if abs(ah[i, 1]) < 0.15 else 2)
++    depth = depths(limb)
++    side = []
++    for i, n in enumerate(names):
++        s = _side_from_name(n)
++        side.append(s if s != 0.0 else float(np.sign(np.round(P[i, 1], 3))))
++    M = float(model.body_mass.sum())
++    tau = [ap.effort_limit for ap in actuator_params]
++    sig = [ap.action_scale for ap in actuator_params]
++    kp = [ap.stiffness for ap in actuator_params]
++    kd = [ap.damping for ap in actuator_params]
++    for n, t, s, k in zip(names, tau, sig, kp):
++        if abs(s - 0.25 * t / k) > 1e-6 * s:
++            warnings.warn(f"{n}: action_scale {s} != 0.25*tau/kp (env sigma stays authoritative)")
++    return _assemble(P, A, qdef, rng, depth, side, limb, tau, sig, M, scale_norm=scale_norm, ablate=ablate,
++                     names=names, extra_meta=dict(tau=tau, kp=kp, kd=kd, sigma=sig, limb_source=source))
++
++
++# Fixed semantic stage table (1-based chain stage within the limb), keyed by joint name (no list order).
++_STAGE = [(r"(?:left_|right_|l_|r_)?hip_pitch_joint", 1), (r"(?:left_|right_|l_|r_)?hip_roll_joint", 2),
++          (r"(?:left_|right_|l_|r_)?(?:hip_yaw|thigh)_joint", 3), (r"(?:left_|right_|l_|r_)?(?:knee|calf)_joint", 4),
++          (r"(?:left_|right_|l_|r_)?ankle_pitch_joint", 5), (r"(?:left_|right_|l_|r_)?ankle_roll_joint", 6),
++          (r"waist_yaw_joint", 1), (r"waist_roll_joint", 2), (r"waist_pitch_joint", 3),
++          (r"head_yaw_joint", 1), (r"head_pitch_joint", 2),
++          (r"(?:left_|right_|l_|r_)?shoulder_pitch_joint", 1), (r"(?:left_|right_|l_|r_)?shoulder_roll_joint", 2),
++          (r"(?:left_|right_|l_|r_)?(?:shoulder_yaw|upper_arm)_joint", 3), (r"(?:left_|right_|l_|r_)?elbow_joint", 4),
++          (r"(?:left_|right_|l_|r_)?wrist_roll_joint", 5), (r"(?:left_|right_|l_|r_)?wrist_pitch_joint", 6),
++          (r"(?:left_|right_|l_|r_)?wrist_yaw_joint", 7)]
++
++
++def _stage(name):
++    h = [s for x, s in _STAGE if re.fullmatch(x, name)]
++    if len(h) != 1:
++        raise ValueError(f"no unique stage for joint {name!r}")
++    return h[0]
++
++
++def synthetic_morphology_v2(joint_names=DEFAULT_JOINT_NAMES, default_qpos=None, actuator_params=None, *,
++                            scale_norm=True, ablate=(), total_mass=REF_TOTAL_MASS):
++    """Order-invariant synthetic descriptor: depth/anchors from the stage table keyed by name."""
++    names = tuple(joint_names)
++    J = len(names)
++    P, A, side, limb, depth = [], [], [], [], np.zeros(J)
++    for i, n in enumerate(names):
++        s = _side_from_name(n)
++        l = _limb_from_name(n)
++        l = 2 if l is None else l
++        st = _stage(n)
++        d0 = st - 1
++        z = (-0.5, 0.0, 0.4)[l]
++        if l == 0:
++            a = [0.0, 0.1 * s, z - 0.1 * d0]
++        elif l == 1:
++            a = [0.0, 0.0, z + 0.05 * d0]
++        else:
++            a = [0.0, (0.15 + 0.08 * d0) * s, z]
++        axn = next((k for k in ("roll", "pitch", "yaw") if k in n), "pitch")
++        ax = [0.0, 0.0, 0.0]
++        ax[("roll", "pitch", "yaw").index(axn)] = 1.0
++        P.append(a); A.append(ax); side.append(s); limb.append(l); depth[i] = st
++    P, A = np.array(P), np.array(A)
++    qdef = np.zeros(J) if default_qpos is None else np.asarray(default_qpos, float)
++    rng = np.tile([-0.5, 0.5], (J, 1))
++    if actuator_params is None:
++        tau = sig = None
++        M = 1.0
++        kp = kd = None
++    else:
++        tau = [ap.effort_limit for ap in actuator_params]
++        sig = [ap.action_scale for ap in actuator_params]
++        kp = [ap.stiffness for ap in actuator_params]
++        kd = [ap.damping for ap in actuator_params]
++        M = float(total_mass)
++    return _assemble(P, A, qdef, rng, depth, side, limb, tau, sig, M, scale_norm=scale_norm, ablate=ablate,
++                     names=names, extra_meta=dict(tau=tau, kp=kp, kd=kd, sigma=sig, limb_source=["name"] * J))
++
++
++# ---------------------------------------------------------------- upstream path (Colab)
++def _scalar(x, what):
++    if isinstance(x, dict) or x is None:
++        raise RuntimeError(f"[descriptor_v2] {what} is not a scalar: {x!r}")
++    try:
++        v = float(x)
++    except (TypeError, ValueError) as e:
++        raise RuntimeError(f"[descriptor_v2] {what} is not a scalar: {x!r}") from e
++    if not math.isfinite(v):
++        raise RuntimeError(f"[descriptor_v2] {what} is not finite: {x!r}")
++    return v
++
++
++def _match_unique(mapping_or_exprs, name, what):
++    exprs = list(mapping_or_exprs)
++    hits = [e for e in exprs if re.fullmatch(e, name)]
++    if len(hits) != 1:
++        raise RuntimeError(f"[descriptor_v2] {what}: joint {name!r} matches {len(hits)} patterns (need exactly 1)")
++    return hits[0]
++
++
++def actuator_params_from_robot_cfg(robot_cfg, action_scale, joint_names):
++    """Per-joint :class:`ActuatorParams` (joint_names order) from the upstream robot entity config.
++
++    ``robot_cfg.articulation.actuators`` entries supply ``target_names_expr``, ``effort_limit``,
++    ``stiffness``, ``damping`` (each joint must be covered by exactly one actuator group); ``action_scale``
++    is the env action scale (a regex -> value dict, or a single number). Anything missing raises: there is
++    no silent fallback to the reference table.
++    """
++    try:
++        actuators = list(robot_cfg.articulation.actuators)
++    except AttributeError as e:
++        raise RuntimeError("[descriptor_v2] robot entity config has no articulation.actuators") from e
++    if not actuators:
++        raise RuntimeError("[descriptor_v2] robot entity config lists no actuators")
++    out = []
++    for n in joint_names:
++        groups = []
++        for a in actuators:
++            exprs = getattr(a, "target_names_expr", None)
++            if exprs is None:
++                raise RuntimeError(f"[descriptor_v2] actuator config {a!r} has no target_names_expr")
++            if any(re.fullmatch(x, n) for x in exprs):
++                groups.append(a)
++        if len(groups) != 1:
++            raise RuntimeError(f"[descriptor_v2] joint {n!r} is covered by {len(groups)} actuator groups (need exactly 1)")
++        a = groups[0]
++        vals = {}
++        for key in ("effort_limit", "stiffness", "damping"):
++            if not hasattr(a, key):
++                raise RuntimeError(f"[descriptor_v2] actuator group for {n!r} lacks {key}")
++            vals[key] = _scalar(getattr(a, key), f"{key} of {n!r}")
++        if isinstance(action_scale, dict):
++            sig = action_scale[_match_unique(action_scale, n, "action_scale")]
++        else:
++            sig = action_scale
++        out.append(ActuatorParams(vals["effort_limit"], vals["stiffness"], vals["damping"], _scalar(sig, f"action scale of {n!r}")))
++    return out
++
++
++def default_synthetic_v2(joint_names=DEFAULT_JOINT_NAMES):
++    """CPU-only synthetic v2 descriptor with the reference-table actuator fixture (smoke / default decoder)."""
++    names = tuple(joint_names)
++    if set(names) <= set(DEFAULT_JOINT_NAMES):
++        params, q = ref29_actuator_params(names)
++        return synthetic_morphology_v2(names, q, params)[0]
++    return synthetic_morphology_v2(names)[0]
+diff -ruN '--exclude=__pycache__' /tmp/pre/code/eval_entry.py code/eval_entry.py
+--- /tmp/pre/code/eval_entry.py	2026-10-25 14:12:09.000000000 -0400
++++ code/eval_entry.py	2026-10-25 15:22:22.437333036 -0400
+@@ -74,7 +74,11 @@
+         cfg = {**cfg, "attention": meta["attention"]}
+     import supermimic.eval.benchmark as bench  # noqa: PLC0415
+ 
+-    install_upstream_policy(arm, cfg, ("supermimic.eval.benchmark",))
++    info = install_upstream_policy(arm, cfg, ("supermimic.eval.benchmark",))
++    want = (meta.get("descriptor") or {}).get("sha256")
++    got = (info.get("descriptor") or {}).get("sha256")
++    if want and want != got:  # descriptor rebuilt from the upstream loaders must equal the trained one
++        raise RuntimeError(f"[eval_entry] descriptor sha256 mismatch: sidecar {want} vs rebuilt {got}")
+     orig_load = bench.load_policy_from_checkpoint
+     up, ev = cfg["upstream"], cfg.get("eval", {})
+     out_dir = Path(ev.get("out_dir", "logs/eval"))
+diff -ruN '--exclude=__pycache__' /tmp/pre/code/tests/test_smoke.py code/tests/test_smoke.py
+--- /tmp/pre/code/tests/test_smoke.py	2026-10-25 14:16:40.000000000 -0400
++++ code/tests/test_smoke.py	2026-10-25 15:23:19.025684633 -0400
+@@ -14,10 +14,21 @@
+ sys.path.insert(0, str(CODE))
+ 
+ from attention_policy import AttentionDecoder, AttentionDecoderCfg, count_params, permute_obs_history, random_token_mask, synthetic_morphology  # noqa: E402
+-from train_entry import build_decoder, install_upstream_policy, load_config, tyro_argv  # noqa: E402
++from attention_policy import DEPTH_NORM, MORPH_DIM_V1, MORPH_DIM_V2  # noqa: E402
++from descriptor_v2 import (  # noqa: E402
++    ActuatorParams, actuator_params_from_robot_cfg, default_synthetic_v2, home_actuator_params, home_default_qpos,
++    morphology_v2, ref29_actuator_params, synthetic_morphology_v2,
++)
++from train_entry import (  # noqa: E402
++    action_scale_match, attention_cfg, SeamProbe, build_decoder, find_env, install_upstream_policy, joint_order_match, load_config, load_morphology,
++    obs_layout_check, resolve_init_joint_pos, tyro_argv,
++)
+ 
+ CFG = load_config(CODE.parent / "configs" / "colab_smoke.yaml")
++CFG_V1 = {**CFG, "attention": {**CFG["attention"], "descriptor": "v1"}}
++SPIKE = CODE.parent / "spikes" / "D-DESC" / "descriptor_v2.py"
+ J, H, L = 29, 10, 32
++DEFAULT_NAMES = __import__("attention_policy").DEFAULT_JOINT_NAMES
+ 
+ 
+ def _batch(n=8):
+@@ -25,20 +36,28 @@
+ 
+ 
+ def test_shapes_and_distinct_morphology():
+-    m = synthetic_morphology()
+-    assert m.shape == (J, 12) and torch.unique(m, dim=0).shape[0] == J
++    m1 = synthetic_morphology()
++    assert m1.shape == (J, MORPH_DIM_V1) and torch.unique(m1, dim=0).shape[0] == J
++    m2 = default_synthetic_v2()
++    assert m2.shape == (J, MORPH_DIM_V2) == (J, 16) and torch.unique(m2, dim=0).shape[0] == J and torch.isfinite(m2).all()
++    assert attention_cfg(CFG).morph_dim == 16 and attention_cfg(CFG_V1).morph_dim == 12
++    assert attention_cfg({}).morph_dim == 16  # v2 is the default
+     z, o = _batch()
+-    assert AttentionDecoder(AttentionDecoderCfg())(z, o).shape == (8, J)
++    assert AttentionDecoder(attention_cfg(CFG))(z, o).shape == (8, J)  # v2 (default synthetic v2 rows)
++    assert AttentionDecoder(attention_cfg(CFG_V1), morphology=m1)(z, o).shape == (8, J)  # v1 path still works
++    assert AttentionDecoder(AttentionDecoderCfg(morph_dim=12))(z, o).shape == (8, J)  # v1 synthetic fallback
+ 
+ 
+ def test_permutation_equivariance():
+-    dec = AttentionDecoder(AttentionDecoderCfg()).eval()
+-    z, o = _batch()
+-    perm = torch.randperm(J)
+-    with torch.no_grad():
+-        a = dec(z, o)
+-        b = dec(z, permute_obs_history(o, perm, J, H), morphology=dec.morphology[perm])
+-    assert torch.allclose(b, a[:, perm], atol=1e-5)
++    for cfg in (CFG, CFG_V1):
++        dec = build_decoder("attention", cfg).eval()
++        z, o = _batch()
++        perm = torch.randperm(J)
++        with torch.no_grad():
++            a = dec(z, o)
++            b = dec(z, permute_obs_history(o, perm, J, H), morphology=dec.morphology[perm])
++        rel = float((b - a[:, perm]).abs().max() / a.abs().mean().clamp_min(1e-12))
++        assert rel < 1e-4, (cfg["attention"]["descriptor"], rel)
+ 
+ 
+ def test_mask_and_grad():
+@@ -50,31 +69,291 @@
+ 
+ 
+ def test_param_match_within_5pct():
+-    att, mlp = build_decoder("attention", CFG), build_decoder("mlp_matched", CFG)
+-    assert abs(count_params(mlp) - count_params(att)) / count_params(att) < 0.05
++    counts = {}
++    for cfg in (CFG, CFG_V1):
++        att, mlp = build_decoder("attention", cfg), build_decoder("mlp_matched", cfg)
++        counts[cfg["attention"]["descriptor"]] = count_params(att)
++        assert abs(count_params(mlp) - count_params(att)) / count_params(att) < 0.05
++    assert counts["v2"] - counts["v1"] == 4 * 128  # only morph_mlp[0] widens (12 -> 16 inputs)
++
++
++def _owner_xml():
++    """The single owner-provided MJCF, found by glob (asset contract: exactly one *.xml)."""
++    xmls = sorted((CODE.parent / "assets" / "home_humanoid_mjcf").glob("*.xml"))
++    assert len(xmls) <= 1, f"asset contract: expected exactly one *.xml, found {[x.name for x in xmls]}"
++    return xmls[0] if xmls else None
+ 
+ 
+ def test_b1_second_body_from_owner_mjcf():
+-    """Same decoder weights on the owner-provided 22-hinge home-humanoid MJCF (skipped without mujoco/asset)."""
+-    xml = CODE.parent / "assets" / "home_humanoid_mjcf" / "pi_plus.xml"
++    """J-agnostic shape test: the 29-joint decoder runs on a J'-joint body (skipped without mujoco/asset).
++
++    This checks tensor shapes and finiteness only; it is not evidence of cross-embodiment transfer.
++    """
++    xml = _owner_xml()
+     try:
+         import mujoco
+     except ImportError:
+-        print("SKIP b1: mujoco not installed")
++        print("SKIP J-agnostic shape test: mujoco not installed")
+         return
+-    if not xml.exists():
+-        print("SKIP b1: asset missing")
++    if xml is None:
++        print("SKIP J-agnostic shape test: asset missing")
+         return
+     from attention_policy import morphology_from_mjmodel
+ 
+     m2 = morphology_from_mjmodel(mujoco.MjModel.from_xml_path(str(xml)))
+     j2 = m2.shape[0]
+     assert j2 == 22 and torch.isfinite(m2).all() and torch.unique(m2, dim=0).shape[0] == j2
+-    dec = AttentionDecoder(AttentionDecoderCfg()).eval()  # built for the 29-joint body
++    dec = AttentionDecoder(AttentionDecoderCfg(morph_dim=12)).eval()  # built for the 29-joint body (v1 path)
+     z = torch.tanh(torch.randn(4, L))
+     with torch.no_grad():
+         a = dec(z, torch.randn(4, H * (3 * j2 + 6)), morphology=m2)
+     assert a.shape == (4, j2) and torch.isfinite(a).all()
++    # v2 rows of the same body (home actuator placeholder) feed the default (v2) decoder
++    from attention_policy import hinge_joint_names
++
++    model = mujoco.MjModel.from_xml_path(str(xml))
++    names = hinge_joint_names(model)
++    eff = [float(model.jnt_actfrcrange[mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, n), 1]) for n in names]
++    ap = home_actuator_params(names, eff, dict(leg=0.01, arm=0.005, head=0.002))
++    m16, meta = morphology_v2(model, names, home_default_qpos(names), ap)
++    assert m16.shape == (j2, 16) and meta["names"] == list(names)
++    with torch.no_grad():
++        a = AttentionDecoder(AttentionDecoderCfg()).eval()(z, torch.randn(4, H * (3 * j2 + 6)), morphology=m16)
++    assert a.shape == (4, j2) and torch.isfinite(a).all()
++
++
++def test_fx1_default_pose_and_fx2_depth_norm():
++    xml = _owner_xml()
++    try:
++        import mujoco
++    except ImportError:
++        print("SKIP fx1/fx2 mjmodel checks: mujoco not installed")
++        return
++    if xml is None:
++        print("SKIP fx1/fx2 mjmodel checks: asset missing")
++        return
++    from attention_policy import hinge_joint_names, morphology_from_mjmodel
++
++    model = mujoco.MjModel.from_xml_path(str(xml))
++    names = hinge_joint_names(model)
++    info0: dict = {}
++    base = morphology_from_mjmodel(model, info=info0)
++    assert info0["default_pose_source"] == "qpos0-fallback" and info0["joint_names"] == list(names)
++    arr = [0.1 * (i + 1) for i in range(len(names))]
++    info1: dict = {}
++    m_arr = morphology_from_mjmodel(model, default_qpos=arr, info=info1)
++    m_map = morphology_from_mjmodel(model, default_qpos=dict(zip(names, arr)))
++    assert info1["default_pose_source"] == "default_qpos"
++    assert torch.allclose(m_arr[:, 6], torch.tensor(arr, dtype=torch.float32))
++    assert torch.equal(m_arr, m_map)
++    keep = [i for i in range(MORPH_DIM_V1) if i != 6]  # only the default-angle column changes
++    assert torch.equal(m_arr[:, keep], base[:, keep])
++    try:
++        morphology_from_mjmodel(model, default_qpos=arr[:-1])
++        raise AssertionError("short default_qpos must raise")
++    except ValueError:
++        pass
++    # FX-2: depth column = integer depth / fixed constant (same constant as the synthetic descriptor)
++    d = base[:, 7] * DEPTH_NORM
++    assert torch.allclose(d, d.round(), atol=1e-4) and DEPTH_NORM == 8.0
++    ds = synthetic_morphology()[:, 7] * DEPTH_NORM
++    assert torch.allclose(ds, ds.round(), atol=1e-4)
++
++
++def test_fx1_unimportable_loader_fails_loudly():
++    cfg = {"attention": {"morphology": "upstream_mjmodel"}, "upstream": {"model_loader": "no_such_pkg_xyz:load"}}
++    try:
++        load_morphology(cfg, 29)
++        raise AssertionError("unimportable loader must raise")
++    except RuntimeError as e:
++        assert "model_loader" in str(e)
++
++
++def test_fx1_resolve_init_joint_pos():
++    assert resolve_init_joint_pos({".*_knee_joint": 0.6, "left_hip_pitch_joint": -0.3}, ["left_hip_pitch_joint", "left_knee_joint", "x"]) == [-0.3, 0.6, 0.0]
++    try:
++        resolve_init_joint_pos({".*_joint": 0.1, "a_joint": 0.2}, ["a_joint"])
++        raise AssertionError("conflicting patterns must raise")
++    except ValueError:
++        pass
++
++
++def test_fx5_seam_helpers_with_fake_objects():
++    names = ["a", "b", "c"]
++    assert joint_order_match(names, names, names)[0]
++    assert not joint_order_match(names, names[::-1], names)[0]
++    assert not joint_order_match(names, names, ["a", "c", "b"])[0]
++    assert not joint_order_match(None, names, names)[0]
++    dims = [H * J, H * J, H * 3, H * 3, H * J]
++    assert obs_layout_check(H * (3 * J + 6), dims, J, H)[0]
++    assert obs_layout_check(H * (3 * J + 6), [J, J, 3, 3, J], J, H)[0]
++    assert not obs_layout_check(H * (3 * J + 6), [J, 3, J, 3, J], J, H)[0]
++    assert not obs_layout_check(H * (3 * J + 5), dims, J, H)[0]
++    assert not obs_layout_check(H * (3 * J + 6), None, J, H)[0]
++
++    class Robot:
++        joint_names = names
++
++    class Env:
++        scene = {"robot": Robot()}
++
++    class Trainer:
++        def __init__(self):
++            self.env = Env()
++            self.cfg = types.SimpleNamespace(policy_trainer=types.SimpleNamespace(compile="None"))
++
++    assert find_env(Trainer()) is not None
++    lines: list[str] = []
++    info = {"default_pose_source": "env_init_state", "joint_names": names, "descriptor_version": "v1"}
++    probe = SeamProbe(info, "None", emit=lines.append)
++    probe.report_s4()
++    probe.on_trainer_ready(Trainer())
++    dec = nn.Linear(L + H * (3 * J + 6), J)
++    probe.attach_decoder(dec)
++    dec.forward = lambda z, o: z  # replaced forward; hook is a pre-hook so it still fires
++    dec(torch.zeros(2, L), torch.zeros(2, H * (3 * J + 6)))
++    text = "\n".join(lines)
++    assert "[seam] S4 default_pose_source=env_init_state" in text
++    assert "[seam] S1 joint_order_match=true" in text and "[seam] S3 compile=None" in text
++    assert f"[seam] S2 obs_policy_dim={H * (3 * J + 6)} term_major_ok=false" in text  # fake env exposes no term spec
++    assert probe.seam["S1_joint_order_match"] is True
++    # S1 mismatch: line is printed first, then it raises
++    Robot.joint_names = names[::-1]
++    lines.clear()
++    try:
++        SeamProbe(info, "None", emit=lines.append).on_trainer_ready(Trainer())
++        raise AssertionError("S1 mismatch must raise")
++    except RuntimeError:
++        assert "[seam] S1 joint_order_match=false" in lines
++
++
++def _fake_robot_cfg(names):
++    ref, _ = ref29_actuator_params(names)
++    groups = [types.SimpleNamespace(target_names_expr=(n,), effort_limit=a.effort_limit, stiffness=a.stiffness, damping=a.damping)
++              for n, a in zip(names, ref)]
++    return types.SimpleNamespace(articulation=types.SimpleNamespace(actuators=tuple(groups))), {n: a.action_scale for n, a in zip(names, ref)}
++
++
++def test_v2_upstream_actuator_params_and_failures():
++    names = list(DEFAULT_NAMES)
++    rcfg, scale = _fake_robot_cfg(names)
++    got = actuator_params_from_robot_cfg(rcfg, scale, names)
++    assert got == ref29_actuator_params(names)[0]
++    for bad in (lambda: actuator_params_from_robot_cfg(rcfg, scale, names + ["nope_joint"]),
++                lambda: actuator_params_from_robot_cfg(rcfg, {**scale, "left_knee_joint": 0.1, ".*_knee_joint": 0.1}, names),
++                lambda: actuator_params_from_robot_cfg(types.SimpleNamespace(), scale, names)):
++        try:
++            bad()
++            raise AssertionError("must raise")
++        except RuntimeError:
++            pass
++    # v2 on the upstream path without the action-scale loader fails loudly (no silent reference-table use)
++    import train_entry
++
++    cfg = {"attention": {"morphology": "upstream_mjmodel", "descriptor": "v2"},
++           "upstream": {"model_loader": "m:f", "robot_cfg_loader": "r:f"}}
++    keys = ("_import_ref", "hinge_joint_names", "default_qpos_from_robot_cfg", "actuator_params_from_robot_cfg")
++    saved = {k: getattr(train_entry, k) for k in keys}
++    train_entry._import_ref = lambda ref, what: (lambda: None)
++    train_entry.hinge_joint_names = lambda model: tuple(names)
++    train_entry.default_qpos_from_robot_cfg = lambda c, n: [0.0] * len(n)
++    try:
++        train_entry.load_morphology(cfg, 29)
++        raise AssertionError("missing action_scale_loader must raise")
++    except RuntimeError as e:
++        assert "action_scale_loader" in str(e)
++    finally:
++        for k, v in saved.items():
++            setattr(train_entry, k, v)
++
++
++def test_v2_s5_action_scale_match():
++    names = list(DEFAULT_NAMES)
++    ap, q = ref29_actuator_params(names)
++    _, meta = synthetic_morphology_v2(names, q, ap)
++    env = (names, [a.action_scale for a in ap], list(q))
++    assert action_scale_match(env, meta)[0]
++    bad = (names, [a.action_scale * (1 + 1e-4) if i == 3 else a.action_scale for i, a in enumerate(ap)], list(q))
++    assert not action_scale_match(bad, meta)[0]
++    assert not action_scale_match((names, env[1], [x + 0.01 for x in q]), meta)[0]
++    assert not action_scale_match(None, meta)[0] and not action_scale_match(env, None)[0]
++
++    class Term:
++        target_names = names
++        _scale = torch.tensor([env[1]] * 3)  # (num_envs, J)
++        _offset = torch.tensor([env[2]] * 3)
++
++    class Env:
++        action_manager = types.SimpleNamespace(_terms={"joint_pos": Term()})
++
++    from train_entry import env_action_scale_offset
++    assert action_scale_match(env_action_scale_offset(Env()), meta)[0]
++
++    class Robot:
++        joint_names = names
++
++    class FakeEnv(Env):
++        scene = {"robot": Robot()}
++
++    class Trainer:
++        env = FakeEnv()
++        cfg = types.SimpleNamespace(policy_trainer=types.SimpleNamespace(compile="None"))
++
++    lines: list[str] = []
++    info = {"default_pose_source": "env_init_state", "joint_names": names, "descriptor_version": "v2", "descriptor_meta": meta}
++    SeamProbe(info, "None", emit=lines.append).on_trainer_ready(Trainer())
++    assert "[seam] S5 env_action_scale_match=true" in lines
++    Term._scale = Term._scale * 1.01
++    lines.clear()
++    try:
++        SeamProbe(info, "None", emit=lines.append).on_trainer_ready(Trainer())
++        raise AssertionError("S5 mismatch must raise")
++    except RuntimeError:
++        assert "[seam] S5 env_action_scale_match=false" in lines
++
++
++def test_v2_matches_spike_module():
++    """Port equality with the spike module (skipped if the spike directory is absent)."""
++    if not SPIKE.exists():
++        print("SKIP spike equality: spike module absent")
++        return
++    import importlib.util
++
++    spec = importlib.util.spec_from_file_location("spike_descriptor_v2", SPIKE)
++    D = importlib.util.module_from_spec(spec)
++    sys.modules["spike_descriptor_v2"] = D
++    spec.loader.exec_module(D)
++    names = list(DEFAULT_NAMES)
++    ap, q = ref29_actuator_params(names)
++    sap, sq = D.ref29_actuator_params(names)
++    assert [tuple(vars(a).values()) for a in ap] == [tuple(vars(a).values()) for a in sap] and q == sq
++    m, meta = synthetic_morphology_v2(names, q, ap)
++    sm, smeta = D.synthetic_morphology_v2(names, sq, sap)
++    assert torch.equal(m, sm) and meta["sha256"] == smeta["sha256"] and meta == smeta
++    sh = list(reversed(names))  # order invariance is part of the ported behaviour
++    assert torch.equal(synthetic_morphology_v2(sh)[0], D.synthetic_morphology_v2(sh)[0])
++    xml = _owner_xml()
++    try:
++        import mujoco
++    except ImportError:
++        print("SKIP spike equality (home humanoid): mujoco not installed")
++        return
++    if xml is None:
++        print("SKIP spike equality (home humanoid): asset missing")
++        return
++    from attention_policy import hinge_joint_names
++
++    model = mujoco.MjModel.from_xml_path(str(xml))
++    hn = hinge_joint_names(model)
++    eff = [float(model.jnt_actfrcrange[mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, n), 1]) for n in hn]
++    inertia = dict(leg=0.01, arm=0.005, head=0.002)
++    hm, hmeta = morphology_v2(model, hn, home_default_qpos(hn), home_actuator_params(hn, eff, inertia))
++    sm, smeta = D.morphology_v2(model, hn, D.home_default_qpos(hn), D.home_actuator_params(hn, eff, inertia))
++    assert torch.equal(hm, sm) and hmeta == smeta
++    for ab, sn in (((), False), (("q_def",), True)):
++        a, ma = morphology_v2(model, hn, home_default_qpos(hn), home_actuator_params(hn, eff, inertia), scale_norm=sn, ablate=ab)
++        b, mb = D.morphology_v2(model, hn, D.home_default_qpos(hn), D.home_actuator_params(hn, eff, inertia), scale_norm=sn, ablate=ab)
++        assert torch.equal(a, b) and ma == mb
+ 
+ 
+ def test_upstream_seam_with_fake_package():
+diff -ruN '--exclude=__pycache__' /tmp/pre/code/tools/make_notebook.py code/tools/make_notebook.py
+--- /tmp/pre/code/tools/make_notebook.py	2026-10-25 14:14:03.000000000 -0400
++++ code/tools/make_notebook.py	2026-10-25 15:22:30.685384288 -0400
+@@ -55,7 +55,7 @@
+ C.append(code("""RUN_SANITY = False
+ if RUN_SANITY:
+     !cd {UP} && env -u PYTHONPATH {PY} -m supermimic.scripts.train --run-name up_sanity --data.npz-dir {cfg['npz_dir']} --env.num-envs 256 --policy-trainer.batch-size 256 --policy-trainer.horizon 16 --policy-trainer.compile None --schedule.max-hours 0.1"""))
+-C.append(md("## 7. B0 smoke train — attention vs matched MLP [GPU] (requires Colab GPU; ~0.5 h per arm)\nSet `RUN_TRAIN = True` deliberately. Check seams S1–S3 (`code/vendor/NOTES.md`) on the first run."))
++C.append(md("## 7. B0 smoke train — attention vs matched MLP [GPU] (requires Colab GPU; ~0.5 h per arm)\nSet `RUN_TRAIN = True` deliberately. Check seams S1–S5 (`code/vendor/NOTES.md`, runbook §6) on the first run: grep the log for `[seam]`."))
+ C.append(code("""RUN_TRAIN = False
+ ARMS = ['attention', 'mlp_matched']
+ SEED = 0
+diff -ruN '--exclude=__pycache__' /tmp/pre/code/train_entry.py code/train_entry.py
+--- /tmp/pre/code/train_entry.py	2026-10-25 14:12:09.000000000 -0400
++++ code/train_entry.py	2026-10-25 15:22:15.137287686 -0400
+@@ -27,6 +27,7 @@
+ import argparse
+ import importlib
+ import json
++import re
+ import sys
+ import time
+ from dataclasses import asdict, fields
+@@ -41,12 +42,21 @@
+ from attention_policy import (  # noqa: E402
+     AttentionDecoder,
+     AttentionDecoderCfg,
++    DEFAULT_JOINT_NAMES,
++    DESCRIPTOR_DIMS,
+     count_params,
++    hinge_joint_names,
+     make_upstream_policy_class,
+     morphology_from_mjmodel,
+     random_token_mask,
+     synthetic_morphology,
+ )
++from descriptor_v2 import (  # noqa: E402
++    actuator_params_from_robot_cfg,
++    morphology_v2,
++    ref29_actuator_params,
++    synthetic_morphology_v2,
++)
+ from mlp_baseline import MLPDecoder, MLPDecoderCfg, build_matched_mlp  # noqa: E402
+ 
+ PROGRAM_ROOT = HERE.parent
+@@ -58,21 +68,104 @@
+         return yaml.safe_load(f)
+ 
+ 
++def descriptor_version(cfg: dict) -> str:
++    """``attention.descriptor``: ``v2`` (default, production) or ``v1``."""
++    v = cfg.get("attention", {}).get("descriptor", "v2")
++    if v not in DESCRIPTOR_DIMS:
++        raise ValueError(f"attention.descriptor must be one of {sorted(DESCRIPTOR_DIMS)}, got {v!r}")
++    return v
++
++
+ def attention_cfg(cfg: dict, latent_dim: int = 32, history: int = 10, num_joints: int = 29) -> AttentionDecoderCfg:
+     names = {f.name for f in fields(AttentionDecoderCfg)}
+     over = {k: (tuple(v) if isinstance(v, list) else v) for k, v in cfg.get("attention", {}).items() if k in names}
++    dim = DESCRIPTOR_DIMS[descriptor_version(cfg)]
++    if over.get("morph_dim", dim) != dim:
++        raise ValueError(f"attention.morph_dim={over['morph_dim']} conflicts with attention.descriptor (needs {dim})")
++    over["morph_dim"] = dim  # follows the descriptor: 16 for v2, 12 for v1
+     return AttentionDecoderCfg(latent_dim=latent_dim, history=history, num_joints=num_joints, **over)
+ 
+ 
+-def load_morphology(cfg: dict, num_joints: int) -> torch.Tensor:
++def _import_ref(ref: str, what: str):
++    """Import ``module:attr``; in upstream mode a failure is fatal (no silent fallback)."""
++    mod, fn = ref.split(":")
++    try:
++        return getattr(importlib.import_module(mod), fn)
++    except (ImportError, AttributeError) as e:
++        raise RuntimeError(f"[train_entry] cannot import configured {what} {ref!r}: {e!r}") from e
++
++
++def resolve_init_joint_pos(init_joint_pos, joint_names) -> list[float]:
++    """Resolve an entity-config ``joint_pos`` (regex -> angle) to per-joint angles in ``joint_names`` order.
++
++    Joints matching no pattern get 0.0; joints matching several patterns with different values raise.
++    """
++    out = []
++    for n in joint_names:
++        vals = {float(v) for pat, v in init_joint_pos.items() if re.fullmatch(pat, n)}
++        if len(vals) > 1:
++            raise ValueError(f"joint {n!r} matches several init-state patterns with different values: {sorted(vals)}")
++        out.append(vals.pop() if vals else 0.0)
++    return out
++
++
++def default_qpos_from_robot_cfg(cfg: dict, joint_names) -> list[float] | None:
++    """Env default pose (initial joint positions of the upstream robot entity config), or None if unconfigured."""
++    ref = cfg.get("upstream", {}).get("robot_cfg_loader")
++    if not ref:
++        return None
++    robot_cfg = _import_ref(ref, "robot_cfg_loader")()
++    try:
++        init_jp = robot_cfg.init_state.joint_pos
++    except AttributeError as e:
++        raise RuntimeError(f"[train_entry] robot entity config from {ref!r} has no init_state.joint_pos") from e
++    return resolve_init_joint_pos(init_jp, joint_names)
++
++
++def action_scale_from_cfg(cfg: dict):
++    """Env action scale (regex -> value dict or number) via the configured loader; raises if not obtainable."""
++    ref = cfg.get("upstream", {}).get("action_scale_loader")
++    if not ref:
++        raise RuntimeError("[train_entry] descriptor v2 on the upstream path needs upstream.action_scale_loader in the config")
++    obj = _import_ref(ref, "action_scale_loader")
++    return obj() if callable(obj) else obj
++
++
++def load_morphology(cfg: dict, num_joints: int, info: dict | None = None) -> torch.Tensor:
++    """Descriptor rows for the policy body. ``info`` (optional dict) receives default_pose_source / joint_names
++    (and, for v2, ``descriptor_meta`` / ``actuator_source``)."""
+     src = cfg.get("attention", {}).get("morphology", "synthetic")
++    ver = descriptor_version(cfg)
++    info = {} if info is None else info
++    info["descriptor_version"] = ver
+     if src == "upstream_mjmodel":
+-        mod, fn = cfg["upstream"]["model_loader"].split(":")
+-        model = getattr(importlib.import_module(mod), fn)()
+-        m = morphology_from_mjmodel(model)
++        model = _import_ref(cfg["upstream"]["model_loader"], "model_loader")()
++        names = hinge_joint_names(model)
++        dq = default_qpos_from_robot_cfg(cfg, names)
++        if ver == "v1":
++            m = morphology_from_mjmodel(model, default_qpos=dq, info=info)
++        else:
++            if dq is None:
++                raise RuntimeError("[train_entry] descriptor v2 needs upstream.robot_cfg_loader (env default pose)")
++            robot_cfg = _import_ref(cfg["upstream"]["robot_cfg_loader"], "robot_cfg_loader")()
++            params = actuator_params_from_robot_cfg(robot_cfg, action_scale_from_cfg(cfg), names)
++            ab = tuple(cfg.get("attention", {}).get("descriptor_ablate", ()))
++            sn = bool(cfg.get("attention", {}).get("descriptor_scale_norm", True))
++            m, meta = morphology_v2(model, names, dq, params, scale_norm=sn, ablate=ab)
++            info.update(default_pose_source="default_qpos", joint_names=list(names), descriptor_meta=meta,
++                        actuator_source="upstream_robot_cfg")
++        if dq is not None:
++            info["default_pose_source"] = "env_init_state"
+         assert m.shape[0] == num_joints, f"model has {m.shape[0]} hinge joints, policy expects {num_joints}"
+         return m
+-    return synthetic_morphology()[:num_joints]
++    names = list(DEFAULT_JOINT_NAMES[:num_joints])
++    info.update(default_pose_source="synthetic", joint_names=names)
++    if ver == "v1":
++        return synthetic_morphology()[:num_joints]
++    params, q = ref29_actuator_params(names)  # CPU-only reference fixture, never on the upstream path
++    m, meta = synthetic_morphology_v2(names, q, params)
++    info.update(descriptor_meta=meta, actuator_source="ref29_cpu_fixture")
++    return m
+ 
+ 
+ def build_decoder(arm: str, cfg: dict, latent_dim: int = 32, history: int = 10, num_joints: int = 29,
+@@ -94,6 +187,7 @@
+     if isinstance(dec, MLPDecoder):
+         out["mlp_hidden"] = list(dec.cfg.hidden)
+     if isinstance(dec, AttentionDecoder):
++        out["descriptor_version"] = descriptor_version(cfg)
+         out["attention_cfg"] = {k: list(v) if isinstance(v, tuple) else v for k, v in asdict(dec.cfg).items()}
+     return out
+ 
+@@ -170,10 +264,233 @@
+     return argv
+ 
+ 
+-def install_upstream_policy(arm: str, cfg: dict, targets: tuple[str, ...]) -> dict:
+-    """Rebind ``Policy`` in the given upstream modules to a subclass with our decoder."""
+-    morphology = load_morphology(cfg, 29) if arm == "attention" else None
++# ------------------------------------------------------------------- seam instrumentation (observation-only)
++def _names(x) -> list[str] | None:
++    return None if x is None else [str(n) for n in x]
++
++
++def joint_order_match(descriptor, entity, action) -> tuple[bool, str]:
++    """S1: all available joint-name sequences must be identical (descriptor rows / robot entity / action order)."""
++    seqs = {"descriptor": _names(descriptor), "entity": _names(entity), "action": _names(action)}
++    avail = {k: v for k, v in seqs.items() if v is not None}
++    if "descriptor" not in avail or "entity" not in avail:
++        return False, f"missing sequences: {sorted(set(seqs) - set(avail))}"
++    ref = avail["descriptor"]
++    bad = [k for k, v in avail.items() if v != ref]
++    detail = f"compared={sorted(avail)}" + (f" mismatch={bad}" if bad else "")
++    if "action" not in avail:
++        detail += " (action order not exposed; unchecked)"
++    return not bad, detail
++
++
++def obs_layout_check(obs_dim: int, term_dims, num_joints: int, history: int) -> tuple[bool, str]:
++    """S2: dim must equal H*(3J+6) and the env's policy-group term dims must follow the term-major order."""
++    expected = history * (3 * num_joints + 6)
++    if obs_dim != expected:
++        return False, f"obs_dim {obs_dim} != expected {expected}"
++    if term_dims is None:
++        return False, "term spec not exposed by env; layout unverified beyond total dim"
++    per_frame = [num_joints, num_joints, 3, 3, num_joints]  # term-major order: pos, vel, ang_vel, gravity, actions
++    td = [int(x) for x in term_dims]
++    if td == [history * d for d in per_frame]:
++        return True, "terms carry the history (term-major)"
++    if td == per_frame:
++        return True, "per-frame terms in term-major order; history flattened by upstream"
++    return False, f"term dims {td} do not match term-major {per_frame} (x{history})"
++
++
++def find_env(trainer):
++    """Locate the upstream env (an object with ``scene``) on a constructed trainer, without upstream edits."""
++    cands = [getattr(trainer, a, None) for a in ("env", "envs", "train_env", "_env", "vec_env")]
++    cands += list(getattr(trainer, "__dict__", {}).values())
++    for c in cands:
++        c = getattr(c, "unwrapped", c)
++        if c is not None and hasattr(c, "scene"):
++            return c
++    return None
++
++
++def entity_joint_names(env) -> list[str] | None:
++    try:
++        return list(env.scene["robot"].joint_names)
++    except Exception:  # noqa: BLE001  (duck-typed upstream object)
++        return None
++
++
++def action_joint_names(env) -> list[str] | None:
++    am = getattr(env, "action_manager", None)
++    terms = getattr(am, "_terms", None)
++    terms = list(terms.values()) if isinstance(terms, dict) else list(terms or [])
++    for t in terms:
++        for attr in ("target_names", "joint_names", "_target_names", "_joint_names"):
++            v = getattr(t, attr, None)
++            if v is not None:
++                return list(v)
++    return None
++
++
++def env_action_scale_offset(env):
++    """(names, scale, offset) per joint of the env's joint-position action term, or None if not exposed."""
++    am = getattr(env, "action_manager", None)
++    terms = getattr(am, "_terms", None)
++    terms = list(terms.values()) if isinstance(terms, dict) else list(terms or [])
++    for t in terms:
++        names = next((getattr(t, a) for a in ("target_names", "joint_names", "_target_names", "_joint_names")
++                      if getattr(t, a, None) is not None), None)
++        scale, offset = getattr(t, "_scale", getattr(t, "scale", None)), getattr(t, "_offset", getattr(t, "offset", None))
++        if names is None or scale is None or offset is None:
++            continue
++        n = len(names)
++
++        def per_joint(x):
++            x = torch.as_tensor(x, dtype=torch.float64).detach().cpu()
++            if x.dim() == 2:  # (num_envs, J): envs share one scale; use env 0
++                x = x[0]
++            return x.expand(n).tolist() if x.dim() == 0 else x.reshape(-1).tolist()
++
++        sc, off = per_joint(scale), per_joint(offset)
++        if len(sc) == n and len(off) == n:
++            return [str(x) for x in names], sc, off
++    return None
++
++
++def action_scale_match(env_terms, meta, rel_tol: float = 1e-6) -> tuple[bool, str]:
++    """S5: env action-manager scale/offset per joint name vs sidecar sigma/q_def (relative tolerance)."""
++    if meta is None:
++        return False, "no descriptor v2 meta to compare against"
++    if env_terms is None:
++        return False, "env action scale/offset not exposed"
++    names, scale, offset = env_terms
++    env = {n: (s, o) for n, s, o in zip(names, scale, offset)}
++    missing = [n for n in meta["names"] if n not in env]
++    if missing:
++        return False, f"joints missing from env action term: {missing[:5]}"
++
++    def close(a, b):
++        return abs(a - b) <= rel_tol * max(abs(a), abs(b))
++
++    bad = [n for n, sg, qd in zip(meta["names"], meta["sigma"], meta["q_def"])
++           if not (close(env[n][0], float(sg)) and close(env[n][1], float(qd)))]
++    return not bad, (f"mismatch joints={bad[:5]} (n={len(bad)})" if bad else f"compared={len(meta['names'])} joints rel_tol={rel_tol}")
++
++
++def policy_term_dims(env) -> list[int] | None:
++    om = getattr(env, "observation_manager", None)
++    try:
++        dims = om.group_obs_term_dim["policy"]
++        return [int(torch.Size(d).numel()) if not isinstance(d, int) else d for d in dims]
++    except Exception:  # noqa: BLE001
++        return None
++
++
++class SeamProbe:
++    """Prints/records seams S1-S5 on the upstream path; observation-only except that S1 mismatch raises."""
++
++    def __init__(self, morph_info: dict, compile_value: str, num_joints: int = 29, history: int = 10, emit=print):
++        self.morph_info, self.compile_value, self.j, self.h, self.emit = morph_info, compile_value, num_joints, history, emit
++        self.seam: dict = {}
++        self.term_dims = None
++
++    def _line(self, text: str) -> None:
++        self.emit(f"[seam] {text}")
++
++    def report_s4(self) -> None:
++        src = self.morph_info.get("default_pose_source")
++        val = "env_init_state" if src == "env_init_state" else "qpos0-fallback" if src == "qpos0-fallback" else str(src)
++        self.seam["S4_default_pose_source"] = val
++        self._line(f"S4 default_pose_source={val}")
++
++    def report_s5(self, env) -> None:
++        meta = self.morph_info.get("descriptor_meta")
++        if self.morph_info.get("descriptor_version") == "v1":
++            self.seam["S5_env_action_scale_match"] = "na"
++            self._line("S5 env_action_scale_match=na")
++            self._line("S5 detail descriptor v1 carries no action scale")
++            return
++        ok, detail = action_scale_match(env_action_scale_offset(env), meta)
++        self.seam.update(S5_env_action_scale_match=ok, S5_detail=detail)
++        self._line(f"S5 env_action_scale_match={str(ok).lower()}")
++        self._line(f"S5 detail {detail}")
++        if not ok:
++            raise RuntimeError(f"[seam] S5 env action scale/offset differ from descriptor sigma/q_def: {detail}")
++
++    def on_trainer_ready(self, trainer) -> None:
++        env = find_env(trainer)
++        if env is None:
++            self.seam["S1_joint_order_match"] = False
++            self._line("S1 joint_order_match=false")
++            raise RuntimeError("[seam] S1: upstream env not found on trainer; cannot verify joint order")
++        ok, detail = joint_order_match(self.morph_info.get("joint_names"), entity_joint_names(env), action_joint_names(env))
++        self.seam.update(S1_joint_order_match=ok, S1_detail=detail)
++        self._line(f"S1 joint_order_match={str(ok).lower()}")
++        self._line(f"S1 detail {detail}")
++        if not ok:
++            raise RuntimeError(f"[seam] S1 joint order mismatch between descriptor rows / robot entity / action order: {detail}")
++        self.report_s5(env)
++        self.term_dims = policy_term_dims(env)
++        tcfg = getattr(getattr(trainer, "cfg", None), "policy_trainer", None)
++        comp = getattr(tcfg, "compile", self.compile_value)
++        self.seam["S3_compile"] = str(comp)
++        self._line(f"S3 compile={comp}")
++
++    def on_first_decoder_call(self, obs_hist: torch.Tensor) -> None:
++        dim = int(obs_hist.shape[-1])
++        ok, detail = obs_layout_check(dim, self.term_dims, self.j, self.h)
++        self.seam.update(S2_obs_policy_dim=dim, S2_term_major_ok=ok, S2_detail=detail)
++        self._line(f"S2 obs_policy_dim={dim} term_major_ok={str(ok).lower()}")
++        self._line(f"S2 detail {detail}")
++
++    def attach_decoder(self, dec: torch.nn.Module) -> None:
++        def pre_hook(_m, args, kwargs):
++            handle.remove()
++            obs = args[1] if len(args) > 1 else kwargs.get("obs_hist")
++            if obs is not None:
++                self.on_first_decoder_call(obs)
++
++        handle = dec.register_forward_pre_hook(pre_hook, with_kwargs=True)
++
++    def install(self, targets: tuple[str, ...]) -> None:
++        """Wrap ``Trainer.__init__`` of the upstream training-loop module (in-process, no upstream edits)."""
++        loop = importlib.import_module(targets[0])
++        trainer_cls = getattr(loop, "Trainer", None)
++        if trainer_cls is None:
++            raise RuntimeError(f"[seam] {targets[0]} has no Trainer; cannot attach S1-S3 instrumentation")
++        orig, probe = trainer_cls.__init__, self
++
++        def init(trainer, *a, **k):
++            orig(trainer, *a, **k)
++            probe.on_trainer_ready(trainer)
++
++        trainer_cls.__init__ = init
++
++
++def install_upstream_policy(arm: str, cfg: dict, targets: tuple[str, ...], probe_cls=None) -> dict:
++    """Rebind ``Policy`` in the given upstream modules to a subclass with our decoder.
++
++    With ``probe_cls`` (train path) the descriptor/default pose is always resolved from the upstream
++    loaders (all arms, so S1/S4 are recorded for every arm) and seams S1-S4 are instrumented.
++    """
+     info: dict = {}
++    morph_info: dict = {}
++    morphology = None
++    if arm == "attention" or probe_cls is not None:
++        if probe_cls is not None and cfg.get("attention", {}).get("morphology") != "upstream_mjmodel":
++            raise RuntimeError("[train_entry] upstream mode requires attention.morphology: upstream_mjmodel")
++        morphology = load_morphology(cfg, 29, morph_info)
++    info["default_pose_source"] = morph_info.get("default_pose_source")
++    info["descriptor_joint_names"] = morph_info.get("joint_names")
++    if morph_info.get("descriptor_meta") is not None:  # full v2 meta (constants, per-joint inputs, matrix, sha256)
++        info["descriptor"] = morph_info["descriptor_meta"]
++        info["actuator_source"] = morph_info.get("actuator_source")
++    probe = None
++    if probe_cls is not None:
++        compile_value = str(cfg.get("upstream", {}).get("tyro_args", {}).get("--policy-trainer.compile", "unset"))
++        probe = probe_cls(morph_info, compile_value)
++        probe.report_s4()
++        probe.install(targets)
++        info["seam"] = probe.seam
++    if arm != "attention":
++        morphology = None
+ 
+     def factory(pcfg):
+         dec = build_decoder(arm, cfg, latent_dim=pcfg.latent_dim, history=pcfg.history, num_joints=29, morphology=morphology)
+@@ -181,6 +498,8 @@
+             assert tuple(pcfg.obs_term_scale) == tuple(attention_cfg(cfg).obs_term_scale), "obs scale drift vs upstream"
+         dec.auto_mask_frac = float(cfg.get("b2", {}).get("train_mask_frac", 0.0))
+         info.update(decoder_sidecar(arm, cfg, dec), train_mask_frac=dec.auto_mask_frac)
++        if probe is not None:
++            probe.attach_decoder(dec)
+         return dec
+ 
+     cls = make_upstream_policy_class(factory)
+@@ -192,7 +511,7 @@
+ def run_upstream(arm: str, cfg: dict) -> None:
+     if not torch.cuda.is_available():
+         sys.exit("[train_entry] --mode upstream requires a CUDA GPU (Colab T4/L4). Use --mode smoke on CPU.")
+-    info = install_upstream_policy(arm, cfg, ("supermimic.training.loop",))
++    info = install_upstream_policy(arm, cfg, ("supermimic.training.loop",), probe_cls=SeamProbe)
+     argv = tyro_argv(cfg, arm)
+     print("[train_entry] upstream argv:", " ".join(argv))
+     sys.argv = ["sm-train", *argv]
+@@ -203,7 +522,7 @@
+     try:
+         upstream_main()
+     finally:
+-        (run_dir / "junior_policy.json").write_text(json.dumps({**info, "argv": argv}, indent=2))
++        (run_dir / "junior_policy.json").write_text(json.dumps({**info, "argv": argv}, indent=2, default=float))
+ 
+ 
+ def main() -> None:
+diff -ruN '--exclude=__pycache__' /tmp/pre/code/vendor/NOTES.md code/vendor/NOTES.md
+--- /tmp/pre/code/vendor/NOTES.md	2026-10-25 14:17:42.000000000 -0400
++++ code/vendor/NOTES.md	2026-10-25 15:22:30.685384288 -0400
+@@ -40,6 +40,8 @@
+ 
+ - **S1 joint order.** The attention arm's morphology rows come from the compiled MuJoCo model's hinge-joint order (`morphology_from_mjmodel`). The policy obs/action order comes from the mjlab robot entity. Assert they match, e.g. compare `env.scene["robot"].joint_names` with the model hinge order. If they do not, a permutation bug would make B0 unfair to the attention arm.
+ - **S2 obs layout.** Confirm `obs["policy"]` in the upstream loop is the 930-d term-major history above. The CPU tests confirm this only against our own reading of upstream code.
++- **S4 default pose source == env init state.** The descriptor default-angle column comes from the robot entity config's `init_state.joint_pos` (loader named in `configs/colab_smoke.yaml` `upstream.robot_cfg_loader`), not model `qpos0`. Expect `[seam] S4 default_pose_source=env_init_state`; `qpos0-fallback` is a defect for the B0 run. Unverified on the box.
++- **S5 env action scale match.** Descriptor v2 carries `ln(sigma/0.25)` and a body-normalised effort limit. Actuator parameters come from the robot entity config (`upstream.robot_cfg_loader`), sigma from `upstream.action_scale_loader`. Expect `[seam] S5 env_action_scale_match=true` (env action-manager scale/offset per joint name equal the sidecar `sigma`/`q_def`, rel tol 1e-6); false raises. Both loader identifiers and the action-term attribute names (`_scale`, `_offset`, `target_names`) are unverified on the box.
+ - **S3 compile.** The smoke config sets `--policy-trainer.compile None`. Check whether `torch.compile` handles `nn.MultiheadAttention` with key-padding masks before using it in timing comparisons, and use the same compile setting for both arms.
+ 
+ ## Data and licensing
+diff -ruN '--exclude=__pycache__' /tmp/pre/configs/colab_smoke.yaml configs/colab_smoke.yaml
+--- /tmp/pre/configs/colab_smoke.yaml	2026-10-25 14:12:09.000000000 -0400
++++ configs/colab_smoke.yaml	2026-10-25 15:22:22.437333036 -0400
+@@ -12,6 +12,7 @@
+   num_self_attn_layers: 1
+   query_hidden: [256]
+   readout_hidden: [256, 128]
++  descriptor: v2             # v2 (default, 16-d, morph_dim follows) | v1 (12-d)
+   id_mode: morph             # morph (Junior-B arm) | index (ablation, breaks permutation equivariance)
+   morphology: upstream_mjmodel   # upstream_mjmodel (Colab) | synthetic (CPU smoke fallback)
+ 
+@@ -30,12 +31,21 @@
+   repo_dir: /content/SuperMimic-Reproduced
+   # Upstream API identifier used to build the default-pose morphology (single place it is named).
+   model_loader: "supermimic.data.motion_convert:load_g1_model"
++  # Upstream robot entity config factory; its init_state.joint_pos (regex -> angle) is the env default
++  # pose used for the descriptor default-angle column (seam S4). UNVERIFIED identifier: if it cannot
++  # be imported, upstream mode fails loudly. Remove this key only to accept the qpos0-fallback.
++  robot_cfg_loader: "mjlab.asset_zoo.robots.unitree_g1.g1_constants:get_g1_robot_cfg"
++  # Env action scale (regex -> rad per unit; sigma = 0.25*effort/stiffness upstream). Descriptor v2 reads the
++  # actuator effort limit / stiffness / damping from the robot entity config above and sigma from here
++  # (single place the identifier is named). UNVERIFIED identifier; upstream mode fails loudly if missing or
++  # not importable. Not needed with attention.descriptor: v1.
++  action_scale_loader: "mjlab.asset_zoo.robots.unitree_g1.g1_constants:G1_ACTION_SCALE"
+   # Upstream literal path inside the public retarget dataset (asset subdirectory).
+   dataset_repo: lvhaidong/LAFAN1_Retargeting_Dataset
+   dataset_subdir: g1
+   npz_dir: data/npz/lafan1_smoke
+   pass_clip_filter: false    # npz_dir is built from `clips` only, so no upstream name filter needed
+-  clips:                     # small LAFAN1-style subset (placeholders; 4 clips ~ walk/run/dance/jump)
++  clips:                     # small LAFAN1-style subset (4 clips ~ walk/run/dance/jump; verified in dataset listing, packets/P1/fixes/FX3.md)
+     - walk1_subject1
+     - run1_subject2
+     - dance1_subject1
+diff -ruN '--exclude=__pycache__' /tmp/pre/notebooks/colab_smoke.ipynb notebooks/colab_smoke.ipynb
+--- /tmp/pre/notebooks/colab_smoke.ipynb	2026-10-25 14:14:03.000000000 -0400
++++ notebooks/colab_smoke.ipynb	2026-10-25 15:22:30.849385307 -0400
+@@ -2,7 +2,7 @@
+  "cells": [
+   {
+    "cell_type": "markdown",
+-   "id": "661626ed",
++   "id": "d9963e86",
+    "metadata": {},
+    "source": [
+     "# Junior-(B) attention decoder on a SuperMimic-style loop — Colab smoke\n",
+@@ -17,7 +17,7 @@
+   },
+   {
+    "cell_type": "markdown",
+-   "id": "58801c58",
++   "id": "0e081409",
+    "metadata": {},
+    "source": [
+     "## 1. Runtime check [CPU ok]"
+@@ -26,7 +26,7 @@
+   {
+    "cell_type": "code",
+    "execution_count": null,
+-   "id": "5876bc75",
++   "id": "043bf9f5",
+    "metadata": {},
+    "outputs": [],
+    "source": [
+@@ -36,7 +36,7 @@
+   },
+   {
+    "cell_type": "markdown",
+-   "id": "da3ada11",
++   "id": "cd3da80a",
+    "metadata": {},
+    "source": [
+     "## 2. Program code [CPU ok]\n",
+@@ -46,7 +46,7 @@
+   {
+    "cell_type": "code",
+    "execution_count": null,
+-   "id": "afad04a1",
++   "id": "9b504d20",
+    "metadata": {},
+    "outputs": [],
+    "source": [
+@@ -61,7 +61,7 @@
+   },
+   {
+    "cell_type": "markdown",
+-   "id": "3ef98ead",
++   "id": "ce354681",
+    "metadata": {},
+    "source": [
+     "## 3. Upstream reproduction at pin [CPU ok to install; runtime needs GPU]"
+@@ -70,7 +70,7 @@
+   {
+    "cell_type": "code",
+    "execution_count": null,
+-   "id": "10593fb4",
++   "id": "d292d01c",
+    "metadata": {},
+    "outputs": [],
+    "source": [
+@@ -88,7 +88,7 @@
+   {
+    "cell_type": "code",
+    "execution_count": null,
+-   "id": "2e43629b",
++   "id": "41908f72",
+    "metadata": {},
+    "outputs": [],
+    "source": [
+@@ -99,7 +99,7 @@
+   },
+   {
+    "cell_type": "markdown",
+-   "id": "b52f849f",
++   "id": "61e5f19d",
+    "metadata": {},
+    "source": [
+     "## 4. Import smoke [CPU ok]"
+@@ -108,7 +108,7 @@
+   {
+    "cell_type": "code",
+    "execution_count": null,
+-   "id": "311fd87c",
++   "id": "4781bcdb",
+    "metadata": {},
+    "outputs": [],
+    "source": [
+@@ -120,7 +120,7 @@
+   },
+   {
+    "cell_type": "markdown",
+-   "id": "e351c50b",
++   "id": "c986cc96",
+    "metadata": {},
+    "source": [
+     "## 5. Motion subset (4 LAFAN1-style clips) [CPU ok]"
+@@ -129,7 +129,7 @@
+   {
+    "cell_type": "code",
+    "execution_count": null,
+-   "id": "7ece1c18",
++   "id": "010516b9",
+    "metadata": {},
+    "outputs": [],
+    "source": [
+@@ -146,7 +146,7 @@
+   },
+   {
+    "cell_type": "markdown",
+-   "id": "624cfe68",
++   "id": "4cc0fc1b",
+    "metadata": {},
+    "source": [
+     "## 6. Upstream sanity, unmodified decoder [GPU] (optional, ~6 min)"
+@@ -155,7 +155,7 @@
+   {
+    "cell_type": "code",
+    "execution_count": null,
+-   "id": "f11ba5e0",
++   "id": "bbe2b3b9",
+    "metadata": {},
+    "outputs": [],
+    "source": [
+@@ -166,17 +166,17 @@
+   },
+   {
+    "cell_type": "markdown",
+-   "id": "98ca4361",
++   "id": "f89e937a",
+    "metadata": {},
+    "source": [
+     "## 7. B0 smoke train — attention vs matched MLP [GPU] (requires Colab GPU; ~0.5 h per arm)\n",
+-    "Set `RUN_TRAIN = True` deliberately. Check seams S1–S3 (`code/vendor/NOTES.md`) on the first run."
++    "Set `RUN_TRAIN = True` deliberately. Check seams S1–S5 (`code/vendor/NOTES.md`, runbook §6) on the first run: grep the log for `[seam]`."
+    ]
+   },
+   {
+    "cell_type": "code",
+    "execution_count": null,
+-   "id": "8e76b973",
++   "id": "98e867b5",
+    "metadata": {},
+    "outputs": [],
+    "source": [
+@@ -190,7 +190,7 @@
+   },
+   {
+    "cell_type": "markdown",
+-   "id": "73638cb9",
++   "id": "d79eb4bf",
+    "metadata": {},
+    "source": [
+     "## 8. Eval + B2 mask [GPU] (requires Colab GPU)"
+@@ -199,7 +199,7 @@
+   {
+    "cell_type": "code",
+    "execution_count": null,
+-   "id": "4fb5b19d",
++   "id": "2adcfcf6",
+    "metadata": {},
+    "outputs": [],
+    "source": [
+@@ -212,7 +212,7 @@
+   },
+   {
+    "cell_type": "markdown",
+-   "id": "1f3df940",
++   "id": "2f774f68",
+    "metadata": {},
+    "source": [
+     "## 9. Collect metrics (no data, no checkpoints)"
+@@ -221,7 +221,7 @@
+   {
+    "cell_type": "code",
+    "execution_count": null,
+-   "id": "30714db7",
++   "id": "89ca8eea",
+    "metadata": {},
+    "outputs": [],
+    "source": [
+--- /tmp/pre/docs/COLAB_RUNBOOK.md	2026-10-25 14:17:48.000000000 -0400
++++ docs/COLAB_RUNBOOK.md	2026-10-25 15:22:30.685384288 -0400
+@@ -47,7 +47,7 @@
+ 
+ ```bash
+ cd /content/junior
+-$PY code/tests/test_smoke.py              # expect 6x PASS (b1 test prints SKIP: asset not in the tarball)
++$PY code/tests/test_smoke.py              # expect 10x PASS (b1 test prints SKIP: asset not in the tarball)
+ $PY code/train_entry.py --policy attention
+ $PY code/eval_entry.py                    # B2 smoke: attention perm_rel_err ~1e-6; MLP arms O(1)
+ ```
+@@ -98,7 +98,18 @@
+ 
+ Reduced defaults (`configs/colab_smoke.yaml`): `num_envs 512`, `batch 512`, `H=16` (paper 32), compile off, `max-hours 0.5` per arm, `--env.anchor-obs` (upstream deviation, applied the same way to both arms). Per GPU: T4 use 256–512 envs, L4 512–1024. If you get CUDA OOM, halve `num-envs` and `batch-size` together, for both arms.
+ 
+-On the first run, check seams S1–S3 (`code/vendor/NOTES.md`). The trainer prints `params: world model …, policy …`. Policy params differ between arms only by the decoder: attention decoder about 0.46 M vs mlp_matched about 0.47 M.
++On the first run, check seams S1–S5 (`code/vendor/NOTES.md`). The upstream path prints machine-greppable lines and copies the same values into `logs/<run>/junior_policy.json` under `seam`:
++
++```bash
++grep '^\[seam\]' logs/train_attention_s0.log
++# [seam] S1 joint_order_match=<true|false>      (false raises: descriptor rows vs robot entity vs action order)
++# [seam] S2 obs_policy_dim=<int> term_major_ok=<true|false>
++# [seam] S3 compile=<value>
++# [seam] S4 default_pose_source=<env_init_state|qpos0-fallback>
++# [seam] S5 env_action_scale_match=<true|false>  (false raises: env action scale/offset per joint name vs sidecar sigma/q_def, rel tol 1e-6; `na` only with attention.descriptor: v1)
++```
++
++**S4 default pose source == env init state.** The descriptor default-angle column must come from the upstream robot entity config's initial joint positions (`upstream.robot_cfg_loader` in the config), not from the model `qpos0`. Expect `S4 default_pose_source=env_init_state`. `qpos0-fallback` means the loader key was removed and the descriptor does not match the env start pose. If the configured loader cannot be imported, the run fails loudly (the identifier in the config is unverified). **S5 env action scale match.** The production descriptor is v2 (`attention.descriptor: v2`, 16-d; `v1` is 12-d). Its actuator parameters (effort limit, stiffness, damping) come from the robot entity config (`upstream.robot_cfg_loader`) and the action scale sigma from `upstream.action_scale_loader`; both identifiers are unverified and the run fails loudly if they cannot be imported or do not cover all 29 joints. Expect `S5 env_action_scale_match=true`: the env action manager's per-joint scale and offset equal the sidecar `sigma` and `q_def` (`junior_policy.json` key `descriptor`, which also records the descriptor matrix sha256; eval re-checks it). The reference-table actuator values are a CPU fixture only. The trainer prints `params: world model …, policy …`. Policy params differ between arms only by the decoder: attention decoder about 0.46 M vs mlp_matched about 0.47 M.
+ 
+ ## 7. Eval (Appendix-F style whole-clip benchmark + B2 mask)
+ 

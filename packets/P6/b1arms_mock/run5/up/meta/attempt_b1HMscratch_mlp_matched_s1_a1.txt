@@ -1,0 +1,16 @@
+aid=b1HMscratch_mlp_matched_s1_a1
+arm=H-M-scratch
+policy=mlp_matched
+init=scratch
+seed=1
+role=secondary
+attempt=1
+config=b1_home.yaml
+src_key=-
+src_ckpt=none
+start_utc=2026-10-27T01:58:55Z
+hours_at_start=0.0428
+end_utc=2026-10-27T01:59:02Z
+exit_code=130
+class=COMPLETED completed=true
+evals=done

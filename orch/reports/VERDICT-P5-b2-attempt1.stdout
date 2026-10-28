@@ -1,0 +1,4 @@
+[verdict_b2] gpu_mismatch: GPU names ['NVIDIA GeForce RTX 4090 + NVIDIA GeForce RTX 4090 + NVIDIA GeForce RTX 4090 + NVIDIA GeForce RTX 4090 + NVIDIA GeForce RTX 4090 + NVIDIA GeForce RTX 4090 + NVIDIA GeForce RTX 4090 + NVIDIA GeForce RTX 4090'] (need one model, NVIDIA GeForce RTX 4090)
+[verdict_b2] U-REPRO: b2u_b0_attention_s0_a1; b2u_b0_attention_s1_a1; b2u_b0_attention_s2_a1; b2u_b0_mlp_matched_s2_a1
+[verdict_b2] B2-V-2: b2mt_attention_s0_a1; b2mt_mlp_mind_s0_a1; b2mt_attention_s1_a1; b2mt_mlp_mind_s1_a1; b2mt_attention_s2_a1; b2mt_mlp_mind_s2_a1
+B2_VERDICT verdict=BLOCKED outcome=null drho_u=-0.5570149528058929 g_u=0.43792569029292255 drho_t=0.9423446992931261 g_t=1.1404454055571487 t_status=ok gate_b1=Go failing_ids=[] blocked=[gpu_mismatch,U-REPRO,B2-V-2]

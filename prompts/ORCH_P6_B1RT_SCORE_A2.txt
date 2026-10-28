@@ -1,0 +1,29 @@
+Method boot (required order):
+1. Read the global pin named in /srv/claude/research/METHOD/CURRENT and verify its sha256.
+2. Read any overlays under this program's method/local/ (skip if empty / only .gitkeep).
+3. Read Appendix A: available-models catalog (A.6) and allocation preference (Claude family required; Codex Astra high as secondary preference when a second family is needed; remaining slots by documented characteristics).
+4. Analyze whether this program needs specials beyond the global method. If yes and overlays are missing, create append-only method/local/ files that name the global version+sha they extend, then continue. If no, use global only; do not invent a local full copy.
+
+Role: Orchestrator for program supermimic-junior-b-colab (home-humanoid Junior-B / SuperMimic-style loop). Decision cap Provisional.
+
+Scope: Stay under /srv/claude/research/supermimic-junior-b-colab/. Working directory: /srv/claude/research/supermimic-junior-b-colab
+
+Task: Score sealed p6-b1-rt attempt 2/2 Fix#2 deposit. Class-2 C amend still active. Do not SSH, do not START GPU, do not reopen P4/P5.
+
+Facts (relay-sealed; do not re-fetch GPU):
+- Deposit: logs/xn4090/2026-10-27/b1rt-20261027-0113.tgz sha256=4e49c3e9efd788e6a457e7df251143cc7c6d0c688179c0c38aa667c5e5d4d8e8
+- Seal: DEPOSIT xn4090 already in logs/seal.log (open only after verifying seal line).
+- Job: orch/jobs/p6-b1-rt.json state=DEPOSITED sha256=9bca5a4c3c8e3a694cce44ab42ce88724a26bed790c895c86fa228637df82e65
+- Amendment scoring: spikes/B1-RT/AMENDMENT-C2-rt4.json sha256=32143be4687ca6de270165a848eaf4aa8292a21a40e8255c142c32f9f048c591 (waive=[RT-4], slot_rule=first)
+- Fix#2 note (context only): spikes/B1-RT/AMENDMENT-FIX2-fetch.md sha256=4ebe829b57912493fa41f9f7c804f3c9ca46deda3f498b20fdecf920a7e8039d; decision 768d6a0a…
+- Attempt 1 retained SCORED BLOCKED (deposit 36cc77dc…; results c3a55e25…). This is attempt 2/2 (last).
+- Relay log (not a verdict): B1DATA/RT6/RT7 attention+mlp/RT8X/RT8E attention+mlp all pass=True; DONE_DRIVER state=DONE.
+
+Do:
+1. Verify seal line for the tgz; open deposit read-only.
+2. Run verdict_rt.py with --gpu-open on this deposit and --amendment spikes/B1-RT/AMENDMENT-C2-rt4.json (exact flags per PLAN / tool docs).
+3. Write SCORED artifacts under orch/reports/ (attempt2 naming); set job state=SCORED; update STATUS; append seal.log + spikes/B1-RT/runs.log + deviations as required.
+4. If verdict PASS on RT-6/7/8 under Class-2 C: set orch/jobs/p6-b1-arms.json state=READY (1855 / sealed PLAN; no new Manager START). If not PASS, leave arms DRAFT and stop (no relaunch — attempt 2/2 last).
+5. Print short progress updates. Stop when SCORED sealed (and arms READY if PASS) or ASK written.
+
+Print milestone: P6_A2_SCORED verdict=… job_sha=… arms_state=…

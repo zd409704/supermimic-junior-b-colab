@@ -1,0 +1,30 @@
+Method boot (required order):
+1. Read the global pin named in /srv/claude/research/METHOD/CURRENT and verify its sha256.
+2. Read any overlays under this program's method/local/ (skip if empty / only .gitkeep).
+3. Read Appendix A: available-models catalog (A.6) and allocation preference (Claude family required; Codex Astra high as secondary preference when a second family is needed; remaining slots by documented characteristics).
+4. Analyze whether this program needs specials beyond the global method. If yes and overlays are missing, create append-only method/local/ files that name the global version+sha they extend, then continue. If no, use global only; do not invent a local full copy.
+5. Before Step 2 of a heterogeneous or high-stakes contest packet: allocate models from the catalog under A.7, write program-root roster.md (A.5 fields), and freeze. Do not copy another program's roster as methodology.
+6. In-flight packets keep the method hash they started under; adopt a newer global pin only at the next packet boundary (or explicit sealed amendment).
+Stay under this program's root for writes. Home-humanoid / plant-class wording only; Provisional unless explicitly authorized to Lock.
+
+Role: Orchestrator for program supermimic-junior-b-colab (home-humanoid Junior-B / SuperMimic-style loop). Decision cap Provisional.
+
+Scope: Stay under /srv/claude/research/supermimic-junior-b-colab/. Working directory: /srv/claude/research/supermimic-junior-b-colab
+
+Task: Score sealed p6-b1-rt deposit (Class-2 C amend still active).
+
+Facts (relay-sealed; do not re-fetch GPU):
+- Deposit: logs/xn4090/2026-10-26/b1rt-20261026-2350.tgz sha256=36cc77dc8710dbaa09abb05584e2ccd1a01b8d9f476f99067c18f870143a0893
+- Seal event: DEPOSIT xn4090 already in logs/seal.log (open only after verifying seal line).
+- Job: orch/jobs/p6-b1-rt.json state=DEPOSITED sha256=182adf25ee646e951fe241a225e5fbdbe7f090bdf574d66e75fcc5bbb2a344c3
+- Amendment: spikes/B1-RT/AMENDMENT-C2-rt4.json sha256=32143be4687ca6de270165a848eaf4aa8292a21a40e8255c142c32f9f048c591 (waive=[RT-4], slot_rule=first)
+- B1-RT PLAN: spikes/B1-RT/PLAN.md sha256=b7365b4f2e382344151c64be979e5e2aff102fbaba6dc6826d8a429b3b9852a5
+- Driver reported BLOCKED data_step (prepare_b1_data exit 1; HTTP 403 on fetch_clip via HF_ENDPOINT=https://hf-mirror.com for lvhaidong/LAFAN1_Retargeting_Dataset g1/*.csv). No RT-6/7/8 arms ran. spent_hours≈0.005.
+- Launch/runner logs sealed beside deposit (RELAY-LOG).
+
+Do:
+1. Verify seal line for the tgz; then open deposit read-only inventory (BLOCKED.md, meta/, logs/).
+2. Run VERDICT-TOOL / verdict_rt.py with --gpu-open on this deposit and --amendment spikes/B1-RT/AMENDMENT-C2-rt4.json (exact flags per sealed PLAN / tool docs under spikes/B1-RT/).
+3. Write SCORED artifacts under orch/reports/ (verdict md + results json); set orch/jobs/p6-b1-rt.json state=SCORED; update orch/STATUS.md Jobs row; append seal.log; append spikes/B1-RT/runs.log + deviations if required by PLAN.
+4. Do NOT READY p6-b1-arms (still DRAFT) unless verdict is PASS on RT-6/7/8 under Class-2 C. Do not relaunch GPU. Do not reopen P4/P5.
+5. Print short progress updates. Stop when SCORED sealed or ASK written for a Class-2 / owner decision beyond C.

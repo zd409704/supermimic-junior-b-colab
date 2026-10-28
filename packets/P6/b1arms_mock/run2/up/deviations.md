@@ -1,0 +1,5 @@
+- [driver] 2026-10-27T01:45:01Z MOCK part 1: trainer/eval/tbdump = /srv/claude/research/supermimic-junior-b-colab/packets/P6/b1arms_mock/mock_entry.py; cap=0.02 h poll=1 s
+- [driver] 2026-10-27T01:45:02Z MOCK data step (synthetic npz)
+- [driver] 2026-10-27T01:45:14Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HAscratch_attention_s0_a1
+- [driver] 2026-10-27T01:45:42Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HAxfer_attention_s0_a1
+- [driver] 2026-10-27T01:45:59Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HMxfer_mlp_matched_s0_a1

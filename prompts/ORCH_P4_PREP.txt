@@ -1,0 +1,49 @@
+Method boot (required order):
+1. Read the global pin named in /srv/claude/research/METHOD/CURRENT and verify its sha256.
+2. Read any overlays under this program's method/local/ (skip if empty / only .gitkeep).
+3. Read Appendix A: available-models catalog (A.6) and allocation preference (Claude family required; Codex Astra high as secondary preference when a second family is needed; remaining slots by documented characteristics).
+4. Analyze whether this program needs specials beyond the global method. If yes and overlays are missing, create append-only method/local/ files that name the global version+sha they extend, then continue. If no, use global only; do not invent a local full copy.
+5. Before Step 2 of a heterogeneous or high-stakes contest packet: allocate models from the catalog under A.7, write program-root roster.md (A.5 fields), and freeze. Do not copy another program's roster as methodology.
+6. In-flight packets keep the method hash they started under; adopt a newer global pin only at the next packet boundary (or explicit sealed amendment).
+Stay under this program's root for writes. Home-humanoid / plant-class wording only; Provisional unless explicitly authorized to Lock.
+
+---
+
+Role: Orchestrator. Packet: **P4-prep** (CPU / research box only). Execute CR-B0-1 and pre-start gates per the sealed PLAN. Do not start Colab, XN-4090, or any GPU training.
+
+Working directory: /srv/claude/research/supermimic-junior-b-colab
+Stay under /srv/claude/research/supermimic-junior-b-colab/.
+
+## Binding PLAN (do not amend)
+
+- Path: spikes/B0/PLAN.md
+- sha256 (re-verify before writing): ed6b6a54a860bbfc67d7c822b5394804b8d408f6aae57fbeb118d2ea63c52557
+- Seal line in logs/seal.log at 2026-10-26T04:59:42Z.
+
+Read PLAN §2.2 (CR-B0-1 a–e and f), §4 (commands the driver must implement), §8 (deposit / verdict fields), and the PS-1…PS-5 definitions. Also read method/local/OVERLAY-001-owner-colab-runner.md, packets/P1/FREEZE_MANIFEST.md, configs/colab_smoke.yaml, code/vendor/NOTES.md, and the upstream pin tree under packets/P1/ddesc/context/upstream-d9be385/ (or clone at pin d9be385b3eeb13a638fb33fb200d3bfd9be9839f if needed for reading F-1…F-5 — read-only; do not vendor new copies into code/ without a CR).
+
+## Deliverables (all under this program)
+
+1. **CR-B0-1 (a)** configs/b0_microbench.yaml — byte copy of configs/colab_smoke.yaml with only the PLAN-listed field changes.
+2. **CR-B0-1 (b)** configs/b0_microbench_lr05.yaml — equals (a) with run_name b0lr05 and F-2 lr ×0.5 if F-2 exists; if F-2=none, still create the file documenting that the divergence arm cannot run, per PLAN pre-registered handling.
+3. **CR-B0-1 (c)** packets/P4/UPSTREAM_FACTS.md — F-1…F-5 with file+line citations from upstream at the pin.
+4. **CR-B0-1 (d)** packets/P4/ driver script implementing PLAN §4 exactly (signal-restoring launcher, harness stop, deposit layout). New code outside code/.
+5. **CR-B0-1 (e)** New deterministic tarball + manifest addendum (old 12 files unchanged hashes + new files). Seal both hashes in logs/seal.log.
+6. **(f) SIGINT launcher check** on this box: dummy Python with finally; same driver path; seal logs/p4prep/sigint-check-attempt<N>.log.
+7. **Verdict tool** spikes/B0/verdict/verdict_b0.py (and helpers if needed) implementing PLAN §6/§8 harness keys; seal as VERDICT-TOOL in logs/seal.log **before any P4 deposit is opened** (none exist yet).
+8. **PS gate record** packets/P4/PRESTART.md (or equivalent) stating PS-1…PS-5 true/false with evidence pointers. If PS-3 or PS-4 needs a human-lead ruling, state BLOCKED_ON_SIGNATURE with the exact ruling text to sign — do not invent a signature.
+9. Update orch/STATUS.md with P4-prep DONE or BLOCKED summary and hashes.
+
+## Hard stops
+
+- Do not modify the 12 D-004 frozen files.
+- Do not rewrite spikes/B0-smoke/PLAN.md or spikes/B0/PLAN.md (append-only Class-2 amendment only if a signed ruling text is being recorded as a draft ask — prefer PRESTART.md ask, not PLAN edit, unless PLAN itself requires an appended amendment file).
+- Do not launch GPU training or spend BLK-12 budget.
+- Home-humanoid / plant-class wording; Provisional.
+
+## Done line
+
+Print exactly one of:
+- P4_PREP_DONE ps1=… ps2=… ps3=… ps4=… ps5=… tarball_sha256=… verdict_tool_sha256=…
+- P4_PREP_BLOCKED reason=PS-3|PS-4|… detail=…
+

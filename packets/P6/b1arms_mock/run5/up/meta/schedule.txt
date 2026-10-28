@@ -1,0 +1,14 @@
+H-A-scratch      attention   scratch 0 b1_home.yaml         -               primary
+H-A-xfer         attention   xfer    0 b1_home.yaml         attention_s0    primary
+H-M-xfer         mlp_matched xfer    0 b1_home.yaml         mlp_matched_s0  primary
+H-A-scratch      attention   scratch 1 b1_home.yaml         -               primary
+H-A-xfer         attention   xfer    1 b1_home.yaml         attention_s1    primary
+H-M-xfer         mlp_matched xfer    1 b1_home.yaml         mlp_matched_s1  primary
+H-A-scratch      attention   scratch 2 b1_home.yaml         -               primary
+H-A-xfer         attention   xfer    2 b1_home.yaml         attention_s2    primary
+H-M-xfer         mlp_matched xfer    2 b1_home.yaml         mlp_matched_s2  primary
+H-M-scratch      mlp_matched scratch 0 b1_home.yaml         -               secondary
+H-M-scratch      mlp_matched scratch 1 b1_home.yaml         -               secondary
+H-M-scratch      mlp_matched scratch 2 b1_home.yaml         -               secondary
+H-A-frozen       attention   frozen  0 b1_home.yaml         attention_s0    diagnostic
+H-A-xfer-noscale attention   xfer    0 b1_home_noscale.yaml attention_s0    diagnostic

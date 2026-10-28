@@ -1,0 +1,45 @@
+# Virtualenvs
+.venv/
+**/cpuenv/.venv/
+**/cpuenv/
+
+# Python caches / build
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+
+# Data and venue dumps (~25G)
+data/
+logs/
+
+# Model weights / checkpoints
+*.npz
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.bin
+
+# Bulky archives and media dumps
+*.tgz
+*.tar
+*.tar.gz
+*.mp4
+*.avi
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+
+# Nested clone metadata (vendor tree kept as plain files)
+packets/P4/upstream-ro/SuperMimic-Reproduced/.git/
+
+# macOS AppleDouble junk
+._*

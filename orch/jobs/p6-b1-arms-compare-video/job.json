@@ -1,0 +1,133 @@
+{
+  "job_id": "p6-b1-arms-compare-video",
+  "program": "supermimic-junior-b-colab",
+  "packet": "P6-B1-arms-compare-video",
+  "state": "READY",
+  "state_note": "READY: visual artifact only. Uploads sealed; gpu0 mutex free (all other jobs SCORED/DEPOSITED); ckpt paths identified from sealed driver meta of deposit f95155af (meta/harness_stop_*_s0_a1.txt). Ckpt presence on the host cannot be verified from the box (no SSH): run.sh preflight checks presence + sealed harness-stop byte size + sidecar policy before any GPU work and, if a required ckpt is missing, packs a *-BLOCKED.tgz and exits 4 (then Orchestrator writes COMPARE_VIDEO_ASK; no retrain).",
+  "venue": "xn-4090-gpu2",
+  "ssh_alias": "xn-4090-gpu2",
+  "workdir": "/tmp/supermimic-junior-b-colab-p6-b1-arms-compare-video",
+  "upload": [
+    {
+      "src": "packets/P6/render_compare_b1_arms.py",
+      "sha256": "51df5575bb6f0644faf0a46748efd0174163ba160acf22352d8c85f6061742c7"
+    },
+    {
+      "src": "orch/jobs/p6-b1-arms-compare-video/run.sh",
+      "sha256": "50ba9b02789b76eff961baa3f433e2de9bf2addae3b922e46f82edee42ec568a"
+    },
+    {
+      "src": "packets/P6/junior_b_colab-P6-B1ARMS.tgz",
+      "sha256": "0f18b8bbca7f7ef13fffb0bcf51b2370e997580a5b5f8f6ed2cffc4dd1eb8d87",
+      "note": "sealed attempt-1 tarball (unchanged); optional if /content/p6_b1arms/ copy on host has the same sha"
+    }
+  ],
+  "command": "bash ./run.sh",
+  "env": {
+    "CUDA_VISIBLE_DEVICES": "0",
+    "MUJOCO_GL": "egl",
+    "MAX_STEPS": "3600",
+    "TZ": "America/Toronto",
+    "LANG": "en_US.UTF-8",
+    "LC_ALL": "en_US.UTF-8"
+  },
+  "timeout_hours": 1.5,
+  "mutex": "gpu0",
+  "arms": {
+    "required": [
+      "H-A-scratch",
+      "H-A-xfer",
+      "H-M-xfer"
+    ],
+    "optional": [
+      "H-M-scratch"
+    ],
+    "seed": 0,
+    "it": "0001600",
+    "clips": [
+      "walk1_subject1",
+      "dance1_subject1"
+    ],
+    "mask": 0.0
+  },
+  "remote_ckpts": {
+    "root": "/content/SuperMimic-Reproduced-b1 (attempt-1 upstream tree $U of packets/P6/b1arms_driver.sh; read-only)",
+    "required": {
+      "H-A-scratch": {
+        "ckpt": "/content/SuperMimic-Reproduced-b1/logs/b1HAscratch_attention_s0/ckpt_0001600.pt",
+        "bytes": 159445702
+      },
+      "H-A-xfer": {
+        "ckpt": "/content/SuperMimic-Reproduced-b1/logs/b1HAxfer_attention_s0/ckpt_0001600.pt",
+        "bytes": 159445702
+      },
+      "H-M-xfer": {
+        "ckpt": "/content/SuperMimic-Reproduced-b1/logs/b1HMxfer_mlp_matched_s0/ckpt_0001600.pt",
+        "bytes": 158486223
+      }
+    },
+    "optional": {
+      "H-M-scratch": {
+        "ckpt": "/content/SuperMimic-Reproduced-b1/logs/b1HMscratch_mlp_matched_s0/ckpt_0001600.pt",
+        "bytes": 159357327
+      }
+    },
+    "also_needed": [
+      "junior_policy.json beside each ckpt",
+      "/content/SuperMimic-Reproduced-b1/.venv/bin/python",
+      "/content/SuperMimic-Reproduced-b1/data/npz/b1_home/{walk1_subject1,dance1_subject1}.npz"
+    ],
+    "source": "logs/xn4090/2026-10-27/open-b1arms-20261027-0935/meta/harness_stop_<aid>_a1.txt (ckpt_path, ckpt_size_poll2, ckpt_stable=true); deposit f95155af excludes *.pt (PLAN §8)",
+    "identity_note": "no ckpt sha256 was recorded at train time; identity = sealed harness-stop byte size + sidecar policy; run.sh records the sha256 it sees in preflight.json"
+  },
+  "deposit": {
+    "remote_glob": "/content/b1-arms-compare-videos*.tgz",
+    "local_dir": "logs/xn4090/<UTC date of the deposit, YYYY-MM-DD>",
+    "seal_event": "DEPOSIT xn4090",
+    "also_deposit": "/content/b1-arms-compare-videos-run-<stamp>.log is inside the tgz; relay stdout as RELAY-LOG"
+  },
+  "success_hint": "COMPARE_VIDEO_DONE line; per-arm MP4s <arm>_s0_it0001600_<clip>.mp4 and compare_s0_it0001600_<clip>_sidebyside.mp4 under /content/b1-arms-compare-videos/; copy MP4s to /workspace/uploads for owner view after DEPOSIT. COMPARE_VIDEO_BLOCKED + exit 4 = ckpt/npz preflight failed (deposit the -BLOCKED tgz anyway).",
+  "plan_ref": {
+    "path": "spikes/B1/PLAN.md",
+    "sha256": "1088752ba26a8798d721aa93d6e10d1b7bdb7fb924d9d72879acc78d8c2304c8",
+    "note": "visual artifact only; does not reopen B1 scoring, M1, attempt 2 or seeds; PLAN not edited"
+  },
+  "authority": {
+    "start": {
+      "path": "orch/owner-decisions/20261027-1834-AsiaShanghai-B1-arms-compare-video-START.md",
+      "sha256": "90f6dd004b5c2a78ee049af4f7d19b62397d0e3cb2cb55516b6391eb2f12de28"
+    },
+    "m1_closeout": {
+      "path": "orch/owner-decisions/20261027-1832-AsiaShanghai-B1-M1-CLOSEOUT.md",
+      "sha256": "48cd6bd25e986ab616d58a15df33cf05d86e4a87d4e4b2bd56cd7d5626dc9768"
+    },
+    "arms_close": {
+      "path": "orch/owner-decisions/20261027-1745-AsiaShanghai-p6-arms-CLOSE-INCONCLUSIVE.md",
+      "sha256": "5d8cf393044efcab8ab899ae9c51a463f7a2214643ea7c87eddf34127c4d2ebd"
+    }
+  },
+  "ready_evidence": {
+    "cpu_test": {
+      "path": "logs/p6/render-compare-b1-cpu-attempt1.log",
+      "sha256": "017ccfa888d845ec0a39706672f17d6d3500a52d9ed66a3d56c113367fb0ad36"
+    },
+    "run_sh_mock": {
+      "path": "logs/p6/run-compare-b1-mock-attempt1.log",
+      "sha256": "ca6afbeab7ce94d0b16b908b1b73939a7115bea6905858e4f7528c921f734930"
+    },
+    "not_tested_on_box": "policy load (p6_entry.install + load_policy_from_checkpoint) and env.render(): need the GPU host (no mjlab/supermimic on the box). Same calls as the sealed B1 eval path and the deposited P4 B0 compare job.",
+    "mutex": "gpu0 free: p4-b0-attempt1/p5-b2-attempt1/p6-b1-rt/p6-b1-arms SCORED, p4-b0-compare-video DEPOSITED"
+  },
+  "method": {
+    "pin": "orchestrating-ai-research-teams.v1.1",
+    "sha256": "9bdc872ea3f92e33893cb71de4db488bf05ca3bce6f78e9ef3fd7e214590afc0",
+    "overlays": [
+      "OVERLAY-001 (deposit before analysis)"
+    ],
+    "new_overlay": "none needed (visual-only, no contest, no scoring)"
+  },
+  "created_by": "Claude Orchestrator (claude-opus-5-5), P6 B1 arms compare-video wake",
+  "stamp": "2026-10-27 06:40 EDT",
+  "ready_stamp": "2026-10-27 06:40 EDT",
+  "remote": {}
+}

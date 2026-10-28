@@ -1,0 +1,61 @@
+PART 1 2026-10-27T01:44:57Z resume=false mock=1 prior_hours=0.0000
+DATA ok
+ATTEMPT b1HAscratch_attention_s0_a1 COMPLETED true
+SPENT 0.0075 2026-10-27T01:45:24Z
+DUR b1HAscratch_attention_s0 0.0058
+RUNDONE b1HAscratch_attention_s0 COMPLETED
+ATTEMPT b1HAxfer_attention_s0_a1 COMPLETED true
+SPENT 0.0139 2026-10-27T01:45:47Z
+DUR b1HAxfer_attention_s0 0.0061
+RUNDONE b1HAxfer_attention_s0 COMPLETED
+ATTEMPT b1HMxfer_mlp_matched_s0_a1 COMPLETED true
+SPENT 0.0189 2026-10-27T01:46:05Z
+DUR b1HMxfer_mlp_matched_s0 0.0050
+RUNDONE b1HMxfer_mlp_matched_s0 COMPLETED
+PART 2 2026-10-27T01:46:21Z resume=true mock=1 prior_hours=0.0189
+ATTEMPT b1HAscratch_attention_s1_a1 INFRA false session_loss
+ATTEMPT b1HAscratch_attention_s1_a2 COMPLETED true
+SPENT 0.0283 2026-10-27T01:46:55Z
+DUR b1HAscratch_attention_s1 0.0067
+RUNDONE b1HAscratch_attention_s1 COMPLETED
+ATTEMPT b1HAxfer_attention_s1_a1 COMPLETED true
+SPENT 0.0339 2026-10-27T01:47:15Z
+DUR b1HAxfer_attention_s1 0.0056
+RUNDONE b1HAxfer_attention_s1 COMPLETED
+ATTEMPT b1HMxfer_mlp_matched_s1_a1 COMPLETED true
+SPENT 0.0420 2026-10-27T01:47:44Z
+DUR b1HMxfer_mlp_matched_s1 0.0078
+RUNDONE b1HMxfer_mlp_matched_s1 COMPLETED
+ATTEMPT b1HAscratch_attention_s2_a1 COMPLETED true
+SPENT 0.0472 2026-10-27T01:48:03Z
+DUR b1HAscratch_attention_s2 0.0053
+RUNDONE b1HAscratch_attention_s2 COMPLETED
+ATTEMPT b1HAxfer_attention_s2_a1 COMPLETED true
+SPENT 0.0531 2026-10-27T01:48:24Z
+DUR b1HAxfer_attention_s2 0.0058
+RUNDONE b1HAxfer_attention_s2 COMPLETED
+ATTEMPT b1HMxfer_mlp_matched_s2_a1 COMPLETED true
+SPENT 0.0611 2026-10-27T01:48:53Z
+DUR b1HMxfer_mlp_matched_s2 0.0078
+RUNDONE b1HMxfer_mlp_matched_s2 COMPLETED
+ATTEMPT b1HMscratch_mlp_matched_s0_a1 COMPLETED true
+SPENT 0.0672 2026-10-27T01:49:15Z
+DUR b1HMscratch_mlp_matched_s0 0.0061
+RUNDONE b1HMscratch_mlp_matched_s0 COMPLETED
+ATTEMPT b1HMscratch_mlp_matched_s1_a1 COMPLETED true
+SPENT 0.0736 2026-10-27T01:49:38Z
+DUR b1HMscratch_mlp_matched_s1 0.0064
+RUNDONE b1HMscratch_mlp_matched_s1 COMPLETED
+ATTEMPT b1HMscratch_mlp_matched_s2_a1 COMPLETED true
+SPENT 0.0783 2026-10-27T01:49:55Z
+DUR b1HMscratch_mlp_matched_s2 0.0047
+RUNDONE b1HMscratch_mlp_matched_s2 COMPLETED
+ATTEMPT b1HAfrozen_attention_s0_a1 COMPLETED true
+SPENT 0.0839 2026-10-27T01:50:15Z
+DUR b1HAfrozen_attention_s0 0.0056
+RUNDONE b1HAfrozen_attention_s0 COMPLETED
+ATTEMPT b1HAxfernoscale_attention_s0_a1 COMPLETED true
+SPENT 0.0903 2026-10-27T01:50:38Z
+DUR b1HAxfernoscale_attention_s0 0.0061
+RUNDONE b1HAxfernoscale_attention_s0 COMPLETED
+SPENT 0.0903 2026-10-27T01:50:38Z

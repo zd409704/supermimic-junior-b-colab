@@ -1,0 +1,1 @@
+P4 B0 compare-video job READY. Owner t177u asked for side-by-side MP4s (attention vs mlp_matched vs mlp_upstream s0, walk1+dance1, mask 0). Script packets/P4/render_compare_b0.py. Venue xn-4090-gpu2 mutex gpu0. No P5 start. No B0/B2 PLAN amend.

@@ -1,0 +1,62 @@
+Method boot (required order):
+1. Read the global pin named in /srv/claude/research/METHOD/CURRENT and verify its sha256.
+2. Read any overlays under this program's method/local/ (skip if empty / only .gitkeep).
+3. Read Appendix A: available-models catalog (A.6) and allocation preference (Claude family required; Codex Astra high as secondary preference when a second family is needed; remaining slots by documented characteristics).
+4. Analyze whether this program needs specials beyond the global method. If yes and overlays are missing, create append-only method/local/ files that name the global version+sha they extend, then continue. If no, use global only; do not invent a local full copy.
+5. Before Step 2 of a heterogeneous or high-stakes contest packet: allocate models from the catalog under A.7, write program-root roster.md (A.5 fields), and freeze. Do not copy another program's roster as methodology.
+6. In-flight packets keep the method hash they started under; adopt a newer global pin only at the next packet boundary (or explicit sealed amendment).
+Stay under this program's root for writes. Home-humanoid / plant-class wording only; Provisional unless explicitly authorized to Lock.
+
+---
+
+Role: Orchestrator. Packet: **P3 — draft and seal spikes/B0/PLAN.md** (formal B0 microbench PLAN). Do not run Colab. Do not run XN-4090. Do not train. Do not amend sealed P2 files.
+
+Working directory: /srv/claude/research/supermimic-junior-b-colab
+Stay under /srv/claude/research/supermimic-junior-b-colab/.
+
+## Authority already recorded (do not re-ask)
+
+Read and treat as signed operational accepts:
+- orch/reports/DECISION-RV-BLK-20261026.md
+- orch/reports/DECISION-A1-P2-close-20261026.md
+- orch/reports/P4-RCA-20261026.md
+
+Accepts in force: RV-1, RV-2, RV-8, BLK-11, BLK-12 (budget authorized as draft envelope; no spend until this PLAN is sealed and a later runner packet asks). RV-7/BLK-10 deferred (Provisional depth-2). D-DESC re-adjudication declined. P6a approved optional CPU later — out of scope for this packet unless you only note it in STATUS.
+
+## Required reads before drafting
+
+- docs/SCHEME_PLAN.md §1 P3/P4, §2 B0 arms/metrics/criteria, §7–§8 cost
+- docs/EVAL_REVIEW.md (RV-1..RV-8 context as needed)
+- spikes/B0-smoke/PLAN.md (structure reference only; **do not modify**; sealed P2)
+- spikes/B0-smoke/results.json and runs.log (A1 context)
+- packets/P1/FREEZE_MANIFEST.md (inputs freeze)
+- method/local/OVERLAY-001-owner-colab-runner.md
+- runbook / notebook paths named in P1 freeze and smoke PLAN
+- briefs/B1-home-humanoid-cross-embodiment.md only as needed for depth/gating language
+
+## PLAN requirements
+
+Write a new file: `spikes/B0/PLAN.md` (create `spikes/B0/` if needed).
+
+Must include:
+1. Mechanism under test (attention decoder vs mlp_matched on single 29-DoF body) consistent with SCHEME_PLAN §2.
+2. Inputs: frozen tarball / P1 freeze hashes; notebook/runbook references; OVERLAY-001 owner-runner (venue named as Colab L4 for short work; note BLK-12 preference for XN-4090-GPU2 Job READY when a later sealed runner PLAN chooses that venue — this P3 PLAN may name the intended P4 venue and budget without starting it).
+3. Arms, seeds=3 per arm (unless scheme says otherwise), equal env steps/updates primary budget (RV-8).
+4. Non-inferiority gate δ as in scheme (RV-1); metrics M-1.. and draft criteria frozen here.
+5. **Train-return / learning-curve gates:** use **cumulative / episode-total return** (episode_len × norm_return or equivalent logged cumulative), not sole reliance on per-step train/episode_norm_return. Cite RCA + A1 as the reason. Disclose that sealed P2 P-4 used per-step norm_return and failed as a metric artifact.
+6. **Eval reporting:** require survival (episode length / steps survived) and cumulative return in addition to any per-step mean; masks as scheme §2/§3 need for B0.
+7. Pass / fail / blocked / attempt rules; deposit path under logs/colab/ (or logs/xn4090/ if naming that venue for P4) with seal-before-open.
+8. Must-capture section; harness keys that a later verdict script can check.
+9. Explicit: no rewrite of spikes/B0-smoke/PLAN.md; P2 remains historical FAIL [P-4] disclosed.
+10. Provisional decision cap; home-humanoid wording; no commercial product brands.
+
+## Seal procedure
+
+After PLAN content is complete:
+1. Append sha256 of spikes/B0/PLAN.md to logs/seal.log with event `SEAL spikes/B0/PLAN.md` and timestamp.
+2. Update orch/STATUS.md: P3 PLAN sealed, full sha256, pointer to PLAN, next runner step (P4 prep / owner wake — do not start training).
+3. Append progress.md row for B0-plan DONE with hash.
+4. Print exactly: `P3_PLAN_SEALED sha256=<hex> path=spikes/B0/PLAN.md`
+
+Stop when sealed. Do not launch training. Do not start P4/P5/P6.
+

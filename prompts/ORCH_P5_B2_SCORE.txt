@@ -1,0 +1,60 @@
+Method boot (required order):
+1. Read the global pin named in /srv/claude/research/METHOD/CURRENT and verify its sha256.
+2. Read any overlays under this program's method/local/ (skip if empty / only .gitkeep).
+3. Read Appendix A only as needed; this packet is deposit-open + sealed harness score only (not a contest roster packet).
+4. Stay under this program's root for writes. Home-humanoid / plant-class wording only; Provisional.
+
+---
+
+Role: Orchestrator. Packet: **P5 B2 attempt1 — open sealed deposit and run VERDICT-TOOL-B2**. Do not run Colab. Do not run XN-4090. Do not train. Do not relaunch GPU. Do not amend sealed PLAN or CR-B2-1 tarball. Do not reopen P4 scoring.
+
+Working directory: /srv/claude/research/supermimic-junior-b-colab
+Stay under /srv/claude/research/supermimic-junior-b-colab/.
+
+## Authority (do not re-ask)
+
+- spikes/B2/PLAN.md sealed sha256 5d1f26f776a3ea56c2becd3ec2fa2cf8e88bd62c43a20f79415a96e82a3da11d
+- VERDICT-TOOL-B2 sealed: spikes/B2/verdict/verdict_b2.py sha256 cd2ac741d2ffad7353c7cf62ca5f325a5402ec4d7e6a6c6f5887ecff511c994c
+- CR-B2-1 tarball sha256 53a898e9b635d1317bebabe884f1450e52be2980165811859445c1b9b53ce851
+- P5 deposit sealed: logs/xn4090/2026-10-26/b2-20261026-1611.tgz sha256 a869b8fcb9d66e20b9938b7aa2df9f0896d754e24b8a56877c22275d9058ef86
+  seal.log: DEPOSIT xn4090 @ 2026-10-26T21:14:53Z; remote DONE_DRIVER 2026-10-26T16:11:04Z
+- Job orch/jobs/p5-b2-attempt1.json state=DEPOSITED; mutex gpu0 free
+- P4 open tree (read-only): logs/xn4090/2026-10-26/open-b0-20261026-0919/
+- P4 results: orch/reports/VERDICT-P4-b0-attempt1-relaunch3-results.json
+- Method pin sha256 9bdc872ea3f92e33893cb71de4db488bf05ca3bce6f78e9ef3fd7e214590afc0
+- packets/P4/UPSTREAM_FACTS.md
+
+Manager ordered: open sealed deposit + VERDICT-TOOL-B2 only. Drive paused. No GPU.
+
+## Required steps
+
+1. **Verify seal before open.** Confirm deposit sha256 matches a869b8fc… and that logs/seal.log has the DEPOSIT xn4090 line for this path. Do not open if mismatch.
+2. **Open** under logs/xn4090/2026-10-26/open-b2-20261026-1611/ (create; extract sealed tarball safely). Do not rewrite the .tgz.
+3. **Inventory** arms / meta / maskstreams / BLOCKED.md briefly into the report (do not adjudicate in prose).
+4. **Run sealed harness** with python -I (stdlib; use program .venv python if needed only for convenience, prefer python3 -I):
+
+```
+python3 -I spikes/B2/verdict/verdict_b2.py \
+  --deposit logs/xn4090/2026-10-26/b2-20261026-1611.tgz \
+  --seal-log logs/seal.log \
+  --plan spikes/B2/PLAN.md \
+  --method-sha 9bdc872ea3f92e33893cb71de4db488bf05ca3bce6f78e9ef3fd7e214590afc0 \
+  --tarball-sha 53a898e9b635d1317bebabe884f1450e52be2980165811859445c1b9b53ce851 \
+  --facts packets/P4/UPSTREAM_FACTS.md \
+  --p4-open-tree logs/xn4090/2026-10-26/open-b0-20261026-0919 \
+  --p4-results orch/reports/VERDICT-P4-b0-attempt1-relaunch3-results.json \
+  --venue xn4090 \
+  --out orch/reports/VERDICT-P5-b2-attempt1-results.json \
+  --runs-log orch/reports/VERDICT-P5-b2-attempt1.runs.log \
+  --work /tmp/verdict-b2-p5-attempt1-work
+```
+
+Capture stdout to orch/reports/VERDICT-P5-b2-attempt1.stdout.
+
+5. **Write** orch/reports/VERDICT-P5-b2-attempt1-YYYYMMDD.md (Provisional) quoting the machine verdict_line, key gates (U-ID, U-REPRO, MS, B2-V-*), U/T outcomes, gate_b1, disclosures. Prose never overrides the harness.
+6. **Update** orch/jobs/p5-b2-attempt1.json state to SCORED (keep venue/mutex notes; gpu stays free). Append seal.log entries for results json, stdout, report md.
+7. **Update** orch/STATUS.md: P5 SCORED with machine verdict + artifact shas; Next = await Manager (no P6/GPU unless ordered). Copy STATUS to orch/reports/STATUS-<stamp>-EDT.md. Append progress.md.
+8. Print exactly:
+   P5_SCORED verdict=<PASS|FAIL|BLOCKED|...> outcome=<...> gate_b1=<...> results_sha256=<hex> report_sha256=<hex> deposit_sha256=a869b8fcb9d66e20b9938b7aa2df9f0896d754e24b8a56877c22275d9058ef86
+
+Stop. Do not start P6. Do not upload. Do not flip READY for any new job.

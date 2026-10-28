@@ -1,0 +1,360 @@
+{
+ "_meta": {
+  "spike": "B0-smoke",
+  "packet": "P2",
+  "attempt": 2,
+  "attempt_cap": 3,
+  "decision_cap": "Provisional",
+  "computed_utc": "2026-10-26 (attempt-2 verdict wake)",
+  "computed_by": "Orchestrator claude-opus-5-5 (Claude Code), verdict-only process; not a packet adjudicator (OVERLAY-001 rule 6)",
+  "deposit": "logs/colab/2026-10-26/b0smoke-20261026-0400-attempt2.tgz",
+  "deposit_sha256": "c04a62880babad5261b34481b7e122fe66d33ac7a8786f86118cc1c3453c570d",
+  "deposit_seal_line": "logs/seal.log:74 DEPOSIT colab (recomputed, exact match, before open)",
+  "plan": "spikes/B0-smoke/PLAN.md",
+  "plan_sha256": "512a3eb40b45cc4e5fabc30836e8b21cb9b2fe15739cd74a693a188ea4ce1987",
+  "method": "v1.1 9bdc872ea3f92e33893cb71de4db488bf05ca3bce6f78e9ef3fd7e214590afc0 + method/local/OVERLAY-001",
+  "extract_dir": "logs/colab/2026-10-26/extract-verdict-attempt2/ (read-only copy)",
+  "verdict_script": {
+   "path": "logs/colab/2026-10-26/verdict-tools/verdict.py",
+   "sha256": "c247967e9accc0e72502f87fccb6055142fb136699d3b623d0d6164991ba1d17",
+   "tb_reader": "logs/colab/2026-10-26/verdict-tools/tbscalars_raw.py",
+   "tb_reader_sha256": "70b8c2616e3db85c1ad51bc759e4d1058c8e4391dc4876953c439717d5173b49",
+   "note": "same sealed scripts as attempt 1 (VERDICT-TOOL lines in seal.log), unmodified"
+  },
+  "raw_verdict_output": "logs/colab/2026-10-26/verdict-attempt2-raw.json",
+  "raw_verdict_output_sha256": "762c9ce240b70ef7a7228f4655580dbed0f673a7c64363b3d1d614fbabd1ada3",
+  "interpretation_notes": [
+   "P-3/P-4 'first logged point after warmup' taken as first logged point with time/updates > 0 (step 50, updates=4), same rule as attempt 1. Sensitivity: P-4 also fails vs step 100 for both arms.",
+   "P-3 uses tb wm/loss; P-4 uses tb train/episode_norm_return.",
+   "P-5: verdict.py hard-codes ls_output_in_bundle=false (written for attempt 1). Attempt 2 bundle contains meta/ckpt_dirs_ls.txt listing ckpt_latest.pt and junior_policy.json for both arms (supplementary field p5_ckpt_ls_attempt2). P-5 is true by either evidence path.",
+   "S3: compile=None in both arm logs (identical)."
+  ]
+ },
+ "P-1": {
+  "pass": true,
+  "evidence": {
+   "cap_line": true,
+   "error_lines": []
+  }
+ },
+ "P-2": {
+  "pass": true,
+  "evidence": {
+   "attention": {
+    "cap": true,
+    "error_lines": [],
+    "tb_all_finite": true
+   },
+   "mlp_matched": {
+    "cap": true,
+    "error_lines": [],
+    "tb_all_finite": true
+   }
+  }
+ },
+ "P-3": {
+  "pass": true,
+  "evidence": {
+   "attention": {
+    "step_first": 50,
+    "wm_loss_first": 58.29322814941406,
+    "step_last": 1350,
+    "wm_loss_last": 4.064846038818359,
+    "pass": true
+   },
+   "mlp_matched": {
+    "step_first": 50,
+    "wm_loss_first": 58.467002868652344,
+    "step_last": 1400,
+    "wm_loss_last": 1.9109573364257812,
+    "pass": true
+   }
+  }
+ },
+ "P-4": {
+  "pass": false,
+  "evidence": {
+   "attention": {
+    "step_first": 50,
+    "updates_first": 4.0,
+    "ret_first": 0.38384178280830383,
+    "step_last": 1350,
+    "ret_last": 0.3047938942909241,
+    "pass": false,
+    "sensitivity_ret_at_step100": 0.3835325539112091,
+    "sensitivity_pass_vs_step100": false
+   },
+   "mlp_matched": {
+    "step_first": 50,
+    "updates_first": 4.0,
+    "ret_first": 0.3839050531387329,
+    "step_last": 1400,
+    "ret_last": 0.35074383020401,
+    "pass": false,
+    "sensitivity_ret_at_step100": 0.38387325406074524,
+    "sensitivity_pass_vs_step100": false
+   }
+  }
+ },
+ "P-5": {
+  "pass": true,
+  "evidence": {
+   "attention": {
+    "junior_policy_json": true,
+    "ls_output_in_bundle": false,
+    "ckpt_evidence": "eval JSONs exist; upstream eval_benchmark loads --ckpt logs/b0_smoke_<arm>_s0/ckpt_latest.pt before writing them (code/eval_entry.py run_upstream)",
+    "eval_jsons_from_ckpt": true
+   },
+   "mlp_matched": {
+    "junior_policy_json": true,
+    "ls_output_in_bundle": false,
+    "ckpt_evidence": "eval JSONs exist; upstream eval_benchmark loads --ckpt logs/b0_smoke_<arm>_s0/ckpt_latest.pt before writing them (code/eval_entry.py run_upstream)",
+    "eval_jsons_from_ckpt": true
+   }
+  },
+  "p5_ckpt_ls_attempt2": {
+   "attention": {
+    "ckpt_latest.pt_listed": true,
+    "junior_policy.json_listed": true
+   },
+   "mlp_matched": {
+    "ckpt_latest.pt_listed": true,
+    "junior_policy.json_listed": true
+   }
+  }
+ },
+ "P-6": {
+  "pass": true,
+  "evidence": {
+   "attention": {
+    "0.00": true,
+    "0.10": true,
+    "0.20": true
+   },
+   "mlp_matched": {
+    "0.00": true,
+    "0.10": true,
+    "0.20": true
+   }
+  }
+ },
+ "S1": {
+  "pass": true,
+  "evidence": {
+   "log": "true"
+  }
+ },
+ "S2": {
+  "pass": true,
+  "evidence": {
+   "obs_policy_dim": "930",
+   "term_major_ok": "true"
+  }
+ },
+ "S3": {
+  "pass": true,
+  "evidence": {
+   "attention": "None",
+   "mlp_matched": "None"
+  }
+ },
+ "S4": {
+  "pass": true,
+  "evidence": {
+   "log": "env_init_state",
+   "json_attention": "env_init_state",
+   "json_mlp_matched": "env_init_state"
+  }
+ },
+ "S5": {
+  "pass": true,
+  "evidence": {
+   "log": "true",
+   "json_attention": true
+  }
+ },
+ "unverified_seam_lines": [],
+ "overall": "FAIL",
+ "failing_ids": [
+  "P-4"
+ ],
+ "change_request_required_for": [],
+ "previous_attempts": [
+  {
+   "attempt": 1,
+   "overall": "FAIL",
+   "failing_ids": [
+    "P-4"
+   ],
+   "sealed_results_sha256": "a85fb1fda2dc71c16e113da641a6cc9bb3ec20dae44c49edad8e121f090ac475",
+   "record": {
+    "_meta": {
+     "spike": "B0-smoke",
+     "packet": "P2",
+     "decision_cap": "Provisional",
+     "computed_utc": "2026-10-26 (verdict wake)",
+     "computed_by": "Orchestrator claude-opus-5-5 (Claude Code), verdict-only process; not a packet adjudicator (OVERLAY-001 rule 6)",
+     "deposit": "logs/colab/2026-10-26/b0smoke-20261026-0238.tgz",
+     "deposit_sha256": "71bd8a1b634ee9893eccc9b026eeba556cf409353b11225181fd369c827d4e03",
+     "deposit_seal_line": "logs/seal.log:68 DEPOSIT colab (recomputed, exact match, before open)",
+     "plan": "spikes/B0-smoke/PLAN.md",
+     "plan_sha256": "512a3eb40b45cc4e5fabc30836e8b21cb9b2fe15739cd74a693a188ea4ce1987",
+     "method": "v1.1 9bdc872ea3f92e33893cb71de4db488bf05ca3bce6f78e9ef3fd7e214590afc0 + method/local/OVERLAY-001",
+     "extract_dir": "logs/colab/2026-10-26/extract-verdict/ (read-only copy)",
+     "verdict_script": {
+      "path": "logs/colab/2026-10-26/verdict-tools/verdict.py",
+      "sha256": "c247967e9accc0e72502f87fccb6055142fb136699d3b623d0d6164991ba1d17",
+      "tb_reader": "logs/colab/2026-10-26/verdict-tools/tbscalars_raw.py",
+      "tb_reader_sha256": "70b8c2616e3db85c1ad51bc759e4d1058c8e4391dc4876953c439717d5173b49"
+     },
+     "interpretation_notes": [
+      "P-3/P-4 'first logged point after warmup' is not defined numerically in PLAN; taken as the first logged point with time/updates > 0 (step 50, updates=4). Sensitivity: P-4 also fails vs step 100 for both arms.",
+      "P-3 uses tb scalar wm/loss; P-4 uses tb scalar train/episode_norm_return (same series as the log's train_ret).",
+      "P-5: no `ls` output in bundle; checkpoint evidence is indirect (eval JSONs exist, and upstream eval loads ckpt_latest.pt before writing them).",
+      "S3: compile=None recorded in both arm logs (identical)."
+     ],
+     "attempt": 1
+    },
+    "P-1": {
+     "pass": true,
+     "evidence": {
+      "cap_line": true,
+      "error_lines": []
+     }
+    },
+    "P-2": {
+     "pass": true,
+     "evidence": {
+      "attention": {
+       "cap": true,
+       "error_lines": [],
+       "tb_all_finite": true
+      },
+      "mlp_matched": {
+       "cap": true,
+       "error_lines": [],
+       "tb_all_finite": true
+      }
+     }
+    },
+    "P-3": {
+     "pass": true,
+     "evidence": {
+      "attention": {
+       "step_first": 50,
+       "wm_loss_first": 58.29787826538086,
+       "step_last": 1350,
+       "wm_loss_last": 3.880352258682251,
+       "pass": true
+      },
+      "mlp_matched": {
+       "step_first": 50,
+       "wm_loss_first": 58.47064971923828,
+       "step_last": 1400,
+       "wm_loss_last": 1.9148427248001099,
+       "pass": true
+      }
+     }
+    },
+    "P-4": {
+     "pass": false,
+     "evidence": {
+      "attention": {
+       "step_first": 50,
+       "updates_first": 4.0,
+       "ret_first": 0.3838462829589844,
+       "step_last": 1350,
+       "ret_last": 0.3149857223033905,
+       "pass": false,
+       "sensitivity_ret_at_step100": 0.38327890634536743,
+       "sensitivity_pass_vs_step100": false
+      },
+      "mlp_matched": {
+       "step_first": 50,
+       "updates_first": 4.0,
+       "ret_first": 0.38390180468559265,
+       "step_last": 1400,
+       "ret_last": 0.35718289017677307,
+       "pass": false,
+       "sensitivity_ret_at_step100": 0.3839603662490845,
+       "sensitivity_pass_vs_step100": false
+      }
+     }
+    },
+    "P-5": {
+     "pass": true,
+     "evidence": {
+      "attention": {
+       "junior_policy_json": true,
+       "ls_output_in_bundle": false,
+       "ckpt_evidence": "eval JSONs exist; upstream eval_benchmark loads --ckpt logs/b0_smoke_<arm>_s0/ckpt_latest.pt before writing them (code/eval_entry.py run_upstream)",
+       "eval_jsons_from_ckpt": true
+      },
+      "mlp_matched": {
+       "junior_policy_json": true,
+       "ls_output_in_bundle": false,
+       "ckpt_evidence": "eval JSONs exist; upstream eval_benchmark loads --ckpt logs/b0_smoke_<arm>_s0/ckpt_latest.pt before writing them (code/eval_entry.py run_upstream)",
+       "eval_jsons_from_ckpt": true
+      }
+     }
+    },
+    "P-6": {
+     "pass": true,
+     "evidence": {
+      "attention": {
+       "0.00": true,
+       "0.10": true,
+       "0.20": true
+      },
+      "mlp_matched": {
+       "0.00": true,
+       "0.10": true,
+       "0.20": true
+      }
+     }
+    },
+    "S1": {
+     "pass": true,
+     "evidence": {
+      "log": "true"
+     }
+    },
+    "S2": {
+     "pass": true,
+     "evidence": {
+      "obs_policy_dim": "930",
+      "term_major_ok": "true"
+     }
+    },
+    "S3": {
+     "pass": true,
+     "evidence": {
+      "attention": "None",
+      "mlp_matched": "None"
+     }
+    },
+    "S4": {
+     "pass": true,
+     "evidence": {
+      "log": "env_init_state",
+      "json_attention": "env_init_state",
+      "json_mlp_matched": "env_init_state"
+     }
+    },
+    "S5": {
+     "pass": true,
+     "evidence": {
+      "log": "true",
+      "json_attention": true
+     }
+    },
+    "unverified_seam_lines": [],
+    "overall": "FAIL",
+    "failing_ids": [
+     "P-4"
+    ],
+    "change_request_required_for": []
+   }
+  }
+ ]
+}

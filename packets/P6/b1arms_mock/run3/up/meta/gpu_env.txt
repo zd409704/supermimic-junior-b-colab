@@ -1,0 +1,2 @@
+part=1 CUDA_VISIBLE_DEVICES=unset
+part=2 CUDA_VISIBLE_DEVICES=unset

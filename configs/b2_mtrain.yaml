@@ -1,0 +1,65 @@
+# Colab smoke / B0 microbench config (reduced from upstream paper defaults: 4096 envs, H=32).
+# Consumed by code/train_entry.py and code/eval_entry.py. Values under `upstream:` are passed to the
+# mjlab SuperMimic-style reproduction CLI (tyro flags) in --mode upstream; everything else is ours.
+
+run_name: b2mt
+seed: 0
+policy: attention            # attention | mlp_matched | mlp_upstream   (B0 arms)
+
+attention:                   # AttentionDecoderCfg overrides
+  d_model: 128
+  num_heads: 4
+  num_self_attn_layers: 1
+  query_hidden: [256]
+  readout_hidden: [256, 128]
+  descriptor: v2             # v2 (default, 16-d, morph_dim follows) | v1 (12-d)
+  id_mode: morph             # morph (Junior-B arm) | index (ablation, breaks permutation equivariance)
+  morphology: upstream_mjmodel   # upstream_mjmodel (Colab) | synthetic (CPU smoke fallback)
+
+b2:
+  mask_fracs: [0.1, 0.2]     # fraction of non-root joint tokens dropped at eval
+  train_mask_frac: 0.1       # optional train-time token-drop augmentation (0 = off for B0)
+  perm_trials: 8
+
+smoke:                       # --mode smoke (CPU-capable, no simulator, no motion data)
+  batch: 64
+  horizon: 8
+  steps: 20
+  device: cpu
+
+upstream:                    # --mode upstream (Colab GPU only)
+  repo_dir: /content/SuperMimic-Reproduced
+  # Upstream API identifier used to build the default-pose morphology (single place it is named).
+  model_loader: "supermimic.data.motion_convert:load_g1_model"
+  # Upstream robot entity config factory; its init_state.joint_pos (regex -> angle) is the env default
+  # pose used for the descriptor default-angle column (seam S4). UNVERIFIED identifier: if it cannot
+  # be imported, upstream mode fails loudly. Remove this key only to accept the qpos0-fallback.
+  robot_cfg_loader: "mjlab.asset_zoo.robots.unitree_g1.g1_constants:get_g1_robot_cfg"
+  # Env action scale (regex -> rad per unit; sigma = 0.25*effort/stiffness upstream). Descriptor v2 reads the
+  # actuator effort limit / stiffness / damping from the robot entity config above and sigma from here
+  # (single place the identifier is named). UNVERIFIED identifier; upstream mode fails loudly if missing or
+  # not importable. Not needed with attention.descriptor: v1.
+  action_scale_loader: "mjlab.asset_zoo.robots.unitree_g1.g1_constants:G1_ACTION_SCALE"
+  # Upstream literal path inside the public retarget dataset (asset subdirectory).
+  dataset_repo: lvhaidong/LAFAN1_Retargeting_Dataset
+  dataset_subdir: g1
+  npz_dir: data/npz/lafan1_smoke
+  pass_clip_filter: false    # npz_dir is built from `clips` only, so no upstream name filter needed
+  clips:                     # small LAFAN1-style subset (4 clips ~ walk/run/dance/jump; verified in dataset listing, packets/P1/fixes/FX3.md)
+    - walk1_subject1
+    - run1_subject2
+    - dance1_subject1
+    - jumps1_subject1
+  tyro_args:
+    --env.num-envs: 512             # T4: 256-512; L4: 512-1024
+    --policy-trainer.batch-size: 512
+    --policy-trainer.horizon: 16    # paper 32
+    --policy-trainer.compile: None  # torch.compile off on first smoke (compile time dominates)
+    --schedule.max-hours: 1.5
+    --schedule.checkpoint-interval: 400
+    --schedule.log-interval: 50
+    --env.anchor-obs: true          # upstream deviation that lifts LAFAN1 return; same for both arms
+
+eval:
+  num_envs: 64
+  out_dir: logs/eval

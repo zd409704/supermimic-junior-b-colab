@@ -1,0 +1,14 @@
+6,7c6,7
+< - packets/P1/ddesc/proposals/Y.md  (the proposal you review; candidate label Y)
+< - packets/P1/ddesc/proposals/X.md   (the other published proposal, for reference only)
+---
+> - packets/P1/ddesc/proposals/X.md  (the proposal you review; candidate label X)
+> - packets/P1/ddesc/proposals/Y.md   (the other published proposal, for reference only)
+12c12
+< File OBJECTIONS against candidate Y only. Do not rewrite the proposal and do not propose a full competing design.
+---
+> File OBJECTIONS against candidate X only. Do not rewrite the proposal and do not propose a full competing design.
+18c18
+< Write to packets/P1/ddesc/reviews-wip/on-Y/review.md, starting with the heading: # D-DESC review of candidate Y
+---
+> Write to packets/P1/ddesc/reviews-wip/on-X/review.md, starting with the heading: # D-DESC review of candidate X

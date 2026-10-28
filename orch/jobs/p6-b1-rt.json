@@ -1,0 +1,239 @@
+{
+  "job_id": "p6-b1-rt",
+  "program": "supermimic-junior-b-colab",
+  "packet": "P6b-B1-RT",
+  "state": "SCORED",
+  "state_note": "SCORED attempt 2/2 Fix#2: verdict_rt PASS (RT-1/2/3/6/7/8 pass, RT-4 waived under C2 32143be4, RT-5 recorded). Deposit 4e49c3e9... opened read-only after DEPOSIT seal verified. Attempt 1 SCORED BLOCKED retained. p6-b1-arms gate (1) met; arms stays DRAFT because ready_prereqs (2)-(4) (driver, verdict_b1.py, tarball/run.sh) are not built (ASK-P6-ARMS-prereqs-20261026.md). No attempts remain.",
+  "venue": "xn-4090-gpu2",
+  "ssh_alias": "xn-4090-gpu2",
+  "workdir": "/tmp/supermimic-junior-b-colab-p6-b1-rt",
+  "upload": [
+    {
+      "src": "packets/P6/junior_b_colab-P6-B1RT.tgz",
+      "sha256": "85d2cc87aaa906e5c0fe4a81973150bcece57f263a3d2909c6d24a77d5291db1"
+    },
+    {
+      "src": "orch/jobs/p6-b1-rt/run.sh",
+      "sha256": "1bf87ff4cb0569664f74527bd8d4ee6d713e1deae7563e74036a416e87fa4358"
+    }
+  ],
+  "command": "UPLOAD_TGZ=\"$PWD/junior_b_colab-P6-B1RT.tgz\" bash ./run.sh",
+  "env": {
+    "B1RT_TARBALL_SHA": "85d2cc87aaa906e5c0fe4a81973150bcece57f263a3d2909c6d24a77d5291db1",
+    "B1RT_AMENDMENT_SHA": "32143be4687ca6de270165a848eaf4aa8292a21a40e8255c142c32f9f048c591",
+    "CUDA_VISIBLE_DEVICES": "0",
+    "TZ": "America/Toronto",
+    "LANG": "en_US.UTF-8",
+    "LC_ALL": "en_US.UTF-8",
+    "HF_ENDPOINT": "https://hf-mirror.com",
+    "HF_HUB_ENABLE_HF_TRANSFER": "0",
+    "LAFAN1_G1_DIR": "/content/SuperMimic-Reproduced/data/raw/lafan1/g1"
+  },
+  "slot_rule": "first",
+  "timeout_hours": 3,
+  "spend_cap_gpu_hours": 2.0,
+  "expected_gpu_hours": 1.3,
+  "mutex": "gpu0",
+  "deposit": {
+    "remote_glob": "/content/b1rt-*.tgz",
+    "local_dir": "logs/xn4090/<UTC date of the deposit, YYYY-MM-DD>",
+    "seal_event": "DEPOSIT xn4090",
+    "also_deposit": "runner stdout log (/content/p6_b1rt/runner_stdout.log) and this job JSON, sealed beside the archive (RELAY-LOG), as in P4/P5"
+  },
+  "success_hint": "DONE_DRIVER line (state=DONE or BLOCKED) and a b1rt-*.tgz under /content; then RUN_SH_DONE. meta/ holds rt6.json, rt8_xferload.json, rt7_attention.json, rt7_mlp_matched.json, rt8_eval_attention.json, rt8_eval_mlp_matched.json",
+  "plan_ref": {
+    "path": "spikes/B1-RT/PLAN.md",
+    "sha256": "b7365b4f2e382344151c64be979e5e2aff102fbaba6dc6826d8a429b3b9852a5",
+    "amendment": {
+      "path": "spikes/B1-RT/AMENDMENT-C2-rt4.json",
+      "sha256": "32143be4687ca6de270165a848eaf4aa8292a21a40e8255c142c32f9f048c591"
+    },
+    "decision": {
+      "path": "orch/owner-decisions/20261026-1931-EDT-p6-rt4-class2-c-waive.md",
+      "sha256": "934b3c9b85231ecedc2704b06e9abd9ccf41b92a871fcc09f8e622b4d294c262"
+    },
+    "tarball_sha256": "85d2cc87aaa906e5c0fe4a81973150bcece57f263a3d2909c6d24a77d5291db1",
+    "manifest": {
+      "path": "packets/P6/MANIFEST-b1rt.sha256",
+      "sha256": "91795dcfd70a5250fe5d6e44b573f096ad32c0bf7bc2bd511eb298fbcd6e2fb2"
+    },
+    "driver": {
+      "path": "packets/P6/b1rt_driver.sh",
+      "sha256": "90bad7a32d57873364bbeff9fb3673192cb3eb7deccd1c39edca7d7fd04bf204"
+    },
+    "upstream_pin": "d9be385b3eeb13a638fb33fb200d3bfd9be9839f + packets/P6/upstream-b1.patch",
+    "dataset_rev": "ce1572906efe6157840e8474d5a0d7aa87481e74",
+    "verdict_tool": "spikes/B1-RT/verdict_rt.py (2341a93d\u2026) --cpu results-cpu-attempt1.json --gpu-open <opened deposit> --amendment AMENDMENT-C2-rt4.json",
+    "cpu_results": {
+      "path": "spikes/B1-RT/results.json",
+      "sha256": "ff129d5196dea72c91b1bd56d160a81356f54da83bff5b3c0e1751703dfd007a",
+      "line": "B1RT_VERDICT verdict=INCOMPLETE failing_ids=[] not_run=[RT-6,RT-7,RT-8] waived=[RT-4] rt5_recorded=True"
+    },
+    "fix2": {
+      "decision": {
+        "path": "orch/owner-decisions/20261027-0752-AsiaShanghai-p6-lafan1-fetch-fix.md",
+        "sha256": "768d6a0a0e62a7f193e29620316dfdf90bfadba2614bbd047e398925fa036f22"
+      },
+      "amendment_note": {
+        "path": "spikes/B1-RT/AMENDMENT-FIX2-fetch.md",
+        "sha256": "4ebe829b57912493fa41f9f7c804f3c9ca46deda3f498b20fdecf920a7e8039d"
+      },
+      "rt_cpu": {
+        "path": "spikes/B1-RT/rt_cpu.py",
+        "sha256": "907022c2308a229a1aa98843d9f8e0cddd6faa92196f292c5996ebd12a32973a",
+        "attempt1_sha256": "e228f7246f28b5b995bdb685834f50c517bf78bfb64f3d3833fe9ec3b48cc2ad"
+      },
+      "smoke_log": "logs/p6/b1rt-fix2-fetch-smoke-attempt1.log",
+      "byte_identical_to_attempt1": false
+    }
+  },
+  "p4_checkpoints": {
+    "note": "RT-8 (b) reads b0_attention_s0 and b0_mlp_matched_s0 ckpt_0001600.pt read-only from the first root holding both: /content/p5_p4ckpts, /content/SuperMimic-Reproduced, /data/muchuan/p4-b0-attempt1/workdir/SuperMimic-Reproduced. sha256 must equal 5fb48347\u2026a1d / 9ae05d74\u2026913e. Do not clean those trees (p6-b1-arms needs all six).",
+    "attention_s0_sha256": "5fb48347dd957b91de4b6780c53bd43d9f1777f56aabc3396aa7351181474a1d",
+    "mlp_matched_s0_sha256": "9ae05d74b9813e4858904a196cffe718d95d1237b41fdd7620aa3c842001913e"
+  },
+  "remote_paths_written": [
+    "/content/p6_b1rt",
+    "/content/b1rt",
+    "/content/SuperMimic-Reproduced-b1 (a prior copy is moved aside, never deleted)",
+    "/content/b1rt-*.tgz"
+  ],
+  "cpu_mock": {
+    "path": "logs/p6/b1rt-driver-mock-attempt3/driver-stdout.log",
+    "result": "DONE; verdict_rt consumed the bundle (mock FAIL [RT-7,RT-8] expected: 60-it config, fake P4 ckpts)"
+  },
+  "created_by": "Claude Orchestrator (claude-opus-5-5), P6 C2 apply wake",
+  "stamp": "2026-10-26 19:47 EDT",
+  "ready_stamp": "2026-10-26 EDT (attempt 2)",
+  "ready_by": "Claude Orchestrator (claude-opus-5-5) under Manager decision 768d6a0a... (Fix#2 item 4: flip READY)",
+  "downstream": {
+    "job": "orch/jobs/p6-b1-arms.json (DRAFT)",
+    "plan": {
+      "path": "spikes/B1/PLAN.md",
+      "sha256": "1088752ba26a8798d721aa93d6e10d1b7bdb7fb924d9d72879acc78d8c2304c8"
+    },
+    "rule": "p6-b1-arms READY only after this deposit is SCORED with verdict_rt PASS (RT-6, RT-7, RT-8 pass; RT-4 waived)"
+  },
+  "attempts": {
+    "attempt1": {
+      "started_stamp": "2026-10-26 19:49 EDT",
+      "started_utc": "2026-10-26T23:49:50Z",
+      "deposited_utc": "2026-10-26T23:50:09Z",
+      "deposited_stamp": "2026-10-27 07:50 Asia/Shanghai",
+      "remote": {
+        "host": "XN-4090-GPU2",
+        "tmux_session": "p6-b1-rt",
+        "workdir": "/data/muchuan/p6-b1-rt/workdir",
+        "log": "/data/muchuan/p6-b1-rt/workdir/logs/run-20261026T234945Z.log",
+        "cuda_visible_devices": "0",
+        "gpu_uuid": "GPU-fb0522c7-d42b-41f1-f24b-4729e2c2174c",
+        "launch_utc": "2026-10-26T23:49:50Z",
+        "done_driver_utc": "2026-10-26T23:50:09Z",
+        "driver_state": "BLOCKED",
+        "hf_endpoint": "https://hf-mirror.com",
+        "upload_verified": {
+          "junior_b_colab-P6-B1RT.tgz": "3cbb77267863145887439dad322f6b1017ba485f5c5f7b491583962596a4d956",
+          "run.sh": "3763a3a783cbff074ea51f3687778de109e15dd3b805b9e7aebd0947110f0e70"
+        },
+        "deposit_bundle": "/content/b1rt-20261026-2350.tgz",
+        "deposit_sha256": "36cc77dc8710dbaa09abb05584e2ccd1a01b8d9f476f99067c18f870143a0893",
+        "local_deposit": "logs/xn4090/2026-10-26/b1rt-20261026-2350.tgz",
+        "local_runner_log": "logs/xn4090/2026-10-26/p6-b1-rt-runner_stdout.log",
+        "local_launch_log": "logs/xn4090/2026-10-26/p6-b1-rt-run-20261026T234945Z.log"
+      },
+      "scored": {
+        "stamp": "2026-10-26 EDT",
+        "by": "Claude Orchestrator (claude-opus-5-5), P6 b1rt score wake",
+        "verdict": "BLOCKED",
+        "machine_line": "B1RT_VERDICT verdict=BLOCKED failing_ids=[] not_run=[RT-6,RT-7,RT-8] waived=[RT-4] rt5_recorded=True",
+        "open_tree": "logs/xn4090/2026-10-26/open-b1rt-20261026-2350",
+        "results": "orch/reports/VERDICT-P6-b1-rt-attempt1-results.json",
+        "results_sha256": "c3a55e257b98b047f416ec9da1003d82f5c2ab8d55e3b589a162aae922239574",
+        "report": "orch/reports/VERDICT-P6-b1-rt-attempt1-20261026.md",
+        "failure_class": "INFRA (download)",
+        "attempts_used": 1,
+        "attempts_max": 2,
+        "gpu_hours_spent": 0.005,
+        "arms_gate": "not met (RT-6/7/8 not_run); p6-b1-arms DRAFT"
+      },
+      "state": "SCORED",
+      "verdict": "BLOCKED",
+      "job_json_sha256": "eb7db827aae6b5f28b1697c5471d532fa3047ff32ff13967585766744d9c77bb",
+      "job_json_copy": "packets/P6/attempt1/p6-b1-rt.attempt1-scored.json",
+      "tarball_sha256": "3cbb77267863145887439dad322f6b1017ba485f5c5f7b491583962596a4d956",
+      "tarball_copy": "packets/P6/attempt1/junior_b_colab-P6-B1RT.attempt1.tgz",
+      "run_sh_sha256": "3763a3a783cbff074ea51f3687778de109e15dd3b805b9e7aebd0947110f0e70",
+      "run_sh_copy": "packets/P6/attempt1/run.attempt1.sh",
+      "manifest_sha256": "76d375c09ffe9de10303576eb90dc460b7ce0e938879434469557cac7475f896",
+      "ready_stamp": "2026-10-26 19:48 EDT",
+      "ready_by": "Claude Orchestrator (claude-opus-5-5) under owner decision 20261026-1931-EDT (C, item 2: set READY)"
+    },
+    "current": 2,
+    "max": 2,
+    "attempt2": {
+      "state": "SCORED",
+      "verdict": "PASS",
+      "machine_line": "B1RT_VERDICT verdict=PASS failing_ids=[] not_run=[] waived=[RT-4] rt5_recorded=True",
+      "scored": {
+        "stamp": "2026-10-26 21:22 EDT",
+        "by": "Claude Orchestrator (claude-opus-5-5), P6 a2 score wake",
+        "open_tree": "logs/xn4090/2026-10-27/open-b1rt-20261027-0113",
+        "deposit_sha256": "4e49c3e9efd788e6a457e7df251143cc7c6d0c688179c0c38aa667c5e5d4d8e8",
+        "results": "orch/reports/VERDICT-P6-b1-rt-attempt2-results.json",
+        "results_sha256": "126c23349ef6770ce7a8c5e3d9d7b60c66dceb7803ae27824f8d2651cc07be2d",
+        "report": "orch/reports/VERDICT-P6-b1-rt-attempt2-20261026.md",
+        "verdict_tool_sha256": "2341a93d4acb857dae3933d38e5dedb49e03841533abdd9cb71482909616443a",
+        "cpu_results_sha256": "197b6c6556551ee9994f54126767192175d3aa9a75c5011d6f573cfa4947eeab",
+        "amendment_sha256": "32143be4687ca6de270165a848eaf4aa8292a21a40e8255c142c32f9f048c591",
+        "gpu_hours_spent": 1.2258,
+        "attempts_used": 2,
+        "attempts_max": 2,
+        "byte_identical_to_attempt1": false,
+        "fix2_decision_sha256": "768d6a0a0e62a7f193e29620316dfdf90bfadba2614bbd047e398925fa036f22",
+        "arms_gate": "(1) met: SCORED PASS waived=[RT-4]; (2)-(4) ready_prereqs not built -> p6-b1-arms DRAFT unchanged (9f71dd1e)"
+      }
+    }
+  },
+  "lafan1_local": {
+    "dir": "/content/SuperMimic-Reproduced/data/raw/lafan1/g1",
+    "access": "read-only (P4 tree; do not clean, move or write)",
+    "preflight": "relay verifies before START; run.sh also logs sha256sum -c (non-fatal); fetch_clip enforces the pins on any source",
+    "csv_sha256": {
+      "walk1_subject1": "68c7887438e94f1f3d9ebacd3a8ce59251a22c7b05129a0f5d7cacaedc48c28d",
+      "run1_subject2": "ec02af4447a62214a6fec6afff60c75d0ecc8f80f8fb45e3cd4119fed9ceac8d",
+      "dance1_subject1": "e2a369e92e5ad076c5acffff7bce53157a0e6cd9e7e9f6a08dadfb1eb2928d8f",
+      "jumps1_subject1": "3f55c1a0f87564044a71817d62dc2a40aa76332aa1cab3f1c817333a197c78c2"
+    },
+    "x002": "CSVs in memory only; never staged into the tarball or deposits"
+  },
+  "started_utc": "2026-10-27T00:00:15Z",
+  "started_stamp": "2026-10-26 20:00 EDT",
+  "remote": {
+    "host": "XN-4090-GPU2",
+    "tmux_session": "p6-b1-rt",
+    "workdir": "/data/muchuan/p6-b1-rt/workdir",
+    "log": "/data/muchuan/p6-b1-rt/workdir/logs/run-20261027T000020Z.log",
+    "cuda_visible_devices": "0",
+    "gpu_uuid": "GPU-fb0522c7-d42b-41f1-f24b-4729e2c2174c",
+    "launch_utc": "2026-10-27T00:00:15Z",
+    "hf_endpoint": "https://hf-mirror.com",
+    "LAFAN1_G1_DIR": "/content/SuperMimic-Reproduced/data/raw/lafan1/g1",
+    "attempt": "2/2",
+    "fix2": true,
+    "csv_pins_verified_at_launch": true,
+    "upload_verified": {
+      "junior_b_colab-P6-B1RT.tgz": "85d2cc87aaa906e5c0fe4a81973150bcece57f263a3d2909c6d24a77d5291db1",
+      "run.sh": "1bf87ff4cb0569664f74527bd8d4ee6d713e1deae7563e74036a416e87fa4358"
+    },
+    "done_driver_utc": "2026-10-27T01:13:49Z",
+    "driver_state": "DONE",
+    "deposit_bundle": "/content/b1rt-20261027-0113.tgz",
+    "deposit_sha256": "4e49c3e9efd788e6a457e7df251143cc7c6d0c688179c0c38aa667c5e5d4d8e8",
+    "local_deposit": "logs/xn4090/2026-10-27/b1rt-20261027-0113.tgz",
+    "local_runner_log": "logs/xn4090/2026-10-27/p6-b1-rt-a2-runner_stdout.log",
+    "local_launch_log": "logs/xn4090/2026-10-27/p6-b1-rt-a2-run-20261027T000020Z.log"
+  },
+  "deposited_utc": "2026-10-27T01:13:49Z",
+  "deposited_stamp": "2026-10-27 09:13 Asia/Shanghai",
+  "scored_stamp": "2026-10-26 EDT (attempt 2)"
+}

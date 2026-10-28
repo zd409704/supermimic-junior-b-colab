@@ -1,0 +1,18 @@
+- [driver] 2026-10-27T01:40:08Z MOCK part 1: trainer/eval/tbdump = /srv/claude/research/supermimic-junior-b-colab/packets/P6/b1arms_mock/mock_entry.py; cap=9.0 h poll=1 s
+- [driver] 2026-10-27T01:40:08Z MOCK data step (synthetic npz)
+- [driver] 2026-10-27T01:40:15Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HAscratch_attention_s0_a1
+- [driver] 2026-10-27T01:40:27Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HAxfer_attention_s0_a1
+- [driver] 2026-10-27T01:40:40Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HMxfer_mlp_matched_s0_a1
+- [driver] 2026-10-27T01:40:57Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HAscratch_attention_s1_a1
+- [driver] 2026-10-27T01:41:09Z b1HAxfer_attention_s1_a1 INFRA failure (exit 1) before the endpoint
+- [driver] 2026-10-27T01:41:17Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HAxfer_attention_s1_a2
+- [driver] 2026-10-27T01:41:29Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HMxfer_mlp_matched_s1_a1
+- [driver] 2026-10-27T01:41:42Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HAscratch_attention_s2_a1
+- [driver] 2026-10-27T01:41:56Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HAxfer_attention_s2_a1
+- [driver] 2026-10-27T01:42:10Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HMxfer_mlp_matched_s2_a1
+- [driver] 2026-10-27T01:42:12Z eval b1HMxfer_mlp_matched_s2_a1 it0000480 exec1 exit=1 or no JSON: one re-execution (PLAN §5)
+- [driver] 2026-10-27T01:42:24Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HMscratch_mlp_matched_s0_a1
+- [driver] 2026-10-27T01:42:37Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HMscratch_mlp_matched_s1_a1
+- [driver] 2026-10-27T01:42:50Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HMscratch_mlp_matched_s2_a1
+- [driver] 2026-10-27T01:43:03Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HAfrozen_attention_s0_a1
+- [driver] 2026-10-27T01:43:15Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HAxfernoscale_attention_s0_a1

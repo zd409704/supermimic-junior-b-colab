@@ -1,0 +1,20 @@
+=== B2 verdict run 2026-10-26T21:16:41Z tool=1.0 sha256=cd2ac741d2ffad7353c7cf62ca5f325a5402ec4d7e6a6c6f5887ecff511c994c ===
+DEPOSIT path=logs/xn4090/2026-10-26/b2-20261026-1611.tgz sha256=a869b8fcb9d66e20b9938b7aa2df9f0896d754e24b8a56877c22275d9058ef86 part=1 extracted=True
+SEAL_LINE 2026-10-26T21:14:53Z 1793049293 DEPOSIT xn4090 a869b8fcb9d66e20b9938b7aa2df9f0896d754e24b8a56877c22275d9058ef86 logs/xn4090/2026-10-26/b2-20261026-1611.tgz p5-b2-attempt1 DONE_DRIVER=2026-10-26T16:11:04Z
+ATTEMPT b2idx_attention_s0_a1 class=completed driver_class=completed completed=True diverged=False scored=True condition=ablation
+ATTEMPT b2idx_attention_s1_a1 class=completed driver_class=completed completed=True diverged=False scored=True condition=ablation
+ATTEMPT b2idx_attention_s2_a1 class=completed driver_class=completed completed=True diverged=False scored=True condition=ablation
+ATTEMPT b2mt_attention_s0_a1 class=completed driver_class=completed completed=True diverged=False scored=True condition=T
+ATTEMPT b2mt_attention_s1_a1 class=completed driver_class=completed completed=True diverged=False scored=True condition=T
+ATTEMPT b2mt_attention_s2_a1 class=completed driver_class=completed completed=True diverged=False scored=True condition=T
+ATTEMPT b2mt_mlp_mind_s0_a1 class=completed driver_class=completed completed=True diverged=False scored=True condition=T
+ATTEMPT b2mt_mlp_mind_s1_a1 class=completed driver_class=completed completed=True diverged=False scored=True condition=T
+ATTEMPT b2mt_mlp_mind_s2_a1 class=completed driver_class=completed completed=True diverged=False scored=True condition=T
+UEVAL b2u_b0_attention_s0_a1 scored_exec=exec1
+UEVAL b2u_b0_mlp_matched_s0_a1 scored_exec=exec1
+UEVAL b2u_b0_attention_s1_a1 scored_exec=exec1
+UEVAL b2u_b0_mlp_matched_s1_a1 scored_exec=exec1
+UEVAL b2u_b0_attention_s2_a1 scored_exec=exec1
+UEVAL b2u_b0_mlp_matched_s2_a1 scored_exec=exec1
+B2_VERDICT verdict=BLOCKED outcome=null drho_u=-0.5570149528058929 g_u=0.43792569029292255 drho_t=0.9423446992931261 g_t=1.1404454055571487 t_status=ok gate_b1=Go failing_ids=[] blocked=[gpu_mismatch,U-REPRO,B2-V-2]
+=== end ===

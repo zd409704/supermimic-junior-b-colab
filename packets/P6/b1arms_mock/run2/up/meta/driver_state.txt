@@ -1,0 +1,18 @@
+PART 1 2026-10-27T01:44:56Z resume=false mock=1 prior_hours=0.0000
+DATA ok
+ATTEMPT b1HAscratch_attention_s0_a1 COMPLETED true
+SPENT 0.0075 2026-10-27T01:45:23Z
+DUR b1HAscratch_attention_s0 0.0058
+RUNDONE b1HAscratch_attention_s0 COMPLETED
+ATTEMPT b1HAxfer_attention_s0_a1 COMPLETED true
+SPENT 0.0142 2026-10-27T01:45:47Z
+DUR b1HAxfer_attention_s0 0.0064
+RUNDONE b1HAxfer_attention_s0 COMPLETED
+ATTEMPT b1HMxfer_mlp_matched_s0_a1 COMPLETED true
+SPENT 0.0192 2026-10-27T01:46:06Z
+DUR b1HMxfer_mlp_matched_s0 0.0053
+RUNDONE b1HMxfer_mlp_matched_s0 COMPLETED
+ATTEMPT b1HAscratch_attention_s1_a1 SPEND_CAP false
+SPENT 0.0214 2026-10-27T01:46:13Z
+RUNDONE b1HAscratch_attention_s1 SPEND_CAP
+SPENT 0.0214 2026-10-27T01:46:13Z

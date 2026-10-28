@@ -1,0 +1,18 @@
+- [driver] 2026-10-27T01:45:03Z MOCK part 1: trainer/eval/tbdump = /srv/claude/research/supermimic-junior-b-colab/packets/P6/b1arms_mock/mock_entry.py; cap=9.0 h poll=1 s
+- [driver] 2026-10-27T01:45:03Z MOCK data step (synthetic npz)
+- [driver] 2026-10-27T01:45:16Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HAscratch_attention_s0_a1
+- [driver] 2026-10-27T01:45:42Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HAxfer_attention_s0_a1
+- [driver] 2026-10-27T01:45:59Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HMxfer_mlp_matched_s0_a1
+- [driver] 2026-10-27T01:46:30Z MOCK part 2: trainer/eval/tbdump = /srv/claude/research/supermimic-junior-b-colab/packets/P6/b1arms_mock/mock_entry.py; cap=9.0 h poll=1 s
+- [driver] 2026-10-27T01:46:31Z b1HAscratch_attention_s1_a1 lost with the previous job part: INFRA (session loss)
+- [driver] 2026-10-27T01:46:49Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HAscratch_attention_s1_a2
+- [driver] 2026-10-27T01:47:07Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HAxfer_attention_s1_a1
+- [driver] 2026-10-27T01:47:34Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HMxfer_mlp_matched_s1_a1
+- [driver] 2026-10-27T01:48:01Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HAscratch_attention_s2_a1
+- [driver] 2026-10-27T01:48:16Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HAxfer_attention_s2_a1
+- [driver] 2026-10-27T01:48:43Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HMxfer_mlp_matched_s2_a1
+- [driver] 2026-10-27T01:49:05Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HMscratch_mlp_matched_s0_a1
+- [driver] 2026-10-27T01:49:28Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HMscratch_mlp_matched_s1_a1
+- [driver] 2026-10-27T01:49:51Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HMscratch_mlp_matched_s2_a1
+- [driver] 2026-10-27T01:50:07Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HAfrozen_attention_s0_a1
+- [driver] 2026-10-27T01:50:29Z harness stop (B0 PLAN §4.3, SIGINT) used for b1HAxfernoscale_attention_s0_a1

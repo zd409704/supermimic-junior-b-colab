@@ -1,0 +1,2 @@
+index, uuid, name
+0, GPU-mock, MOCK CPU

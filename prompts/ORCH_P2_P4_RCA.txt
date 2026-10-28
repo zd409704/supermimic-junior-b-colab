@@ -1,0 +1,39 @@
+Method boot (required order):
+1. Read the global pin named in /srv/claude/research/METHOD/CURRENT and verify its sha256.
+2. Read any overlays under this program's method/local/ (skip if empty / only .gitkeep).
+3. Read Appendix A: available-models catalog (A.6) and allocation preference (Claude family required; Codex Astra high as secondary preference when a second family is needed; remaining slots by documented characteristics).
+4. Analyze whether this program needs specials beyond the global method. If yes and overlays are missing, create append-only method/local/ files that name the global version+sha they extend, then continue. If no, use global only; do not invent a local full copy.
+5. Before Step 2 of a heterogeneous or high-stakes contest packet: allocate models from the catalog under A.7, write program-root roster.md (A.5 fields), and freeze. Do not copy another program's roster as methodology.
+6. In-flight packets keep the method hash they started under; adopt a newer global pin only at the next packet boundary (or explicit sealed amendment).
+Stay under this program's root for writes. Home-humanoid / plant-class wording only; Provisional unless explicitly authorized to Lock.
+
+---
+
+Role: Orchestrator (claude-opus, medium effort). Packet: P2 B0 **P-4 root-cause analysis** only (not a new Colab run; not a PLAN amend).
+
+Working directory: /srv/claude/research/supermimic-junior-b-colab
+Stay under /srv/claude/research/supermimic-junior-b-colab/.
+
+Context: Attempts 1 and 2 both machine-verdict FAIL with failing_ids=[P-4] only. P-3 (wm/loss) passed; seams S1–S5 passed. Owner aborted attempt 3 in favor of analysis. Do not start Colab. Do not amend PLAN. Do not change P1 freeze. Do not start P3.
+
+Inputs (read-only sealed deposits — confirm seal lines in logs/seal.log and recompute sha256 before open):
+- logs/colab/2026-10-26/b0smoke-20261026-0238.tgz  sha256 71bd8a1b634ee9893eccc9b026eeba556cf409353b11225181fd369c827d4e03
+- logs/colab/2026-10-26/b0smoke-20261026-0400-attempt2.tgz  sha256 c04a62880babad5261b34481b7e122fe66d33ac7a8786f86118cc1c3453c570d
+Also read: spikes/B0-smoke/PLAN.md, spikes/B0-smoke/results.json, spikes/B0-smoke/runs.log, method/local/OVERLAY-001-owner-colab-runner.md. You may reuse logs/colab/2026-10-26/verdict-tools/ and existing extract dirs if hashes still match; otherwise extract under logs/colab/2026-10-26/extract-rca/ without modifying sealed .tgz files.
+
+Analysis questions:
+1. Why does train/episode_norm_return fall over the 0.5 h smoke for BOTH attention and mlp_matched while wm/loss improves (P-3 OK, P-4 FAIL twice)?
+2. Compare arms: same failure mode or different?
+3. Check reward/return logging definitions, warmup definition ambiguity in PLAN, smoke length vs hyperparameters, eval early termination pattern.
+4. Distinguish pipeline-OK-but-P-4-too-strict vs real learning/return collapse vs metric artifact.
+
+Deliverables (write under this program):
+- orch/reports/P4-RCA-20261026.md — evidence-backed RCA with concrete numbered options:
+  A) Accept: smoke pipeline OK; P-4 criterion too strict / wrong for 0.5 h smoke
+  B) PLAN amendment candidates (warmup numeric, longer cap, different return metric, etc.) — propose text, do NOT apply
+  C) Code/config change-request candidates against P1 freeze — propose, do NOT apply
+  Each option must cite deposit evidence (log/tb/eval numbers you actually read).
+- Update orch/STATUS.md with RCA headline + pointer to the report + recommended owner choice framed as options (not a Lock).
+
+Stop when the report and STATUS are written. Print: RCA_DONE options=A|B|C-summary.
+

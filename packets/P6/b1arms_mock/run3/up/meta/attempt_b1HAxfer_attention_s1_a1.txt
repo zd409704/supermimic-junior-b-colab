@@ -1,0 +1,16 @@
+aid=b1HAxfer_attention_s1_a1
+arm=H-A-xfer
+policy=attention
+init=xfer
+seed=1
+role=primary
+attempt=1
+config=b1_home.yaml
+src_key=attention_s1
+src_ckpt=/home/box/.srv-claude/research/supermimic-junior-b-colab/packets/P6/b1arms_mock/run3/ckroot/logs/b0_attention_s1/ckpt_0001600.pt
+start_utc=2026-10-27T01:46:55Z
+hours_at_start=0.0283
+end_utc=2026-10-27T01:47:07Z
+exit_code=130
+class=COMPLETED completed=true
+evals=done

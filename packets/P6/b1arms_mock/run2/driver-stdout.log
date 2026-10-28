@@ -1,0 +1,12 @@
+[b1arms_driver 2026-10-27T01:44:56Z] start part=1 resume=false mock=1 J=/home/box/.srv-claude/research/supermimic-junior-b-colab/packets/P6/b1arms_mock/run2/junior U=/home/box/.srv-claude/research/supermimic-junior-b-colab/packets/P6/b1arms_mock/run2/up prior_hours=0.0000 cap=0.02
+[b1arms_driver 2026-10-27T01:45:02Z] started b1HAscratch_attention_s0_a1 pid=2617744 (primary, 0.0017 h)
+[b1arms_driver 2026-10-27T01:45:15Z] b1HAscratch_attention_s0_a1 class=COMPLETED completed=true exit=130
+[b1arms_driver 2026-10-27T01:45:24Z] started b1HAxfer_attention_s0_a1 pid=2618402 (primary, 0.0078 h)
+[b1arms_driver 2026-10-27T01:45:43Z] b1HAxfer_attention_s0_a1 class=COMPLETED completed=true exit=130
+[b1arms_driver 2026-10-27T01:45:47Z] started b1HMxfer_mlp_matched_s0_a1 pid=2619223 (primary, 0.0142 h)
+[b1arms_driver 2026-10-27T01:46:00Z] b1HMxfer_mlp_matched_s0_a1 class=COMPLETED completed=true exit=130
+[b1arms_driver 2026-10-27T01:46:06Z] started b1HAscratch_attention_s1_a1 pid=2620138 (primary, 0.0194 h)
+[b1arms_driver 2026-10-27T01:46:13Z] b1HAscratch_attention_s1_a1 class=SPEND_CAP completed=false exit=130
+[b1arms_driver 2026-10-27T01:46:13Z] BLOCKED spend_cap: b1HAscratch_attention_s1_a1 stopped by the spend cap at 0.0214 h
+[b1arms_driver 2026-10-27T01:46:13Z] BUNDLE /home/box/.srv-claude/research/supermimic-junior-b-colab/packets/P6/b1arms_mock/run2/out/b1arms-20261027-0146.tgz sha256=6425c502630aa55ec8eee27fa8265c27475c121cf946f6379abce292258f3624
+DONE_DRIVER utc=2026-10-27T01:46:13Z bundle=/home/box/.srv-claude/research/supermimic-junior-b-colab/packets/P6/b1arms_mock/run2/out/b1arms-20261027-0146.tgz state=BLOCKED

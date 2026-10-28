@@ -1,0 +1,16 @@
+aid=b1HMxfer_mlp_matched_s2_a1
+arm=H-M-xfer
+policy=mlp_matched
+init=xfer
+seed=2
+role=primary
+attempt=1
+config=b1_home.yaml
+src_key=mlp_matched_s2
+src_ckpt=/home/box/.srv-claude/research/supermimic-junior-b-colab/packets/P6/b1arms_mock/run4/ckroot/logs/b0_mlp_matched_s2/ckpt_0001600.pt
+start_utc=2026-10-27T01:48:56Z
+hours_at_start=0.0406
+end_utc=2026-10-27T01:49:04Z
+exit_code=130
+class=COMPLETED completed=true
+evals=done

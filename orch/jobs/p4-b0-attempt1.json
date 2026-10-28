@@ -1,0 +1,180 @@
+{
+  "job_id": "p4-b0-attempt1",
+  "program": "supermimic-junior-b-colab",
+  "packet": "P4-B0-attempt1",
+  "state": "SCORED",
+  "venue": "xn-4090-gpu2",
+  "ssh_alias": "xn-4090-gpu2",
+  "workdir": "/tmp/supermimic-junior-b-colab-p4-b0-attempt1",
+  "upload": [
+    {
+      "src": "packets/P4/junior_b_colab-CR-B0-1.tgz",
+      "sha256": "763867682e3cfa05ca8eb6382ffc9124be2347b898531c60b904061776c33bff"
+    },
+    {
+      "src": "orch/jobs/p4-b0-attempt1/run.sh",
+      "sha256": "da9c19ce78f1d01fe779bd74dd5619437398f88c6b88f005d7e514891e89a5c1"
+    }
+  ],
+  "command": "UPLOAD_TGZ=\"$PWD/junior_b_colab-CR-B0-1.tgz\" bash ./run.sh",
+  "env": {
+    "B0_VENUE": "xn4090",
+    "B0_TARBALL_SHA": "763867682e3cfa05ca8eb6382ffc9124be2347b898531c60b904061776c33bff",
+    "TZ": "America/Toronto",
+    "LANG": "en_US.UTF-8",
+    "LC_ALL": "en_US.UTF-8",
+    "HF_ENDPOINT": "https://hf-mirror.com",
+    "HF_HUB_ENABLE_HF_TRANSFER": "0"
+  },
+  "timeout_hours": 10,
+  "mutex": "gpu0",
+  "deposit": {
+    "remote_glob": "/content/b0-*.tgz",
+    "local_dir": "logs/xn4090/2026-10-26",
+    "seal_event": "DEPOSIT xn4090"
+  },
+  "success_hint": "DONE_DRIVER or B0 deposit tarball under /content; harness_stop completed for scheduled cells",
+  "plan_ref": {
+    "path": "spikes/B0/PLAN.md",
+    "base_sha256": "ed6b6a54a860bbfc67d7c822b5394804b8d408f6aae57fbeb118d2ea63c52557",
+    "full_sha256_with_amendment_v1": "356c389f4c2efd47249f741b23f69bde19043a0ed8dc6e2c637abe397b9e145a",
+    "amendment": "v1",
+    "tarball_sha256": "763867682e3cfa05ca8eb6382ffc9124be2347b898531c60b904061776c33bff",
+    "prestart_update": "packets/P4/PRESTART-UPDATE-AMENDMENT-v1.md"
+  },
+  "created_by": "Claude 4 Orchestrator relay (P4-prep clear + runner packet)",
+  "stamp": "2026-10-26 06:22 EDT",
+  "notes": "SCORED PASS/NONINFERIOR (machine verdict_b0). Deposit 1f491182\u2026; results 76507d8a\u2026; report VERDICT-P4-b0-attempt1-relaunch3-20261026.md. Seven arms completed exit=130 F-1 harness stop; diverged=false.",
+  "started_stamp": "2026-10-26 02:52 EDT",
+  "started_utc": "2026-10-26T06:52:53Z",
+  "remote": {
+    "host": "XN-4090-GPU2",
+    "tmux_session": "p4-b0-attempt1",
+    "workdir": "/data/muchuan/p4-b0-attempt1/workdir",
+    "log": "/data/muchuan/p4-b0-attempt1/workdir/logs/run-20261026T065253Z.log",
+    "cuda_visible_devices": "0",
+    "gpu_uuid": "GPU-fb0522c7-d42b-41f1-f24b-4729e2c2174c",
+    "launch_utc": "2026-10-26T06:52:53Z",
+    "relaunch": 3,
+    "hf_endpoint": "https://hf-mirror.com",
+    "pids_at_launch": [
+      3871269,
+      3871271,
+      3871282,
+      3871293
+    ],
+    "run_sha256": "da9c19ce78f1d01fe779bd74dd5619437398f88c6b88f005d7e514891e89a5c1"
+  },
+  "deposits": [
+    {
+      "path": "logs/xn4090/2026-10-26/b0-20261026-0628.tgz",
+      "sha256": "e5120f7976a033e7572a2654c62dec996cc6fdda872bb8ce39365d2a8e3765ea",
+      "kind": "BLOCKED_setup",
+      "reason": "tarball_sha_mismatch missing /content/junior_b_colab-CR-B0-1.tgz (run.sh pre-unpacked and omitted B0_TGZ)"
+    },
+    {
+      "path": "logs/xn4090/2026-10-26/b0-20261026-0630.tgz",
+      "sha256": "8c7c9845afd95f1baa74d85971d3acb76626297d42bb5c7461fcc5c0e39320a2",
+      "kind": "BLOCKED_setup",
+      "reason": "setup_failed uv sync \u2014 uv not on PATH"
+    },
+    {
+      "path": "logs/xn4090/2026-10-26/b0-20261026-0645.tgz",
+      "sha256": "8b5ee889edd98e99802df03863c8c2a51bad6f088b79f689b266b747d6e1e1eb",
+      "kind": "BLOCKED_setup",
+      "reason": "setup_failed motion data download \u2014 huggingface_hub ConnectError Network is unreachable (errno 101)"
+    },
+    {
+      "path": "logs/xn4090/2026-10-26/b0-20261026-0919.tgz",
+      "sha256": "1f49118213d53538485303aa0b3f09bb5f068daeb06eb325045fd83a3118dde1",
+      "kind": "DONE_DRIVER",
+      "reason": "exit=0; 7 arms completed exit=130 harness_stop max_hours; seal-before-open",
+      "run_log": "logs/xn4090/2026-10-26/run-20261026T065253Z.log",
+      "run_log_sha256": "255fd9446e4fd8d4b40c0633d4a8b853f4032697289e76e321f05bf2002b3e28"
+    }
+  ],
+  "remote_relaunch": {
+    "reason": "run.sh placed unpacked tree but not B0_TGZ path; driver setup blocked",
+    "fixed_run_sha": "f6874ce518063b8b44c407579691330a3e793c8f13da3b3243ab920fe3d7ecf2",
+    "stamp": "2026-10-26 02:30 EDT"
+  },
+  "fix": {
+    "kind": "HF_ENDPOINT_mirror",
+    "diag_sha256": "b818a714421f3a36ce32e77d8ad72ed8ac67fac2ab1338cf1e2475baff5ed5f7",
+    "run_sha256": "da9c19ce78f1d01fe779bd74dd5619437398f88c6b88f005d7e514891e89a5c1",
+    "manager_decision": "adopt fix #1 then relaunch"
+  },
+  "blocked_history": [
+    {
+      "stamp": "2026-10-26 02:45 EDT",
+      "utc": "2026-10-26T06:45:09Z",
+      "reason": "motion_data_download_network_unreachable",
+      "detail": "After uv sync (156 pkgs), snapshot_download failed: httpx ConnectError [Errno 101] Network is unreachable",
+      "deposit_sha256": "8b5ee889edd98e99802df03863c8c2a51bad6f088b79f689b266b747d6e1e1eb",
+      "run_log": "logs/xn4090/2026-10-26/run-20261026T063117Z.log"
+    }
+  ],
+  "finished_utc": "2026-10-26T09:19:29Z",
+  "deposited": {
+    "path": "logs/xn4090/2026-10-26/b0-20261026-0919.tgz",
+    "sha256": "1f49118213d53538485303aa0b3f09bb5f068daeb06eb325045fd83a3118dde1",
+    "utc": "2026-10-26T09:19:29Z",
+    "arms_from_run_log": [
+      {
+        "id": "b0_attention_s0_a1",
+        "class": "completed",
+        "exit": 130
+      },
+      {
+        "id": "b0_mlp_matched_s0_a1",
+        "class": "completed",
+        "exit": 130
+      },
+      {
+        "id": "b0_attention_s1_a1",
+        "class": "completed",
+        "exit": 130
+      },
+      {
+        "id": "b0_mlp_matched_s1_a1",
+        "class": "completed",
+        "exit": 130
+      },
+      {
+        "id": "b0_attention_s2_a1",
+        "class": "completed",
+        "exit": 130
+      },
+      {
+        "id": "b0_mlp_matched_s2_a1",
+        "class": "completed",
+        "exit": 130
+      },
+      {
+        "id": "b0_mlp_upstream_s0_a1",
+        "class": "completed",
+        "exit": 130
+      }
+    ],
+    "driver_exit": 0,
+    "not_opened": true
+  },
+  "scored": {
+    "verdict": "PASS",
+    "b0_outcome": "NONINFERIOR",
+    "outcome_basis": "margin",
+    "superior": true,
+    "delta": 0.21324904291209681,
+    "delta_threshold": 0.1520180327677581,
+    "rbar_h_attention": 0.2908716158904344,
+    "rbar_h_mlp_matched": 0.0776225729783376,
+    "shadow_outcome_rstep": "NONINFERIOR",
+    "results_json": "orch/reports/VERDICT-P4-b0-attempt1-relaunch3-results.json",
+    "results_sha256": "76507d8a9488cd295add444d9e9463da1bf7ab62c2216733043c535f3c6f8d3d",
+    "report": "orch/reports/VERDICT-P4-b0-attempt1-relaunch3-20261026.md",
+    "report_sha256": "2bb0de08f91c2514d4b76504683ccada1c5008ecfd8feba589d14a9420bd9cb4",
+    "verdict_line": "B0_VERDICT verdict=PASS outcome=NONINFERIOR basis=margin delta=0.21324904291209681 delta_thr=0.1520180327677581 failing_ids=[] blocked=[]",
+    "tool_sha256": "9caa744a65ef5206fd46f532c4d13529b7773d076ee725ee4cb98ec192774a3b",
+    "plan_sha256": "356c389f4c2efd47249f741b23f69bde19043a0ed8dc6e2c637abe397b9e145a"
+  }
+}

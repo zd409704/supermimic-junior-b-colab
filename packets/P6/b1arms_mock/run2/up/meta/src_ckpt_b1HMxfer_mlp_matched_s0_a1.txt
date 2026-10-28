@@ -1,0 +1,4 @@
+aid=b1HMxfer_mlp_matched_s0_a1 src=mlp_matched_s0
+expected_sha256=f4a088a9f4564e7e42872178ddb7d8f33ea4421ddbede2431a3cb39890776c8e
+candidate=/home/box/.srv-claude/research/supermimic-junior-b-colab/packets/P6/b1arms_mock/run2/ckroot/logs/b0_mlp_matched_s0/ckpt_0001600.pt sha256=f4a088a9f4564e7e42872178ddb7d8f33ea4421ddbede2431a3cb39890776c8e match=true
+used=/home/box/.srv-claude/research/supermimic-junior-b-colab/packets/P6/b1arms_mock/run2/ckroot/logs/b0_mlp_matched_s0/ckpt_0001600.pt

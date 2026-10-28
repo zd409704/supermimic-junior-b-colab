@@ -1,0 +1,54 @@
+Method boot (required order):
+1. Read the global pin named in /srv/claude/research/METHOD/CURRENT and verify its sha256.
+2. Read any overlays under this program's method/local/ (skip if empty / only .gitkeep).
+3. Read Appendix A: available-models catalog (A.6) and allocation preference (Claude family required; Codex Astra high as secondary preference when a second family is needed; remaining slots by documented characteristics).
+4. Analyze whether this program needs specials beyond the global method. If yes and overlays are missing, create append-only method/local/ files that name the global version+sha they extend, then continue. If no, use global only; do not invent a local full copy.
+5. Before Step 2 of a heterogeneous or high-stakes contest packet: allocate models from the catalog under A.7, write program-root roster.md (A.5 fields), and freeze. Do not copy another program's roster as methodology.
+6. In-flight packets keep the method hash they started under; adopt a newer global pin only at the next packet boundary (or explicit sealed amendment).
+Stay under this program's root for writes. Home-humanoid / plant-class wording only; Provisional unless explicitly authorized to Lock.
+
+---
+
+Role: Orchestrator. Packet: **P6 Class-2 apply option C (waive RT-4) → READY p6-b1-rt**.
+
+Working directory: /srv/claude/research/supermimic-junior-b-colab
+Stay under /srv/claude/research/supermimic-junior-b-colab/.
+
+## Authority (do not re-ask)
+
+- Class-2 SIGNED C: `orch/owner-decisions/20261026-1931-EDT-p6-rt4-class2-c-waive.md` sha256 `934b3c9b85231ecedc2704b06e9abd9ccf41b92a871fcc09f8e622b4d294c262` (answers ASK `orch/reports/ASK-P6-RT4-class2-20261026.md`)
+- Prior: P6 START `3a0254de…`; xn-4090 free + P6d proceed `1408aeef…`
+- Sealed B1-RT PLAN `spikes/B1-RT/PLAN.md` sha256 `b7365b4f2e382344151c64be979e5e2aff102fbaba6dc6826d8a429b3b9852a5`
+- CPU evidence: results-cpu-attempt1 `197b6c65…`, diag-source-baseline `8f511559…`, results.json FAIL RT-4 `02366717…`, BLOCKED `6122baac…`
+- Verdict tool `spikes/B1-RT/verdict_rt.py` already supports AMENDMENT waive list (do not change tool semantics except to consume the new amendment)
+- Do **not** implement option B (RT-b). Do **not** reopen P4/P5.
+
+## Do now (exact)
+
+1. Write and seal `spikes/B1-RT/AMENDMENT-C2-rt4.json` with at least:
+   - `waive`: ["RT-4"]
+   - `slot_rule`: "first"
+   - `decision_sha256`: "934b3c9b85231ecedc2704b06e9abd9ccf41b92a871fcc09f8e622b4d294c262"
+   - `decision_path`: "orch/owner-decisions/20261026-1931-EDT-p6-rt4-class2-c-waive.md"
+   - `ask_path`: "orch/reports/ASK-P6-RT4-class2-20261026.md"
+   - `plan_ref`: spikes/B1-RT/PLAN.md sha b7365b4f…
+   - `disclosure`: RT-4 and source-baseline numbers must appear in every B1 write-up; claim-scope line that references were produced by route RT-a which failed retarget QA (skate measure not attainable on the 29-DoF source itself)
+   - `option`: "C"
+   Append seal.log event for this file.
+
+2. Re-run / refresh machine `spikes/B1-RT/results.json` via verdict_rt with the amendment loaded so waived=[RT-4] and RT-6..8 remain not_run until GPU deposit (document that GPU still required). Seal updated results if bytes change.
+
+3. Create or update `orch/jobs/p6-b1-rt.json` + `orch/jobs/p6-b1-rt/run.sh` (and any upload tarball listed in upload[]) for RT-6..RT-8 on **xn-4090-gpu2**, mutex `gpu0`, `env.HF_ENDPOINT=https://hf-mirror.com`, `slot_rule=first`, plan_ref = B1-RT PLAN sha, pointer to AMENDMENT-C2-rt4.json sha. Follow P5 job schema fields as needed (`job_id`, `program`, `packet`, `state`, `venue`, `ssh_alias`, `workdir`, `upload`, `command`, `env`, `timeout_hours`, `mutex`, `deposit`, `success_hint`, `plan_ref`, `created_by`, `stamp`). State must end as **READY** (JSON + `orch/STATUS.md` ## Jobs row). Re-seal job JSON sha after READY flip.
+
+4. Update `orch/STATUS.md` headline: Class-2 C applied; amendment sealed; `p6-b1-rt` READY; next = relay START on xn-4090. Copy STATUS to `orch/reports/STATUS-<stamp>-EDT.md`. Append progress.md. Mark ASK status answered/closed by pointer to decision (do not delete ASK).
+
+5. If `spikes/B1/PLAN.md` is not yet sealed: draft and seal it now (venue xn-4090-gpu2; carry P5 NO_GAIN caveat; disclose RT-4 waive C + claim-scope; arms H-A-scratch / H-A-xfer / H-M-xfer; B1-RT gate = RT-1..3 pass + RT-4 waived + RT-5 recorded + RT-6..8 pass). If already sealed, only amend if venue/disclosure missing (append-only amendment; re-seal).
+
+6. Prepare `orch/jobs/p6-b1-arms` as **DRAFT** only (do not READY until RT deposit SCORED PASS on RT-6/7/8). Print reminder for relay.
+
+## Print exactly when done
+
+`P6_C2_RT4_WAIVE_SEALED amendment_sha256=<hex> job_sha256=<hex> state=READY`
+and if B1 PLAN sealed this wake: `P6C_PLAN_SEALED sha256=<hex> path=spikes/B1/PLAN.md`
+
+Stop. Do not SSH. Do not flip p6-b1-arms to READY. Do not start GPU.

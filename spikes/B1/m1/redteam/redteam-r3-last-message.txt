@@ -1,0 +1,20 @@
+1. **R1-8 — PARTIAL — MAJOR — M1.6–M1.7.** The malformed-summary fix and run-statistic finiteness checks are present, but C2 remains incompletely implemented:
+   - `m1_branch()` calls `m1_runs()` and `m1_arm_stats()` **outside** its exception handler. In particular, `sd1()` can raise during squaring of finite deviations. An arithmetic failure can therefore abort scoring instead of producing structured invalidity; a secondary-arm failure can also abort the primary analysis.
+   - The finiteness check examines only floats returned in `comparison`. It does not check every intermediate comparison quantity, such as the S-ratio threshold or the lower bound `mean(m) − 2·SE(x,m)`.
+   - When a returned comparison quantity is non-finite, the branch becomes BLOCKED but retains the calculated `o`; this can still produce a partial outcome from arithmetic that C2 declared invalid.
+
+   **Fix:** guard numeric validation and aggregation at their specified scopes, including the preceding v1.0 recomputation in M1 mode. Validate all comparison operands before classifying. On comparison-level C2 failure, null both outcome and partial outcome. Keep secondary-only failures informational. Verify these paths with synthetic fixtures.
+
+2. **Round-2 #10 — RESOLVED — MAJOR — M1.1, M1.7.** `m1_guard()` now requires exactly one deposit and checks its full pinned SHA-256 before extraction or scoring. **Fix:** none further for this objection.
+
+3. **Round-2 #11 — RESOLVED — MAJOR — M1.2, M1.7–M1.9.** The tool loads the hash-verified historical record, preserves its original outcome and line, and includes its per-run curves/AULC/R25/R100 and per-arm AULC. The printed `v10_outcome` comes from that record rather than recomputation. **Fix:** none further for historical-record preservation; discrepancy coverage has a separate issue below.
+
+4. **Round-2 #12 — PARTIAL — MAJOR — M1.7.** Both destinations are now checked against protected files using canonical paths and file identity. However, **the two output destinations are compared with each other only by canonical path** (`m1_guard()`, lines 753–755). Distinct hard links to the same unprotected file pass this test. Writing the JSON and then appending the log through the other link corrupts the JSON artifact.
+
+   **Fix:** also apply `os.path.samefile()` between existing `--out` and `--runs-log` destinations. Reject matching file identities before scoring. Add a synthetic hard-link case alongside the existing alias tests.
+
+5. **NEW — MINOR — M1.7.** The discrepancy list is narrower than the promised historical-versus-recomputed comparison. `m1_write()` compares per-run `R` and the aggregate verdict line, but not per-run AULC/R25/R100 or per-arm AULC arrays. A curve-metric regression can therefore go unreported when point returns and the aggregate line remain unchanged; recomputed per-run curve metrics are also absent from the final M1 JSON.
+
+   **Fix:** compare every historical metric copied into `v10_record` against its recomputed counterpart, report field-specific discrepancies and missing entries, and retain the corresponding recomputed fields under an explicitly separate namespace.
+
+OVERALL: SEAL-AFTER-FIXES

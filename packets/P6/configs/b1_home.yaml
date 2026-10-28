@@ -1,0 +1,49 @@
+# B1 (P6) home-humanoid config: consumed by packets/P6/b1/p6_entry.py with SM_BODY_MODULE=sm_body_home.
+# Decoder settings are the P4 (configs/b0_microbench.yaml) values, unchanged, so P4 decoder weights load 1:1.
+# Upstream flags are the P4 values except --schedule.checkpoint-interval 160 (10 equally spaced AULC points).
+
+run_name: b1
+seed: 0
+policy: attention
+
+attention:
+  d_model: 128
+  num_heads: 4
+  num_self_attn_layers: 1
+  query_hidden: [256]
+  readout_hidden: [256, 128]
+  descriptor: v2
+  id_mode: morph
+  morphology: upstream_mjmodel
+  descriptor_scale_norm: true   # false only in the H-A-xfer-noscale ablation (configs/b1_home_noscale.yaml)
+
+b2:
+  mask_fracs: [0.1, 0.2]
+  train_mask_frac: 0.0
+
+upstream:
+  repo_dir: /content/SuperMimic-Reproduced-b1
+  model_loader: "sm_body_home:load_model"
+  robot_cfg_loader: "sm_body_home:get_robot_cfg"
+  action_scale_loader: "sm_body_home:ACTION_SCALE"
+  dataset_repo: lvhaidong/LAFAN1_Retargeting_Dataset
+  dataset_subdir: g1
+  npz_dir: data/npz/b1_home
+  pass_clip_filter: false
+  clips:                       # RT-a retargets of these slots (spikes/B1-RT/PLAN.md §3; replacements per RT-4)
+    - walk1_subject1
+    - run1_subject2
+    - dance1_subject1
+    - jumps1_subject1
+  tyro_args:
+    --env.num-envs: 512
+    --policy-trainer.batch-size: 512
+    --policy-trainer.horizon: 16
+    --policy-trainer.compile: None
+    --schedule.max-hours: 1.5
+    --schedule.checkpoint-interval: 160
+    --schedule.log-interval: 50
+    --env.anchor-obs: true
+
+eval:
+  num_envs: 64

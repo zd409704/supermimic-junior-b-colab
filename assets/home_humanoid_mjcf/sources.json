@@ -1,0 +1,15 @@
+{
+  "repository": "https://github.com/hanyang9/UMR",
+  "commit": "d1cdaedaf67a827198da71c5fa831f48b2e51f91",
+  "robot_original": "home_humanoid_upstream_export.xml",
+  "robot_original_sha256": "d310aa59cf3301f0a4f12cb73add099504af2bd656b40880b0bedb7153d5eeac",
+  "anatomical_ankles": {
+    "left": "l_ankle_pitch_joint",
+    "right": "r_ankle_pitch_joint"
+  },
+  "note": "Ankle sites are geometric audit markers. Official UMR learns dense surface correspondence; this is not a hand-written IK mapping or proof of learned correspondence accuracy.",
+  "comparison_repository": "https://github.com/plant-class-locomotion/HT_UMR",
+  "comparison_commit": "9fb026ffe5b0c9425e91dec6aef2f495c0b09072",
+  "repository_layout": "Vendored source snapshots; motion samples, model weights, training checkpoints and playback caches are external.",
+  "comparison_repository_note": "Vendor organization segment redacted to plant-class wording; commit pin unchanged."
+}

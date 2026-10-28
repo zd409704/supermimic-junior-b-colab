@@ -1,0 +1,608 @@
+diff -ru '--exclude=__pycache__' /tmp/pre/code/attention_policy.py code/attention_policy.py
+--- /tmp/pre/code/attention_policy.py	2026-10-25 14:16:31.000000000 -0400
++++ code/attention_policy.py	2026-10-25 15:10:07.776768846 -0400
+@@ -72,6 +72,10 @@
+ # Upstream per-term scales (divide): joint_pos, joint_vel, base_ang_vel, projected_gravity, actions.
+ DEFAULT_OBS_TERM_SCALE: tuple[float, ...] = (1.0, 5.0, 2.0, 1.0, 1.0)
+ 
++# Tree depth is normalised by this fixed constant (not per-body max depth) so that the same depth
++# value means the same thing on every body (B1 transfer). Bodies deeper than 8 exceed 1.0.
++DEPTH_NORM = 8.0
++
+ MORPH_DIM = 12  # anchor xyz (3) + axis xyz (3) + default angle (1) + depth (1) + side (1) + limb one-hot (3)
+ 
+ 
+@@ -154,30 +158,59 @@
+             anchor = [0.0, (0.15 + 0.08 * depth) * side, z]
+         onehot = [0.0, 0.0, 0.0]
+         onehot[limb] = 1.0
+-        rows.append(anchor + axis + [0.0, depth / 6.0, side] + onehot)
++        rows.append(anchor + axis + [0.0, depth / DEPTH_NORM, side] + onehot)
+     return torch.tensor(rows, dtype=torch.float32)
+ 
+ 
+-def morphology_from_mjmodel(model, joint_names: tuple[str, ...] | None = None) -> torch.Tensor:
++def hinge_joint_names(model) -> tuple[str, ...]:
++    """Hinge joint names of a compiled ``mujoco.MjModel`` in model (joint) order."""
++    import mujoco  # noqa: PLC0415  (optional dependency)
++
++    return tuple(
++        mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_JOINT, j)
++        for j in range(model.njnt) if model.jnt_type[j] == mujoco.mjtJoint.mjJNT_HINGE
++    )
++
++
++def morphology_from_mjmodel(model, joint_names: tuple[str, ...] | None = None, default_qpos=None,
++                            info: dict | None = None) -> torch.Tensor:
+     """Default-pose morphology descriptor m_j from a compiled ``mujoco.MjModel`` (Colab path).
+ 
+     For each hinge joint: world anchor and axis at ``qpos0`` expressed relative to the root body,
+-    the default angle, normalised tree depth, lateral side sign and a coarse limb one-hot.
++    the default angle, tree depth / ``DEPTH_NORM``, lateral side sign and a coarse limb one-hot.
+     Requires ``mujoco`` (installed with the upstream reproduction, not on the research box).
++
++    ``default_qpos`` supplies the *env default pose* for the default-angle column: either a
++    per-hinge sequence/array in joint order, or a ``name -> angle`` mapping covering every hinge.
++    Only when it is ``None`` does the column fall back to the model's ``qpos0``; that fallback is
++    recorded in ``info["default_pose_source"] = "qpos0-fallback"`` (otherwise ``"default_qpos"``).
++    If ``info`` (a dict) is passed it is filled with ``default_pose_source`` and ``joint_names``.
++    The anchor/axis geometry is always evaluated at ``qpos0``.
+     """
+     import mujoco  # noqa: PLC0415  (optional dependency)
+     import numpy as np  # noqa: PLC0415
+ 
+     data = mujoco.MjData(model)
+     mujoco.mj_forward(model, data)
+-    names = joint_names or tuple(
+-        mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_JOINT, j)
+-        for j in range(model.njnt) if model.jnt_type[j] == mujoco.mjtJoint.mjJNT_HINGE
+-    )
++    names = tuple(joint_names or hinge_joint_names(model))
++    if default_qpos is None:
++        angles = [float(model.qpos0[model.jnt_qposadr[mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, n)]]) for n in names]
++        source = "qpos0-fallback"
++    elif hasattr(default_qpos, "keys"):
++        missing = [n for n in names if n not in default_qpos]
++        if missing:
++            raise KeyError(f"default_qpos mapping lacks hinge joints: {missing}")
++        angles, source = [float(default_qpos[n]) for n in names], "default_qpos"
++    else:
++        angles = [float(x) for x in np.asarray(default_qpos, dtype=float).reshape(-1)]
++        if len(angles) != len(names):
++            raise ValueError(f"default_qpos has {len(angles)} entries, expected {len(names)} (one per hinge, joint order)")
++        source = "default_qpos"
++    if info is not None:
++        info.update(default_pose_source=source, joint_names=list(names))
+     root_body = 1
+     root_pos = data.xpos[root_body].copy()
+     root_rot = data.xmat[root_body].reshape(3, 3).copy()
+-    max_depth = 1
+     depths = []
+     for n in names:
+         j = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, n)
+@@ -185,9 +218,8 @@
+         while b > root_body:
+             b, d = model.body_parentid[b], d + 1
+         depths.append(d)
+-        max_depth = max(max_depth, d)
+     rows = []
+-    for n, d in zip(names, depths):
++    for n, d, ang in zip(names, depths, angles):
+         j = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, n)
+         anchor = root_rot.T @ (data.xanchor[j] - root_pos)
+         axis = root_rot.T @ data.xaxis[j]
+@@ -197,7 +229,7 @@
+             limb = 0 if anchor[2] < -0.1 else (1 if abs(anchor[1]) < 0.05 else 2)
+         onehot = [0.0, 0.0, 0.0]
+         onehot[limb] = 1.0
+-        rows.append([*anchor, *axis, float(model.qpos0[model.jnt_qposadr[j]]), d / max_depth, side, *onehot])
++        rows.append([*anchor, *axis, ang, d / DEPTH_NORM, side, *onehot])
+     return torch.tensor(rows, dtype=torch.float32)
+ 
+ 
+diff -ru '--exclude=__pycache__' /tmp/pre/code/tests/test_smoke.py code/tests/test_smoke.py
+--- /tmp/pre/code/tests/test_smoke.py	2026-10-25 14:16:40.000000000 -0400
++++ code/tests/test_smoke.py	2026-10-25 15:11:06.237132039 -0400
+@@ -14,7 +14,11 @@
+ sys.path.insert(0, str(CODE))
+ 
+ from attention_policy import AttentionDecoder, AttentionDecoderCfg, count_params, permute_obs_history, random_token_mask, synthetic_morphology  # noqa: E402
+-from train_entry import build_decoder, install_upstream_policy, load_config, tyro_argv  # noqa: E402
++from attention_policy import DEPTH_NORM  # noqa: E402
++from train_entry import (  # noqa: E402
++    SeamProbe, build_decoder, find_env, install_upstream_policy, joint_order_match, load_config, load_morphology,
++    obs_layout_check, resolve_init_joint_pos, tyro_argv,
++)
+ 
+ CFG = load_config(CODE.parent / "configs" / "colab_smoke.yaml")
+ J, H, L = 29, 10, 32
+@@ -54,16 +58,26 @@
+     assert abs(count_params(mlp) - count_params(att)) / count_params(att) < 0.05
+ 
+ 
++def _owner_xml():
++    """The single owner-provided MJCF, found by glob (asset contract: exactly one *.xml)."""
++    xmls = sorted((CODE.parent / "assets" / "home_humanoid_mjcf").glob("*.xml"))
++    assert len(xmls) <= 1, f"asset contract: expected exactly one *.xml, found {[x.name for x in xmls]}"
++    return xmls[0] if xmls else None
++
++
+ def test_b1_second_body_from_owner_mjcf():
+-    """Same decoder weights on the owner-provided 22-hinge home-humanoid MJCF (skipped without mujoco/asset)."""
+-    xml = CODE.parent / "assets" / "home_humanoid_mjcf" / "pi_plus.xml"
++    """J-agnostic shape test: the 29-joint decoder runs on a J'-joint body (skipped without mujoco/asset).
++
++    This checks tensor shapes and finiteness only; it is not evidence of cross-embodiment transfer.
++    """
++    xml = _owner_xml()
+     try:
+         import mujoco
+     except ImportError:
+-        print("SKIP b1: mujoco not installed")
++        print("SKIP J-agnostic shape test: mujoco not installed")
+         return
+-    if not xml.exists():
+-        print("SKIP b1: asset missing")
++    if xml is None:
++        print("SKIP J-agnostic shape test: asset missing")
+         return
+     from attention_policy import morphology_from_mjmodel
+ 
+@@ -77,6 +91,111 @@
+     assert a.shape == (4, j2) and torch.isfinite(a).all()
+ 
+ 
++def test_fx1_default_pose_and_fx2_depth_norm():
++    xml = _owner_xml()
++    try:
++        import mujoco
++    except ImportError:
++        print("SKIP fx1/fx2 mjmodel checks: mujoco not installed")
++        return
++    if xml is None:
++        print("SKIP fx1/fx2 mjmodel checks: asset missing")
++        return
++    from attention_policy import hinge_joint_names, morphology_from_mjmodel
++
++    model = mujoco.MjModel.from_xml_path(str(xml))
++    names = hinge_joint_names(model)
++    info0: dict = {}
++    base = morphology_from_mjmodel(model, info=info0)
++    assert info0["default_pose_source"] == "qpos0-fallback" and info0["joint_names"] == list(names)
++    arr = [0.1 * (i + 1) for i in range(len(names))]
++    info1: dict = {}
++    m_arr = morphology_from_mjmodel(model, default_qpos=arr, info=info1)
++    m_map = morphology_from_mjmodel(model, default_qpos=dict(zip(names, arr)))
++    assert info1["default_pose_source"] == "default_qpos"
++    assert torch.allclose(m_arr[:, 6], torch.tensor(arr, dtype=torch.float32))
++    assert torch.equal(m_arr, m_map)
++    keep = [i for i in range(12) if i != 6]  # only the default-angle column changes
++    assert torch.equal(m_arr[:, keep], base[:, keep])
++    try:
++        morphology_from_mjmodel(model, default_qpos=arr[:-1])
++        raise AssertionError("short default_qpos must raise")
++    except ValueError:
++        pass
++    # FX-2: depth column = integer depth / fixed constant (same constant as the synthetic descriptor)
++    d = base[:, 7] * DEPTH_NORM
++    assert torch.allclose(d, d.round(), atol=1e-4) and DEPTH_NORM == 8.0
++    ds = synthetic_morphology()[:, 7] * DEPTH_NORM
++    assert torch.allclose(ds, ds.round(), atol=1e-4)
++
++
++def test_fx1_unimportable_loader_fails_loudly():
++    cfg = {"attention": {"morphology": "upstream_mjmodel"}, "upstream": {"model_loader": "no_such_pkg_xyz:load"}}
++    try:
++        load_morphology(cfg, 29)
++        raise AssertionError("unimportable loader must raise")
++    except RuntimeError as e:
++        assert "model_loader" in str(e)
++
++
++def test_fx1_resolve_init_joint_pos():
++    assert resolve_init_joint_pos({".*_knee_joint": 0.6, "left_hip_pitch_joint": -0.3}, ["left_hip_pitch_joint", "left_knee_joint", "x"]) == [-0.3, 0.6, 0.0]
++    try:
++        resolve_init_joint_pos({".*_joint": 0.1, "a_joint": 0.2}, ["a_joint"])
++        raise AssertionError("conflicting patterns must raise")
++    except ValueError:
++        pass
++
++
++def test_fx5_seam_helpers_with_fake_objects():
++    names = ["a", "b", "c"]
++    assert joint_order_match(names, names, names)[0]
++    assert not joint_order_match(names, names[::-1], names)[0]
++    assert not joint_order_match(names, names, ["a", "c", "b"])[0]
++    assert not joint_order_match(None, names, names)[0]
++    dims = [H * J, H * J, H * 3, H * 3, H * J]
++    assert obs_layout_check(H * (3 * J + 6), dims, J, H)[0]
++    assert obs_layout_check(H * (3 * J + 6), [J, J, 3, 3, J], J, H)[0]
++    assert not obs_layout_check(H * (3 * J + 6), [J, 3, J, 3, J], J, H)[0]
++    assert not obs_layout_check(H * (3 * J + 5), dims, J, H)[0]
++    assert not obs_layout_check(H * (3 * J + 6), None, J, H)[0]
++
++    class Robot:
++        joint_names = names
++
++    class Env:
++        scene = {"robot": Robot()}
++
++    class Trainer:
++        def __init__(self):
++            self.env = Env()
++            self.cfg = types.SimpleNamespace(policy_trainer=types.SimpleNamespace(compile="None"))
++
++    assert find_env(Trainer()) is not None
++    lines: list[str] = []
++    info = {"default_pose_source": "env_init_state", "joint_names": names}
++    probe = SeamProbe(info, "None", emit=lines.append)
++    probe.report_s4()
++    probe.on_trainer_ready(Trainer())
++    dec = nn.Linear(L + H * (3 * J + 6), J)
++    probe.attach_decoder(dec)
++    dec.forward = lambda z, o: z  # replaced forward; hook is a pre-hook so it still fires
++    dec(torch.zeros(2, L), torch.zeros(2, H * (3 * J + 6)))
++    text = "\n".join(lines)
++    assert "[seam] S4 default_pose_source=env_init_state" in text
++    assert "[seam] S1 joint_order_match=true" in text and "[seam] S3 compile=None" in text
++    assert f"[seam] S2 obs_policy_dim={H * (3 * J + 6)} term_major_ok=false" in text  # fake env exposes no term spec
++    assert probe.seam["S1_joint_order_match"] is True
++    # S1 mismatch: line is printed first, then it raises
++    Robot.joint_names = names[::-1]
++    lines.clear()
++    try:
++        SeamProbe(info, "None", emit=lines.append).on_trainer_ready(Trainer())
++        raise AssertionError("S1 mismatch must raise")
++    except RuntimeError:
++        assert "[seam] S1 joint_order_match=false" in lines
++
++
+ def test_upstream_seam_with_fake_package():
+     """Exercise install_upstream_policy against a stand-in of the upstream module layout."""
+ 
+diff -ru '--exclude=__pycache__' /tmp/pre/code/tools/make_notebook.py code/tools/make_notebook.py
+--- /tmp/pre/code/tools/make_notebook.py	2026-10-25 14:14:03.000000000 -0400
++++ code/tools/make_notebook.py	2026-10-25 15:11:06.237132039 -0400
+@@ -55,7 +55,7 @@
+ C.append(code("""RUN_SANITY = False
+ if RUN_SANITY:
+     !cd {UP} && env -u PYTHONPATH {PY} -m supermimic.scripts.train --run-name up_sanity --data.npz-dir {cfg['npz_dir']} --env.num-envs 256 --policy-trainer.batch-size 256 --policy-trainer.horizon 16 --policy-trainer.compile None --schedule.max-hours 0.1"""))
+-C.append(md("## 7. B0 smoke train — attention vs matched MLP [GPU] (requires Colab GPU; ~0.5 h per arm)\nSet `RUN_TRAIN = True` deliberately. Check seams S1–S3 (`code/vendor/NOTES.md`) on the first run."))
++C.append(md("## 7. B0 smoke train — attention vs matched MLP [GPU] (requires Colab GPU; ~0.5 h per arm)\nSet `RUN_TRAIN = True` deliberately. Check seams S1–S4 (`code/vendor/NOTES.md`, runbook §6) on the first run: grep the log for `[seam]`."))
+ C.append(code("""RUN_TRAIN = False
+ ARMS = ['attention', 'mlp_matched']
+ SEED = 0
+diff -ru '--exclude=__pycache__' /tmp/pre/code/train_entry.py code/train_entry.py
+--- /tmp/pre/code/train_entry.py	2026-10-25 14:12:09.000000000 -0400
++++ code/train_entry.py	2026-10-25 15:10:37.748955053 -0400
+@@ -27,6 +27,7 @@
+ import argparse
+ import importlib
+ import json
++import re
+ import sys
+ import time
+ from dataclasses import asdict, fields
+@@ -41,7 +42,9 @@
+ from attention_policy import (  # noqa: E402
+     AttentionDecoder,
+     AttentionDecoderCfg,
++    DEFAULT_JOINT_NAMES,
+     count_params,
++    hinge_joint_names,
+     make_upstream_policy_class,
+     morphology_from_mjmodel,
+     random_token_mask,
+@@ -64,14 +67,55 @@
+     return AttentionDecoderCfg(latent_dim=latent_dim, history=history, num_joints=num_joints, **over)
+ 
+ 
+-def load_morphology(cfg: dict, num_joints: int) -> torch.Tensor:
++def _import_ref(ref: str, what: str):
++    """Import ``module:attr``; in upstream mode a failure is fatal (no silent fallback)."""
++    mod, fn = ref.split(":")
++    try:
++        return getattr(importlib.import_module(mod), fn)
++    except (ImportError, AttributeError) as e:
++        raise RuntimeError(f"[train_entry] cannot import configured {what} {ref!r}: {e!r}") from e
++
++
++def resolve_init_joint_pos(init_joint_pos, joint_names) -> list[float]:
++    """Resolve an entity-config ``joint_pos`` (regex -> angle) to per-joint angles in ``joint_names`` order.
++
++    Joints matching no pattern get 0.0; joints matching several patterns with different values raise.
++    """
++    out = []
++    for n in joint_names:
++        vals = {float(v) for pat, v in init_joint_pos.items() if re.fullmatch(pat, n)}
++        if len(vals) > 1:
++            raise ValueError(f"joint {n!r} matches several init-state patterns with different values: {sorted(vals)}")
++        out.append(vals.pop() if vals else 0.0)
++    return out
++
++
++def default_qpos_from_robot_cfg(cfg: dict, joint_names) -> list[float] | None:
++    """Env default pose (initial joint positions of the upstream robot entity config), or None if unconfigured."""
++    ref = cfg.get("upstream", {}).get("robot_cfg_loader")
++    if not ref:
++        return None
++    robot_cfg = _import_ref(ref, "robot_cfg_loader")()
++    try:
++        init_jp = robot_cfg.init_state.joint_pos
++    except AttributeError as e:
++        raise RuntimeError(f"[train_entry] robot entity config from {ref!r} has no init_state.joint_pos") from e
++    return resolve_init_joint_pos(init_jp, joint_names)
++
++
++def load_morphology(cfg: dict, num_joints: int, info: dict | None = None) -> torch.Tensor:
++    """Descriptor rows for the policy body. ``info`` (optional dict) receives default_pose_source / joint_names."""
+     src = cfg.get("attention", {}).get("morphology", "synthetic")
++    info = {} if info is None else info
+     if src == "upstream_mjmodel":
+-        mod, fn = cfg["upstream"]["model_loader"].split(":")
+-        model = getattr(importlib.import_module(mod), fn)()
+-        m = morphology_from_mjmodel(model)
++        model = _import_ref(cfg["upstream"]["model_loader"], "model_loader")()
++        dq = default_qpos_from_robot_cfg(cfg, hinge_joint_names(model))
++        m = morphology_from_mjmodel(model, default_qpos=dq, info=info)
++        if dq is not None:
++            info["default_pose_source"] = "env_init_state"
+         assert m.shape[0] == num_joints, f"model has {m.shape[0]} hinge joints, policy expects {num_joints}"
+         return m
++    info.update(default_pose_source="synthetic", joint_names=list(DEFAULT_JOINT_NAMES[:num_joints]))
+     return synthetic_morphology()[:num_joints]
+ 
+ 
+@@ -170,10 +214,170 @@
+     return argv
+ 
+ 
+-def install_upstream_policy(arm: str, cfg: dict, targets: tuple[str, ...]) -> dict:
+-    """Rebind ``Policy`` in the given upstream modules to a subclass with our decoder."""
+-    morphology = load_morphology(cfg, 29) if arm == "attention" else None
++# ------------------------------------------------------------------- seam instrumentation (observation-only)
++def _names(x) -> list[str] | None:
++    return None if x is None else [str(n) for n in x]
++
++
++def joint_order_match(descriptor, entity, action) -> tuple[bool, str]:
++    """S1: all available joint-name sequences must be identical (descriptor rows / robot entity / action order)."""
++    seqs = {"descriptor": _names(descriptor), "entity": _names(entity), "action": _names(action)}
++    avail = {k: v for k, v in seqs.items() if v is not None}
++    if "descriptor" not in avail or "entity" not in avail:
++        return False, f"missing sequences: {sorted(set(seqs) - set(avail))}"
++    ref = avail["descriptor"]
++    bad = [k for k, v in avail.items() if v != ref]
++    detail = f"compared={sorted(avail)}" + (f" mismatch={bad}" if bad else "")
++    if "action" not in avail:
++        detail += " (action order not exposed; unchecked)"
++    return not bad, detail
++
++
++def obs_layout_check(obs_dim: int, term_dims, num_joints: int, history: int) -> tuple[bool, str]:
++    """S2: dim must equal H*(3J+6) and the env's policy-group term dims must follow the term-major order."""
++    expected = history * (3 * num_joints + 6)
++    if obs_dim != expected:
++        return False, f"obs_dim {obs_dim} != expected {expected}"
++    if term_dims is None:
++        return False, "term spec not exposed by env; layout unverified beyond total dim"
++    per_frame = [num_joints, num_joints, 3, 3, num_joints]  # term-major order: pos, vel, ang_vel, gravity, actions
++    td = [int(x) for x in term_dims]
++    if td == [history * d for d in per_frame]:
++        return True, "terms carry the history (term-major)"
++    if td == per_frame:
++        return True, "per-frame terms in term-major order; history flattened by upstream"
++    return False, f"term dims {td} do not match term-major {per_frame} (x{history})"
++
++
++def find_env(trainer):
++    """Locate the upstream env (an object with ``scene``) on a constructed trainer, without upstream edits."""
++    cands = [getattr(trainer, a, None) for a in ("env", "envs", "train_env", "_env", "vec_env")]
++    cands += list(getattr(trainer, "__dict__", {}).values())
++    for c in cands:
++        c = getattr(c, "unwrapped", c)
++        if c is not None and hasattr(c, "scene"):
++            return c
++    return None
++
++
++def entity_joint_names(env) -> list[str] | None:
++    try:
++        return list(env.scene["robot"].joint_names)
++    except Exception:  # noqa: BLE001  (duck-typed upstream object)
++        return None
++
++
++def action_joint_names(env) -> list[str] | None:
++    am = getattr(env, "action_manager", None)
++    terms = getattr(am, "_terms", None)
++    terms = list(terms.values()) if isinstance(terms, dict) else list(terms or [])
++    for t in terms:
++        for attr in ("target_names", "joint_names", "_target_names", "_joint_names"):
++            v = getattr(t, attr, None)
++            if v is not None:
++                return list(v)
++    return None
++
++
++def policy_term_dims(env) -> list[int] | None:
++    om = getattr(env, "observation_manager", None)
++    try:
++        dims = om.group_obs_term_dim["policy"]
++        return [int(torch.Size(d).numel()) if not isinstance(d, int) else d for d in dims]
++    except Exception:  # noqa: BLE001
++        return None
++
++
++class SeamProbe:
++    """Prints/records seams S1-S4 on the upstream path; observation-only except that S1 mismatch raises."""
++
++    def __init__(self, morph_info: dict, compile_value: str, num_joints: int = 29, history: int = 10, emit=print):
++        self.morph_info, self.compile_value, self.j, self.h, self.emit = morph_info, compile_value, num_joints, history, emit
++        self.seam: dict = {}
++        self.term_dims = None
++
++    def _line(self, text: str) -> None:
++        self.emit(f"[seam] {text}")
++
++    def report_s4(self) -> None:
++        src = self.morph_info.get("default_pose_source")
++        val = "env_init_state" if src == "env_init_state" else "qpos0-fallback" if src == "qpos0-fallback" else str(src)
++        self.seam["S4_default_pose_source"] = val
++        self._line(f"S4 default_pose_source={val}")
++
++    def on_trainer_ready(self, trainer) -> None:
++        env = find_env(trainer)
++        if env is None:
++            self.seam["S1_joint_order_match"] = False
++            self._line("S1 joint_order_match=false")
++            raise RuntimeError("[seam] S1: upstream env not found on trainer; cannot verify joint order")
++        ok, detail = joint_order_match(self.morph_info.get("joint_names"), entity_joint_names(env), action_joint_names(env))
++        self.seam.update(S1_joint_order_match=ok, S1_detail=detail)
++        self._line(f"S1 joint_order_match={str(ok).lower()}")
++        self._line(f"S1 detail {detail}")
++        if not ok:
++            raise RuntimeError(f"[seam] S1 joint order mismatch between descriptor rows / robot entity / action order: {detail}")
++        self.term_dims = policy_term_dims(env)
++        tcfg = getattr(getattr(trainer, "cfg", None), "policy_trainer", None)
++        comp = getattr(tcfg, "compile", self.compile_value)
++        self.seam["S3_compile"] = str(comp)
++        self._line(f"S3 compile={comp}")
++
++    def on_first_decoder_call(self, obs_hist: torch.Tensor) -> None:
++        dim = int(obs_hist.shape[-1])
++        ok, detail = obs_layout_check(dim, self.term_dims, self.j, self.h)
++        self.seam.update(S2_obs_policy_dim=dim, S2_term_major_ok=ok, S2_detail=detail)
++        self._line(f"S2 obs_policy_dim={dim} term_major_ok={str(ok).lower()}")
++        self._line(f"S2 detail {detail}")
++
++    def attach_decoder(self, dec: torch.nn.Module) -> None:
++        def pre_hook(_m, args, kwargs):
++            handle.remove()
++            obs = args[1] if len(args) > 1 else kwargs.get("obs_hist")
++            if obs is not None:
++                self.on_first_decoder_call(obs)
++
++        handle = dec.register_forward_pre_hook(pre_hook, with_kwargs=True)
++
++    def install(self, targets: tuple[str, ...]) -> None:
++        """Wrap ``Trainer.__init__`` of the upstream training-loop module (in-process, no upstream edits)."""
++        loop = importlib.import_module(targets[0])
++        trainer_cls = getattr(loop, "Trainer", None)
++        if trainer_cls is None:
++            raise RuntimeError(f"[seam] {targets[0]} has no Trainer; cannot attach S1-S3 instrumentation")
++        orig, probe = trainer_cls.__init__, self
++
++        def init(trainer, *a, **k):
++            orig(trainer, *a, **k)
++            probe.on_trainer_ready(trainer)
++
++        trainer_cls.__init__ = init
++
++
++def install_upstream_policy(arm: str, cfg: dict, targets: tuple[str, ...], probe_cls=None) -> dict:
++    """Rebind ``Policy`` in the given upstream modules to a subclass with our decoder.
++
++    With ``probe_cls`` (train path) the descriptor/default pose is always resolved from the upstream
++    loaders (all arms, so S1/S4 are recorded for every arm) and seams S1-S4 are instrumented.
++    """
+     info: dict = {}
++    morph_info: dict = {}
++    morphology = None
++    if arm == "attention" or probe_cls is not None:
++        if probe_cls is not None and cfg.get("attention", {}).get("morphology") != "upstream_mjmodel":
++            raise RuntimeError("[train_entry] upstream mode requires attention.morphology: upstream_mjmodel")
++        morphology = load_morphology(cfg, 29, morph_info)
++    info["default_pose_source"] = morph_info.get("default_pose_source")
++    info["descriptor_joint_names"] = morph_info.get("joint_names")
++    probe = None
++    if probe_cls is not None:
++        compile_value = str(cfg.get("upstream", {}).get("tyro_args", {}).get("--policy-trainer.compile", "unset"))
++        probe = probe_cls(morph_info, compile_value)
++        probe.report_s4()
++        probe.install(targets)
++        info["seam"] = probe.seam
++    if arm != "attention":
++        morphology = None
+ 
+     def factory(pcfg):
+         dec = build_decoder(arm, cfg, latent_dim=pcfg.latent_dim, history=pcfg.history, num_joints=29, morphology=morphology)
+@@ -181,6 +385,8 @@
+             assert tuple(pcfg.obs_term_scale) == tuple(attention_cfg(cfg).obs_term_scale), "obs scale drift vs upstream"
+         dec.auto_mask_frac = float(cfg.get("b2", {}).get("train_mask_frac", 0.0))
+         info.update(decoder_sidecar(arm, cfg, dec), train_mask_frac=dec.auto_mask_frac)
++        if probe is not None:
++            probe.attach_decoder(dec)
+         return dec
+ 
+     cls = make_upstream_policy_class(factory)
+@@ -192,7 +398,7 @@
+ def run_upstream(arm: str, cfg: dict) -> None:
+     if not torch.cuda.is_available():
+         sys.exit("[train_entry] --mode upstream requires a CUDA GPU (Colab T4/L4). Use --mode smoke on CPU.")
+-    info = install_upstream_policy(arm, cfg, ("supermimic.training.loop",))
++    info = install_upstream_policy(arm, cfg, ("supermimic.training.loop",), probe_cls=SeamProbe)
+     argv = tyro_argv(cfg, arm)
+     print("[train_entry] upstream argv:", " ".join(argv))
+     sys.argv = ["sm-train", *argv]
+diff -ru '--exclude=__pycache__' /tmp/pre/code/vendor/NOTES.md code/vendor/NOTES.md
+--- /tmp/pre/code/vendor/NOTES.md	2026-10-25 14:17:42.000000000 -0400
++++ code/vendor/NOTES.md	2026-10-25 15:11:29.405275974 -0400
+@@ -40,6 +40,7 @@
+ 
+ - **S1 joint order.** The attention arm's morphology rows come from the compiled MuJoCo model's hinge-joint order (`morphology_from_mjmodel`). The policy obs/action order comes from the mjlab robot entity. Assert they match, e.g. compare `env.scene["robot"].joint_names` with the model hinge order. If they do not, a permutation bug would make B0 unfair to the attention arm.
+ - **S2 obs layout.** Confirm `obs["policy"]` in the upstream loop is the 930-d term-major history above. The CPU tests confirm this only against our own reading of upstream code.
++- **S4 default pose source == env init state.** The descriptor default-angle column comes from the robot entity config's `init_state.joint_pos` (loader named in `configs/colab_smoke.yaml` `upstream.robot_cfg_loader`), not model `qpos0`. Expect `[seam] S4 default_pose_source=env_init_state`; `qpos0-fallback` is a defect for the B0 run. Unverified on the box.
+ - **S3 compile.** The smoke config sets `--policy-trainer.compile None`. Check whether `torch.compile` handles `nn.MultiheadAttention` with key-padding masks before using it in timing comparisons, and use the same compile setting for both arms.
+ 
+ ## Data and licensing
+--- /tmp/pre/configs/colab_smoke.yaml	2026-10-25 14:12:09.000000000 -0400
++++ configs/colab_smoke.yaml	2026-10-25 15:10:37.748955053 -0400
+@@ -30,12 +30,16 @@
+   repo_dir: /content/SuperMimic-Reproduced
+   # Upstream API identifier used to build the default-pose morphology (single place it is named).
+   model_loader: "supermimic.data.motion_convert:load_g1_model"
++  # Upstream robot entity config factory; its init_state.joint_pos (regex -> angle) is the env default
++  # pose used for the descriptor default-angle column (seam S4). UNVERIFIED identifier: if it cannot
++  # be imported, upstream mode fails loudly. Remove this key only to accept the qpos0-fallback.
++  robot_cfg_loader: "mjlab.asset_zoo.robots.unitree_g1.g1_constants:get_g1_robot_cfg"
+   # Upstream literal path inside the public retarget dataset (asset subdirectory).
+   dataset_repo: lvhaidong/LAFAN1_Retargeting_Dataset
+   dataset_subdir: g1
+   npz_dir: data/npz/lafan1_smoke
+   pass_clip_filter: false    # npz_dir is built from `clips` only, so no upstream name filter needed
+-  clips:                     # small LAFAN1-style subset (placeholders; 4 clips ~ walk/run/dance/jump)
++  clips:                     # small LAFAN1-style subset (4 clips ~ walk/run/dance/jump; verified in dataset listing, packets/P1/fixes/FX3.md)
+     - walk1_subject1
+     - run1_subject2
+     - dance1_subject1
+--- /tmp/pre/docs/COLAB_RUNBOOK.md	2026-10-25 14:17:48.000000000 -0400
++++ docs/COLAB_RUNBOOK.md	2026-10-25 15:11:29.405275974 -0400
+@@ -47,7 +47,7 @@
+ 
+ ```bash
+ cd /content/junior
+-$PY code/tests/test_smoke.py              # expect 6x PASS (b1 test prints SKIP: asset not in the tarball)
++$PY code/tests/test_smoke.py              # expect 10x PASS (b1 test prints SKIP: asset not in the tarball)
+ $PY code/train_entry.py --policy attention
+ $PY code/eval_entry.py                    # B2 smoke: attention perm_rel_err ~1e-6; MLP arms O(1)
+ ```
+@@ -98,7 +98,17 @@
+ 
+ Reduced defaults (`configs/colab_smoke.yaml`): `num_envs 512`, `batch 512`, `H=16` (paper 32), compile off, `max-hours 0.5` per arm, `--env.anchor-obs` (upstream deviation, applied the same way to both arms). Per GPU: T4 use 256–512 envs, L4 512–1024. If you get CUDA OOM, halve `num-envs` and `batch-size` together, for both arms.
+ 
+-On the first run, check seams S1–S3 (`code/vendor/NOTES.md`). The trainer prints `params: world model …, policy …`. Policy params differ between arms only by the decoder: attention decoder about 0.46 M vs mlp_matched about 0.47 M.
++On the first run, check seams S1–S4 (`code/vendor/NOTES.md`). The upstream path prints machine-greppable lines and copies the same values into `logs/<run>/junior_policy.json` under `seam`:
++
++```bash
++grep '^\[seam\]' logs/train_attention_s0.log
++# [seam] S1 joint_order_match=<true|false>      (false raises: descriptor rows vs robot entity vs action order)
++# [seam] S2 obs_policy_dim=<int> term_major_ok=<true|false>
++# [seam] S3 compile=<value>
++# [seam] S4 default_pose_source=<env_init_state|qpos0-fallback>
++```
++
++**S4 default pose source == env init state.** The descriptor default-angle column must come from the upstream robot entity config's initial joint positions (`upstream.robot_cfg_loader` in the config), not from the model `qpos0`. Expect `S4 default_pose_source=env_init_state`. `qpos0-fallback` means the loader key was removed and the descriptor does not match the env start pose. If the configured loader cannot be imported, the run fails loudly (the identifier in the config is unverified). The trainer prints `params: world model …, policy …`. Policy params differ between arms only by the decoder: attention decoder about 0.46 M vs mlp_matched about 0.47 M.
+ 
+ ## 7. Eval (Appendix-F style whole-clip benchmark + B2 mask)
+ 

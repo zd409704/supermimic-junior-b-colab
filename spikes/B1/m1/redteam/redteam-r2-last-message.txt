@@ -1,0 +1,29 @@
+1. **R1-1 — RESOLVED — BLOCKER — M1.0, M1.5.** Draft2 explicitly makes δ exploratory and data-informed, discloses the outcome-selected calibration subset, and removes the “20% faster learning” interpretation. This resolves the objection through restricted interpretation, not independent justification. **Fix:** none further.
+
+2. **R1-2 — RESOLVED — MAJOR — M1.5.** The algebraic comparison now correctly allows either criterion to be stricter. S-δ10 is distinguished from applying the PLAN criterion to R_full. **Fix:** none further; retain the stated SE condition whenever describing M1 as easier.
+
+3. **R1-3 — RESOLVED — MAJOR — M1.2–M1.3.** The metric now has the correct computable domain, includes the terminating transition, and treats `steps > W` as non-computable. The implementation uses the specified multiplication and division without clipping. **Fix:** none further.
+
+4. **R1-4 — RESOLVED — MAJOR — M1.0, M1.3.** W is now explicitly outcome-derived, exploratory, and conditional on unverified H2. Applying it uniformly does not remove selection bias, but draft2 no longer claims otherwise. **Fix:** none further within this explicitly exploratory scope.
+
+5. **R1-5 — RESOLVED — BLOCKER — M1.3, M1.5–M1.6.** The validity matrix distinguishes integrity from computability; sensitivity branches retain seeds independently; primary BLOCKED does not stop computable sensitivities; M1 failures do not trigger execution fallback. The `m1_*` branch structure implements these choices. **Fix:** none further for this objection, subject to the malformed-input defect in item 8.
+
+6. **R1-6 — RESOLVED — MAJOR — M1.5.** All four sensitivities now participate in robustness, unavailable comparisons yield null, SIGNAL and SIGNAL_STRONG are distinct, and the label explicitly excludes unregistered interactions. **Fix:** none further.
+
+7. **R1-7 — RESOLVED — MAJOR — M1.6.** The amendment preserves inherited diagnostic-arm checks while limiting only the new M1 checks to primary-run gating. **Fix:** none further.
+
+8. **R1-8 — PARTIAL — MAJOR — M1.2, M1.6–M1.7.** Ordering, booleans, integer collapse comparisons, sensitivity clip sets, and retained-seed reporting are substantially resolved. The numerical/malformed-input contract remains incomplete:
+   - `eval_points()` dereferences `summary` before M1 validation. A JSON object containing `"summary": null` or a list raises an exception instead of producing the required validation failure.
+   - C2 checks only per-eval R and S. Finite point values do not guarantee finite AULC, interpolation, variance, SE, or comparison quantities. `m1_runs()` marks validity before calculating curve metrics; subsequent arithmetic can overflow or produce non-finite statistics without invalidating the branch.
+   
+   **Fix:** make malformed summaries reach a structured validation failure in M1 mode without changing frozen execution selection. Extend the contract and implementation to reject non-finite derived run statistics and comparisons, handle arithmetic exceptions, and prohibit non-finite JSON output. Verify these paths using synthetic fixtures only.
+
+9. **R1-9 — RESOLVED — MINOR — M1.6, M1.8–M1.9.** Draft2 explicitly leaves the original review-timing gap on record and limits partial outcomes to informational results on listed retained seeds with no decision authority. **Fix:** none further for the wording; the separate implementation problem in item 11 remains.
+
+10. **NEW — MAJOR — M1.1, M1.7: The tool does not enforce the amendment’s single-deposit scope.** M1 mode still accepts repeated `--deposit` arguments and any deposit satisfying the generic seal checks. It never compares the input archive hash against the amendment’s pinned `f95155af…` identity. The existing `--tarball-sha` check concerns the internal tarball manifest and does not enforce that deposit identity. A correctly pinned amendment can therefore label a score computed from different or combined inputs. **Fix:** in M1 mode, require exactly one deposit and verify its full pinned SHA-256 before extraction or scoring. Preserve generic multi-deposit behavior only outside M1 mode.
+
+11. **NEW — MAJOR — M1.2, M1.7–M1.9: The implementation substitutes a recomputation for the immutable original record.** `m1_rescore()` sets `v10_outcome_of_record` from the current recomputation, and `m1_write()` prints that value as `v10_outcome`. If an inherited check fails, this becomes null even though the historical outcome remains INCONCLUSIVE. The JSON also omits the original per-run AULCs promised for side-by-side comparison; it retains recomputed point returns and an aggregate line instead. **Fix:** embed or load the hash-verified original record separately, preserve its original line and outcome unconditionally, and include the promised original curves/AULCs. Label recomputation separately and report discrepancies without replacing historical fields.
+
+12. **NEW — MAJOR — M1.7, M1.9: The original-file overwrite guard is incomplete.** The guard checks `--out` only against `results.json` and `--runs-log` only against `runs.log`. Passing `--out spikes/B1/runs.log` can truncate the original log; passing `--runs-log spikes/B1/results.json` can append to the original results. Path aliases can also bypass the string comparisons. **Fix:** validate both output destinations against both protected files using canonical paths and file identity where applicable, reject identical output destinations, and complete these checks before scoring or writing.
+
+OVERALL: SEAL-AFTER-FIXES

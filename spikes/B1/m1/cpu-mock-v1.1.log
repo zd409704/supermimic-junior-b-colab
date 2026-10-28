@@ -1,0 +1,73 @@
+# M1 v1.1 CPU mock 2026-10-27T10:29:13Z tool=cd32a0ac2340b5b2e4db6ce969914870305ef38c4694652c0c3d3bb2465f8993
+test_m01_default_mode_is_v10 (test_verdict_b1_m1.TestM1.test_m01_default_mode_is_v10) ... ok
+test_m02_line_and_shape (test_verdict_b1_m1.TestM1.test_m02_line_and_shape) ... ok
+test_m03_amendment_sha_pinned (test_verdict_b1_m1.TestM1.test_m03_amendment_sha_pinned) ... ok
+test_m04_refuses_protected_outputs (test_verdict_b1_m1.TestM1.test_m04_refuses_protected_outputs) ... ok
+test_m04b_single_pinned_deposit (test_verdict_b1_m1.TestM1.test_m04b_single_pinned_deposit) ... ok
+test_m04c_malformed_summary_no_crash (test_verdict_b1_m1.TestM1.test_m04c_malformed_summary_no_crash) ... ok
+test_m05_rfull_exact_collapse_and_rules (test_verdict_b1_m1.TestM1.test_m05_rfull_exact_collapse_and_rules) ... ok
+test_m06_dance_beyond_window_invalid (test_verdict_b1_m1.TestM1.test_m06_dance_beyond_window_invalid) ... ok
+test_m07_field_checks (test_verdict_b1_m1.TestM1.test_m07_field_checks) ... ok
+test_m08_summary_mismatch (test_verdict_b1_m1.TestM1.test_m08_summary_mismatch) ... ok
+test_m09_criterion_margin (test_verdict_b1_m1.TestM1.test_m09_criterion_margin) ... ok
+test_m10_two_se_floor (test_verdict_b1_m1.TestM1.test_m10_two_se_floor) ... ok
+test_m11_kill (test_verdict_b1_m1.TestM1.test_m11_kill) ... ok
+test_m12_collapse_penalised_not_rewarded (test_verdict_b1_m1.TestM1.test_m12_collapse_penalised_not_rewarded)
+The v1.0 defect: an all-clips-fail-early eval scores higher. Under R_full it scores near zero. ... ok
+test_m13_v10_failure_blocks_m1 (test_verdict_b1_m1.TestM1.test_m13_v10_failure_blocks_m1) ... ok
+test_m14_secondary_invalid_does_not_gate (test_verdict_b1_m1.TestM1.test_m14_secondary_invalid_does_not_gate) ... ok
+test_m15_bool_and_collapse_boundary (test_verdict_b1_m1.TestM1.test_m15_bool_and_collapse_boundary) ... ok
+test_m16_excl_counts_three_clips (test_verdict_b1_m1.TestM1.test_m16_excl_counts_three_clips) ... ok
+test_m17_v10_failure_nulls_every_branch (test_verdict_b1_m1.TestM1.test_m17_v10_failure_nulls_every_branch) ... ok
+test_m18_branches_independent (test_verdict_b1_m1.TestM1.test_m18_branches_independent)
+Primary BLOCKED by C1 does not stop S-excl / S-full; partial lists retained seeds. ... ok
+test_m19_hardlink_outputs (test_verdict_b1_m1.TestM1.test_m19_hardlink_outputs) ... ok
+test_m20_c2_unit_paths (test_verdict_b1_m1.TestM1.test_m20_c2_unit_paths)
+C2 at arm and comparison level (direct calls; synthetic values). ... ok
+test_m21_arm_c2_end_to_end (test_verdict_b1_m1.TestM1.test_m21_arm_c2_end_to_end)
+A primary-arm aggregation error yields a BLOCKED, fully serialised M1 artifact (no crash). ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 4.473s
+
+OK
+test_30_unsealed (test_verdict_b1.TestDeposit.test_30_unsealed) ... ok
+test_31_wrong_venue_seal (test_verdict_b1.TestDeposit.test_31_wrong_venue_seal) ... ok
+test_32_tarball_mismatch (test_verdict_b1.TestDeposit.test_32_tarball_mismatch) ... ok
+test_33_pt_member_rejected (test_verdict_b1.TestDeposit.test_33_pt_member_rejected) ... ok
+test_34_two_deposits_merge (test_verdict_b1.TestDeposit.test_34_two_deposits_merge) ... ok
+test_35_results_shape (test_verdict_b1.TestDeposit.test_35_results_shape) ... ok
+test_40_mock_driver_bundle (test_verdict_b1.TestMockBundle.test_40_mock_driver_bundle)
+End to end: the CPU-mock driver bundle has mock source shas, mock data and no 4090 -> BLOCKED V-3/V-4/V-5, ... skipped 'set B1_MOCK_BUNDLE to a CPU-mock driver bundle'
+test_01_signal_strong (test_verdict_b1.TestOutcome.test_01_signal_strong) ... ok
+test_02_signal (test_verdict_b1.TestOutcome.test_02_signal) ... ok
+test_03_inconclusive_ratio (test_verdict_b1.TestOutcome.test_03_inconclusive_ratio) ... ok
+test_04_kill_not_above_scratch (test_verdict_b1.TestOutcome.test_04_kill_not_above_scratch) ... ok
+test_05_kill_below_mlp (test_verdict_b1.TestOutcome.test_05_kill_below_mlp) ... ok
+test_06_scratch_nonpositive_branch (test_verdict_b1.TestOutcome.test_06_scratch_nonpositive_branch) ... ok
+test_07_aulc_r25_r100_exact (test_verdict_b1.TestOutcome.test_07_aulc_r25_r100_exact) ... ok
+test_08_se_definition (test_verdict_b1.TestOutcome.test_08_se_definition) ... ok
+test_09_secondary_arms_do_not_move_outcome (test_verdict_b1.TestOutcome.test_09_secondary_arms_do_not_move_outcome) ... ok
+test_10_missing_primary_run (test_verdict_b1.TestValidity.test_10_missing_primary_run) ... ok
+test_11_infra_then_completed_attempt2 (test_verdict_b1.TestValidity.test_11_infra_then_completed_attempt2) ... ok
+test_12_nonfinite_is_result_not_retry (test_verdict_b1.TestValidity.test_12_nonfinite_is_result_not_retry) ... ok
+test_13_two_infra_attempts (test_verdict_b1.TestValidity.test_13_two_infra_attempts) ... ok
+test_14_spend_cap_stop (test_verdict_b1.TestValidity.test_14_spend_cap_stop) ... ok
+test_15_spend_cap_in_secondaries_only (test_verdict_b1.TestValidity.test_15_spend_cap_in_secondaries_only) ... ok
+test_16_seam_false (test_verdict_b1.TestValidity.test_16_seam_false) ... ok
+test_17_eval_nonfinite (test_verdict_b1.TestValidity.test_17_eval_nonfinite) ... ok
+test_18_eval_reexecution (test_verdict_b1.TestValidity.test_18_eval_reexecution) ... ok
+test_19_missing_eval_point (test_verdict_b1.TestValidity.test_19_missing_eval_point) ... ok
+test_20_updates_differ (test_verdict_b1.TestValidity.test_20_updates_differ) ... ok
+test_21_argv_differs (test_verdict_b1.TestValidity.test_21_argv_differs) ... ok
+test_22_transfer_sha_mismatch (test_verdict_b1.TestValidity.test_22_transfer_sha_mismatch) ... ok
+test_23_mlp_report (test_verdict_b1.TestValidity.test_23_mlp_report) ... ok
+test_24_attention_partial_load (test_verdict_b1.TestValidity.test_24_attention_partial_load) ... ok
+test_25_diagnostic_identity_checked (test_verdict_b1.TestValidity.test_25_diagnostic_identity_checked) ... ok
+test_26_data_identity (test_verdict_b1.TestValidity.test_26_data_identity) ... ok
+test_27_gpu (test_verdict_b1.TestValidity.test_27_gpu) ... ok
+
+----------------------------------------------------------------------
+Ran 34 tests in 4.595s
+
+OK (skipped=1)

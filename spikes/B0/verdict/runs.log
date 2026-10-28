@@ -1,0 +1,12 @@
+=== B0 verdict run 2026-10-26T10:22:40Z tool=1.0 sha256=9caa744a65ef5206fd46f532c4d13529b7773d076ee725ee4cb98ec192774a3b ===
+DEPOSIT path=logs/xn4090/2026-10-26/b0-20261026-0919.tgz sha256=1f49118213d53538485303aa0b3f09bb5f068daeb06eb325045fd83a3118dde1 part=1 extracted=True
+SEAL_LINE 2026-10-26T10:22:04Z 1793010124 DEPOSIT xn4090 1f49118213d53538485303aa0b3f09bb5f068daeb06eb325045fd83a3118dde1 logs/xn4090/2026-10-26/b0-20261026-0919.tgz job=p4-b0-attempt1 DONE_DRIVER exit0 arms_completed_exit130 harness_stop
+ATTEMPT b0_attention_s0_a1 class=completed driver_class=completed disagreement=False completed=True diverged=False scored=True in_scored_set=True infra_cause=None post_endpoint_anomalies=1
+ATTEMPT b0_attention_s1_a1 class=completed driver_class=completed disagreement=False completed=True diverged=False scored=True in_scored_set=True infra_cause=None post_endpoint_anomalies=1
+ATTEMPT b0_attention_s2_a1 class=completed driver_class=completed disagreement=False completed=True diverged=False scored=True in_scored_set=True infra_cause=None post_endpoint_anomalies=1
+ATTEMPT b0_mlp_matched_s0_a1 class=completed driver_class=completed disagreement=False completed=True diverged=False scored=True in_scored_set=True infra_cause=None post_endpoint_anomalies=1
+ATTEMPT b0_mlp_matched_s1_a1 class=completed driver_class=completed disagreement=False completed=True diverged=False scored=True in_scored_set=True infra_cause=None post_endpoint_anomalies=1
+ATTEMPT b0_mlp_matched_s2_a1 class=completed driver_class=completed disagreement=False completed=True diverged=False scored=True in_scored_set=True infra_cause=None post_endpoint_anomalies=1
+ATTEMPT b0_mlp_upstream_s0_a1 class=completed driver_class=completed disagreement=False completed=True diverged=False scored=True in_scored_set=False infra_cause=None post_endpoint_anomalies=1
+B0_VERDICT verdict=PASS outcome=NONINFERIOR basis=margin delta=0.21324904291209681 delta_thr=0.1520180327677581 failing_ids=[] blocked=[]
+=== end ===

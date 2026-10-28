@@ -1,0 +1,16 @@
+aid=b1HAscratch_attention_s1_a2
+arm=H-A-scratch
+policy=attention
+init=scratch
+seed=1
+role=primary
+attempt=2
+config=b1_home.yaml
+src_key=-
+src_ckpt=none
+start_utc=2026-10-27T01:46:31Z
+hours_at_start=0.0217
+end_utc=2026-10-27T01:46:49Z
+exit_code=130
+class=COMPLETED completed=true
+evals=done

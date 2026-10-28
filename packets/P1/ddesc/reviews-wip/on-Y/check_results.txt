@@ -1,0 +1,18 @@
+C1 synthetic rebuilt max difference: 1.0
+C1 left hip pitch depth original/rebuilt: 0.125 0.75
+C1 decoder relative error direct/rebuilt: 2.3335385890277394e-07 0.031181318685412407
+C2 counts v1/v2/matched/widths: 463489 464001 468317 (384, 192, 96, 48)
+C3 scale counts: [(0.07450087, 4), (0.350661466, 4), (0.438577314, 16), (0.547546463, 5)]
+C3 kd/kp: [0.063661977]
+C4 home J/nu/L/c/M/distinct/finite/maxabs: 22 0 0.2824 [ 0.      0.     -0.0435] 15.862761 22 True 1.781465786809949
+C4 home left knee: [-0.00123938  0.28859773 -0.50424929  0.          1.          0.
+  0.4        -0.69455217  0.69455217  0.5         1.          1.
+  0.          0.         -0.6312317  -0.04527617]
+C4 home fixed-row permutation relative error: 2.542012111916847e-07
+C5 calf ranges left/right: [-2.182  2.182] [-2.18  2.18]
+C5 normalized limit mirror residual: 0.0006366197723675082
+C6 home scale/maxdiff: 0.5 5.551115123125783e-16
+C6 home scale/maxdiff: 2 4.440892098500626e-16
+C7 side fallback at y=.0008 and half-size: 1.0 0.0
+C8 wrist log_tau at proposal-estimated M=35, L=.65 / ablated L=1: -3.1053823259801856 -3.5361652420726397
+C8 minimum mass making 5 Nm wrist violate abs(log_tau)<=3.5 at L=1: 33.75683176217361

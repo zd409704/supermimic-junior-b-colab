@@ -1,0 +1,5 @@
+## 2026-10-27T10:29:29Z verdict_b1 1.1 M1 post-hoc re-score (M1) tool=cd32a0ac2340b5b2e4db6ce969914870305ef38c4694652c0c3d3bb2465f8993 amendment=d04aca276c6042d7bc56c63bb6a328d62fef451290047d310b64d065475abdfe
+deposit logs/xn4090/2026-10-27/b1arms-20261027-0935.tgz sha256=f95155af47357026d69f7c06f01c3d20ca806aa3378fce125322001d1094126d extracted=True
+v1.0 recomputed: B1_VERDICT verdict=PASS outcome=INCONCLUSIVE failing=[] aulc_HA_xfer=0.5361342107547861 aulc_HA_scratch=0.5023742432955027 aulc_HM_xfer=0.519483948911739 se=0.014513165235814461 partial_outcome=null plan=1088752b tool=cd32a0ac
+B1_M1_VERDICT label=post-hoc-M1 verdict=PASS outcome=KILL robust=true failing=[] aulc_full_HA_xfer=0.3598740704583323 aulc_full_HA_scratch=0.41869187142511705 aulc_full_HM_xfer=0.47689527088062883 diff_xs=-0.05881780096678474 margin_xs=0.13216770557700344 se_xm=0.054676367568006694 S-excl=KILL S-full=KILL S-d10=KILL S-ratio=KILL partial_outcome=null v10_outcome=INCONCLUSIVE plan=1088752b amendment=d04aca27 tool=cd32a0ac
+

@@ -1,0 +1,164 @@
+[
+  {
+    "name": "base_link.STL",
+    "bytes": 5629084,
+    "git_blob_sha": "6d592064b37a847c032e5271dcb56ae2036838d6",
+    "sha256": "9b2e0c7e702d79659694af5e0706bbfc0dd509a2313d27891410eca37949f234"
+  },
+  {
+    "name": "camera_link.STL",
+    "bytes": 70684,
+    "git_blob_sha": "8dbc1c6b741611f8f901977d70d5beecb22799c9",
+    "sha256": "7e4412d4a4f087e1d12ba774b0dcfbc6945166bf4a0709c263b246ea594e34a0"
+  },
+  {
+    "name": "head_pitch_link.STL",
+    "bytes": 3664384,
+    "git_blob_sha": "03752f727ce8618b65e263c62e04e12ec5a60b0b",
+    "sha256": "8a2057e1376f2c76a83ecdc5416ebcc8c4e94c0c3c7d689fc237f28ef4215dcd"
+  },
+  {
+    "name": "head_yaw_link.STL",
+    "bytes": 2530384,
+    "git_blob_sha": "8363af0dcf692498a846cd32a98c002537cb5a5c",
+    "sha256": "4ee560d981fad3767102d66d03485057c62eaa7c95d9b20a57ec29b8f9936a94"
+  },
+  {
+    "name": "l_ankle_pitch_link.STL",
+    "bytes": 1272884,
+    "git_blob_sha": "9c82f2968ed8015a08225c038bff18087f252d71",
+    "sha256": "d7fbcad0de071857ddcfd142e81b59a560fa0e62636aafe15e61f03d13cbb32b"
+  },
+  {
+    "name": "l_ankle_roll_link.STL",
+    "bytes": 2820684,
+    "git_blob_sha": "b48c02aa8a80d756e7c88a44cc1a20d173d4a203",
+    "sha256": "ee4d41c4d6047d5a040702d643028f3d833111d47fe82484a7836325139e3531"
+  },
+  {
+    "name": "l_calf_link.STL",
+    "bytes": 5321184,
+    "git_blob_sha": "40ad725393633a434f5be4751f0bbf3a4363ae98",
+    "sha256": "f477edf303280decdd2bf18e30166f355f195d70cc1e66b9f7eda82e5c4a3778"
+  },
+  {
+    "name": "l_elbow_link.STL",
+    "bytes": 2561384,
+    "git_blob_sha": "408ce482f97c5eafc3133cddb143b9f787c909f1",
+    "sha256": "373506e05723ea071aa76ca61dc3bebdbb1a8107dad15ce9a1850ba54a29c889"
+  },
+  {
+    "name": "l_hip_pitch_link.STL",
+    "bytes": 2813984,
+    "git_blob_sha": "da0e5140eb6020a7a6da390229883ce94819377b",
+    "sha256": "140cecbedb2113aa2e276e02ba8ff91f8f1022a1db228768c3748cb27cf472d3"
+  },
+  {
+    "name": "l_hip_roll_link.STL",
+    "bytes": 2815684,
+    "git_blob_sha": "0ee04b742ac41f83bcc57b3c83f4e746761aa2d6",
+    "sha256": "cbffb0a237e346b0fa2ca7d5ebfa80d8b2fa6d379b81d60177cb32a6a67f19ca"
+  },
+  {
+    "name": "l_shoulder_pitch_link.STL",
+    "bytes": 1145084,
+    "git_blob_sha": "afcad8652197d1cdd62f9a3dcf6f0019ffaad23a",
+    "sha256": "bda9df253f0238588afec74f07e0c8bd5b0256792abe59535dbf1c91a3f99232"
+  },
+  {
+    "name": "l_shoulder_roll_link.STL",
+    "bytes": 2996484,
+    "git_blob_sha": "c04b580fc4b889400d929023903c52a3e88a6e6a",
+    "sha256": "4f8fe12dc2c85738433f55f7a06e10bb975344d092a73528c47a1cd3ec6b2b49"
+  },
+  {
+    "name": "l_thigh_link.STL",
+    "bytes": 2088084,
+    "git_blob_sha": "22e022572781ce255afb4d39e7ad4e4cdcd1787c",
+    "sha256": "19dd5fcdd60752021fcadd1f7b52dc0549c881398b566052fa79983b314e65f8"
+  },
+  {
+    "name": "l_upper_arm_link.STL",
+    "bytes": 2882284,
+    "git_blob_sha": "fcdcaed8e4577ea999b117d0b7345f7bfb9771c0",
+    "sha256": "484e91d0435610134937b85c8d960d0bbab7489e5a928981bebe5a3804b0908f"
+  },
+  {
+    "name": "l_wrist_link.STL",
+    "bytes": 951484,
+    "git_blob_sha": "27397bac1a1c7f9e62058ff2277f24bb10e1663d",
+    "sha256": "8ecd35f729e1328c1c4fc4291d3268925d9c38ab5b06d617701b494ae52c8b2e"
+  },
+  {
+    "name": "r_ankle_pitch_link.STL",
+    "bytes": 1272884,
+    "git_blob_sha": "6e533858b7102f7f0fce6d7cad51ed209d3932fd",
+    "sha256": "480fe56af099c6a018f0ce9892a623fa3e628b77fd2c203ba75a442ec095df8f"
+  },
+  {
+    "name": "r_ankle_roll_link.STL",
+    "bytes": 2820684,
+    "git_blob_sha": "f963d40817d8eef13534c03384dca816e68fbba1",
+    "sha256": "f9ed8e4374163fc6afe9e367474154e83196fe6636302d60903d2c706a6f4dad"
+  },
+  {
+    "name": "r_calf_link.STL",
+    "bytes": 5319884,
+    "git_blob_sha": "cf66fe7714eeac34558333fe99d8400374590e36",
+    "sha256": "fb06a7e507ce545473bdeeb2d5abdd878ce32a48467366c901a16fe8e9832506"
+  },
+  {
+    "name": "r_elbow_link.STL",
+    "bytes": 2551584,
+    "git_blob_sha": "6f195ac4b2d05a4d0fe1ce8114cc20f075768e08",
+    "sha256": "31e8c9ec4e01b86a01e6fb991006c8761bb28f2909e3ded2d37cf0d1fa336eb1"
+  },
+  {
+    "name": "r_hip_pitch_link.STL",
+    "bytes": 2811584,
+    "git_blob_sha": "51b1e8abf29163c5c261ef1cda1a42d759fcae4a",
+    "sha256": "727ae1193d7cd8cd1ec5f02353d83f4d7472ccb4039c61ee6a2392b8b1dace06"
+  },
+  {
+    "name": "r_hip_roll_link.STL",
+    "bytes": 2815684,
+    "git_blob_sha": "928574d7597c6945333066ea34f8e389ee39fa91",
+    "sha256": "dcf45ba3f2438ba77653e6824dcb031d17887fe28ab907cca72b0d4f764f1d80"
+  },
+  {
+    "name": "r_shoulder_pitch_link.STL",
+    "bytes": 1145984,
+    "git_blob_sha": "8a9e99b7483724d29f62ae5e08951044412cdcc5",
+    "sha256": "80bcceb825da00d823c057861e0a9ee13ee79677bbe2dbffb3e0313563bd91b2"
+  },
+  {
+    "name": "r_shoulder_roll_link.STL",
+    "bytes": 2997484,
+    "git_blob_sha": "82c0840932f5c9e9b20d4ce8cbdb8fd008060756",
+    "sha256": "33861454b9c04a2dcd64c584f100ffe04587acdaf174b45a7e33e401b6dfecab"
+  },
+  {
+    "name": "r_thigh_link.STL",
+    "bytes": 2086784,
+    "git_blob_sha": "f056a115e91b28060be3a7564cde7b525c60e220",
+    "sha256": "68f7320f4b690d49d2d3b46f0a71aa53c967bfe2d1aa20cded15ffb28300ad50"
+  },
+  {
+    "name": "r_upper_arm_link.STL",
+    "bytes": 2881184,
+    "git_blob_sha": "9e791c4ba3466ecfb6e793a9c7d5eab437a12f1d",
+    "sha256": "0ae3b9ef3017ecc4a8f7d4bb42e3863b3527b44369ce97a4b1f5387eb4b9b9c2"
+  },
+  {
+    "name": "r_wrist_link.STL",
+    "bytes": 951484,
+    "git_blob_sha": "628cd457de0b5d7b6fa8947c500cc55ad9e282d0",
+    "sha256": "d25bb5b88b2573c28aaa89c28883ae7185fcbb69d99e3a1a12ef95f8f0fce83f"
+  },
+  {
+    "name": "torso_link.STL",
+    "bytes": 5687234,
+    "git_blob_sha": "0b437fedaf98a854a36c408fde088a915841c72c",
+    "sha256": "6dbd4b086234d5bf208e2cedbf0ea872b09204c7b0918dbc7dd0a5e3974af52d"
+  }
+]

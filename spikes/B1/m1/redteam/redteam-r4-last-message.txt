@@ -1,0 +1,15 @@
+1. **R1-8 — PARTIAL — MAJOR — M1.6–M1.7.** Arithmetic guards and nulling of comparison-level outcomes are substantially implemented, but primary-arm aggregation errors still break reporting. `m1_arm_stats_safe()` returns only `n`, `seeds_retained` and `c2_error` after an exception (tool line 550); `m1_write()` unconditionally accesses `aulc_mean` (lines 819–820). The resulting `KeyError` prevents the promised BLOCKED artifact and sensitivity report. The fallback also incorrectly reports zero retained seeds when aggregation failed on otherwise valid runs.
+
+   **Fix:** preserve actual retained seeds and denominators; return a complete arm-record schema with unavailable statistics null; make the writer handle that schema. Verify the error path through final serialization using synthetic fixtures. M1.7’s explicitly disclosed fail-closed handling of **v1.0** exceptions does not cover this M1 reporting failure. The disposition’s magnitude argument also does not establish safety: unequal completion scaling can increase between-seed dispersion while reducing individual magnitudes.
+
+2. **Round-2 #10 — RESOLVED — MAJOR — M1.1, M1.7.** The single-deposit count and full pinned hash are checked before extraction or scoring. **Fix:** none further.
+
+3. **Round-2 #11 — RESOLVED — MAJOR — M1.2, M1.7–M1.9.** The hash-verified historical record remains separate from recomputation, and the printed historical outcome comes from that record. **Fix:** none further.
+
+4. **Round-2 #12 — RESOLVED — MAJOR — M1.7.** `m1_guard()` now compares the two output destinations using both canonical paths and `os.path.samefile()`, closing the hard-link corruption path. **Fix:** none further.
+
+5. **Round-3 NEW-5 — RESOLVED — MINOR — M1.7.** The discrepancy comparison now covers copied per-run curve metrics, per-arm AULC fields, verdict, outcome, failing IDs and the verdict line excluding tool hash. Missing run/arm entries are reported, and recomputed metrics are retained separately. **Fix:** none further.
+
+6. **NEW — MINOR — M1.7.** The reviewed draft tool still sets `M1_AMENDMENT_SHA256 = "__M1_SHA__"`. Consequently, its entry point rejects every actual amendment file. This is an unfinished seal prerequisite rather than a metric defect. **Fix:** insert the final amendment’s full hash, verify matching/mismatching amendment handling without accessing the deposit, then hash and seal that completed tool before deposit access.
+
+OVERALL: SEAL-AFTER-FIXES

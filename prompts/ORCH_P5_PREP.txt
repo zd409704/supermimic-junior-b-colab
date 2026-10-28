@@ -1,0 +1,56 @@
+Method boot (required order):
+1. Read the global pin named in /srv/claude/research/METHOD/CURRENT and verify its sha256.
+2. Read any overlays under this program's method/local/ (skip if empty / only .gitkeep).
+3. Read Appendix A: available-models catalog (A.6) and allocation preference (Claude family required; Codex Astra high as secondary preference when a second family is needed; remaining slots by documented characteristics).
+4. Analyze whether this program needs specials beyond the global method. If yes and overlays are missing, create append-only method/local/ files that name the global version+sha they extend, then continue. If no, use global only; do not invent a local full copy.
+5. Before Step 2 of a heterogeneous or high-stakes contest packet: allocate models from the catalog under A.7, write program-root roster.md (A.5 fields), and freeze. Do not copy another program's roster as methodology.
+6. In-flight packets keep the method hash they started under; adopt a newer global pin only at the next packet boundary (or explicit sealed amendment).
+Stay under this program's root for writes. Home-humanoid / plant-class wording only; Provisional unless explicitly authorized to Lock.
+
+---
+
+Role: Orchestrator. Packet: **P5-prep — implement and seal CR-B2-1 (a)–(h) + VERDICT-TOOL-B2** (CPU only on the box). Do not run Colab. Do not run XN-4090. Do not train. Do not amend sealed P4 deposits. Do not reopen P4 scoring. Do not start P5 attempt 1 GPU spend.
+
+Working directory: /srv/claude/research/supermimic-junior-b-colab
+Stay under /srv/claude/research/supermimic-junior-b-colab/.
+
+## Authority (do not re-ask; do not reopen)
+
+- spikes/B2/PLAN.md sealed sha256 5d1f26f776a3ea56c2becd3ec2fa2cf8e88bd62c43a20f79415a96e82a3da11d (SEAL spikes/B2/PLAN.md 2026-10-26T10:48:30Z)
+- orch/reports/VERDICT-P4-b0-attempt1-relaunch3-results.json (PASS/NONINFERIOR)
+- orch/reports/DECISION-RV-BLK-20261026.md
+- packets/P4/junior_b_colab-CR-B0-1.tgz sha256 763867682e3cfa05ca8eb6382ffc9124be2347b898531c60b904061776c33bff
+- method/local/OVERLAY-001-owner-colab-runner.md
+
+Manager ordered this prep after PLAN seal. Manager START for GPU comes later and must cite PLAN sha + CR-B2-1 tarball sha.
+
+## Required reads
+
+- spikes/B2/PLAN.md §2.3 (a)–(h), §3 mask stream, §4 driver outline, §6 PERM, §7–§9 harness/deposit/venue, §10 spend gate
+- spikes/B0/PLAN.md only by ID reference (do not modify)
+- packets/P4/ layout as the CR-B0-1 pattern for new-files-only change requests
+- packets/P1/FREEZE_MANIFEST.md as needed for frozen hashes
+
+## Deliverables (all under this program)
+
+Implement PLAN §2.3 exactly:
+
+1. **(a)** configs/b2_idx.yaml and configs/b2_mtrain.yaml (byte copies of configs/b0_microbench.yaml with only the named changes).
+2. **(b)** mlp_mind decoder + wrapper entry under packets/P5/ (frozen files untouched).
+3. **(c)** Fixed-seed mask-stream eval wrapper under packets/P5/ (seeds 7100/7101/7102; dedicated torch.Generator; maskstream artifacts).
+4. **(d)** GPU permutation check script under packets/P5/ (also runnable on CPU for prep tests).
+5. **(e)** P5 driver under packets/P5/ plus orch/jobs/p5-b2-attempt1/run.sh and job JSON. Job may be written but must stay **not READY for GPU spend** until Manager START: leave state DRAFT or PREP until prep seals; include env.HF_ENDPOINT=https://hf-mirror.com, mutex gpu0, venue xn-4090-gpu2. Do not flip READY and do not upload.
+6. **(f)** Deterministic tarball packets/P5/junior_b_colab-CR-B2-1.tgz + packets/P5/MANIFEST_ADDENDUM.md proving CR-B0-1 files unchanged.
+7. **(g)** CPU tests; seal the log. Every (g) item in PLAN must pass.
+8. **(h)** spikes/B2/verdict/verdict_b2.py (+ fixture, tests). Seal as VERDICT-TOOL-B2 before any P5 deposit is opened. Fixture tests must pass.
+
+## Seal procedure when prep is complete
+
+1. Append sha256 entries to logs/seal.log for CR-B2-1 pieces, tarball, manifest addendum, CPU-test log, VERDICT-TOOL-B2, job files as applicable.
+2. Record PS-B2-1 and PS-B2-2 as held in a sealed packets/P5/PRESTART.md (PS-B2-3 READY flip and PS-B2-4 Manager START remain open).
+3. Update orch/STATUS.md: P5-prep DONE with full hashes; next = await Manager START (cite PLAN 5d1f26f7… and CR-B2-1 tarball sha). Copy STATUS to orch/reports/STATUS-<stamp>-EDT.md.
+4. Append progress.md rows.
+5. Print exactly:
+   P5_PREP_SEALED plan_sha256=5d1f26f776a3ea56c2becd3ec2fa2cf8e88bd62c43a20f79415a96e82a3da11d tarball_sha256=<hex> verdict_sha256=<hex> path=packets/P5/
+
+Stop when sealed. Do not launch training. Do not open Colab or XN jobs. Do not START. Wake Manager with the P5_PREP_SEALED line and hashes.

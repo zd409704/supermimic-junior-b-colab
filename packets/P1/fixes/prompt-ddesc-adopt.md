@@ -1,0 +1,17 @@
+You are the P1 FIXES AUTHOR (stage 2: DDESC-ADOPT) for research program supermimic-junior-b-colab. Program root: /srv/claude/research/supermimic-junior-b-colab (paths relative to it). A cross-family reviewer will file objections afterwards.
+
+Read first: packets/P1/ddesc/decision.md (Recommend = candidate Y), packets/P1/ddesc/proposals/Y.md, spikes/D-DESC/PLAN.md section 3, spikes/D-DESC/results.json and the spike implementation spikes/D-DESC/descriptor_v2.py (it passed the pre-registered CPU spike), packets/P1/fixes/CHANGES.md (stage-1 fixes already applied), code/ (all), configs/colab_smoke.yaml.
+
+TASK (DDESC-ADOPT): make descriptor v2 (candidate Y, as implemented and validated in spikes/D-DESC/descriptor_v2.py) the production descriptor of the attention arm, keeping v1 selectable.
+1. Port the v2 builder, the synthetic v2 fallback and the actuator-parameter helpers into code/ (code/attention_policy.py or a new code/descriptor_v2.py). Port, do not redesign: behaviour must match the spike module for the same inputs; add a CPU test that asserts equality with the spike module's output on the home humanoid and the synthetic 29-DoF reference (import the spike module by path in the test only if present; skip otherwise).
+2. Config: `attention.descriptor: v2` (default) | `v1`; `morph_dim` follows (16 for v2, 12 for v1). `load_morphology` dispatches on it. On the Colab upstream path, the 29-DoF actuator parameters (effort limit, stiffness, damping, action scale) and default pose come from the upstream robot entity config, via the loader key(s) in configs/colab_smoke.yaml only (single place for upstream identifiers). The spike's regex table built from the pinned constants excerpt may be kept as a CPU-only reference/test fixture, NOT silently used on the upstream path. Fail loudly if the upstream path cannot obtain them.
+3. Sidecar `junior_policy.json`: record the full v2 meta (version, constants, L, c, M, names, q_def, ranges, tau, kp, kd, sigma, limb_source, scale_norm, ablate, descriptor matrix sha256). Add an FX-5-style seam line `[seam] S5 env_action_scale_match=<true|false>` comparing env action-manager scale/offset per joint name to the sidecar sigma/q_def (rel tol 1e-6), raising after printing when false. Add S5 to the runbook seam list and to its notebook text.
+4. `mlp_matched` must re-solve against the v2 attention parameter count automatically (check it does), within 5%.
+5. Update code/tests/test_smoke.py: v2 shapes/distinct rows, permutation equivariance for v2 (rel err < 1e-4), param match, and the v1 path still works.
+RULES
+- Write only under code/, configs/, notebooks/, docs/COLAB_RUNBOOK.md and packets/P1/fixes/. Never write to assets/, logs/, spikes/, briefs/, packets/P1/ddesc/.
+- No other changes. Plant-class wording only; no product/company names in new prose or identifiers.
+- Regenerate notebooks/colab_smoke.ipynb with code/tools/make_notebook.py if the embedded text changes.
+- Before finishing run from the program root: `.venv/bin/python code/tests/test_smoke.py`, `.venv/bin/python code/train_entry.py --policy attention --out /tmp/p1-adopt-smoke`, `.venv/bin/python code/train_entry.py --policy mlp_matched --out /tmp/p1-adopt-smoke`, `.venv/bin/python code/eval_entry.py --out /tmp/p1-adopt-smoke`. All must pass. Never write outputs under logs/.
+- Append a `## DDESC-ADOPT` section to packets/P1/fixes/CHANGES.md: files, what changed, how verified, and anything that remains unverifiable on the box.
+Final reply: a single line DONE

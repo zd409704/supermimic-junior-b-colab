@@ -1,0 +1,151 @@
+{
+  "tool": "spikes/B1-RT/verdict_rt.py",
+  "tool_sha256": "2341a93d4acb857dae3933d38e5dedb49e03841533abdd9cb71482909616443a",
+  "cpu_results": "spikes/B1-RT/results-cpu-attempt1.json",
+  "cpu_results_sha256": "197b6c6556551ee9994f54126767192175d3aa9a75c5011d6f573cfa4947eeab",
+  "checks": {
+    "RT-1": {
+      "pass": true,
+      "source": "cpu"
+    },
+    "RT-2": {
+      "pass": true,
+      "source": "cpu"
+    },
+    "RT-3": {
+      "pass": true,
+      "source": "cpu"
+    },
+    "RT-4": {
+      "pass": false,
+      "source": "cpu",
+      "waived": true
+    },
+    "RT-5": {
+      "recorded": true,
+      "source": "cpu"
+    },
+    "RT-6": {
+      "pass": null,
+      "status": "not_run"
+    },
+    "RT-7": {
+      "pass": null,
+      "status": "not_run"
+    },
+    "RT-8": {
+      "pass": null,
+      "status": "not_run"
+    }
+  },
+  "amendment": {
+    "path": "spikes/B1-RT/AMENDMENT-C2-rt4.json",
+    "sha256": "32143be4687ca6de270165a848eaf4aa8292a21a40e8255c142c32f9f048c591",
+    "amendment_id": "AMENDMENT-C2-rt4",
+    "class": 2,
+    "option": "C",
+    "waive": [
+      "RT-4"
+    ],
+    "slot_rule": "first",
+    "slot_rule_detail": "First clip of each PLAN \u00a73 slot (the P4 clips: walk1_subject1, run1_subject2, dance1_subject1, jumps1_subject1). No replacement is tried and nothing is selected on RT-4 QA; QA numbers are still computed and recorded on the GPU host. All 4 slots are required (prepare_b1_data.py --slot-rule first).",
+    "clips": [
+      "walk1_subject1",
+      "run1_subject2",
+      "dance1_subject1",
+      "jumps1_subject1"
+    ],
+    "binding_unchanged": [
+      "RT-1",
+      "RT-2",
+      "RT-3",
+      "RT-5 (recorded)",
+      "RT-6",
+      "RT-7",
+      "RT-8"
+    ],
+    "decision_sha256": "934b3c9b85231ecedc2704b06e9abd9ccf41b92a871fcc09f8e622b4d294c262",
+    "decision_path": "orch/owner-decisions/20261026-1931-EDT-p6-rt4-class2-c-waive.md",
+    "ask_path": "orch/reports/ASK-P6-RT4-class2-20261026.md",
+    "ask_sha256": "d2f541616c092d9af02d7a1d406a1ed719c348f80e24d80796404899ce02b680",
+    "plan_ref": {
+      "path": "spikes/B1-RT/PLAN.md",
+      "sha256": "b7365b4f2e382344151c64be979e5e2aff102fbaba6dc6826d8a429b3b9852a5"
+    },
+    "evidence": {
+      "results_cpu_attempt1": {
+        "path": "spikes/B1-RT/results-cpu-attempt1.json",
+        "sha256": "197b6c6556551ee9994f54126767192175d3aa9a75c5011d6f573cfa4947eeab"
+      },
+      "diag_source_baseline": {
+        "path": "spikes/B1-RT/diag-source-baseline-attempt1.json",
+        "sha256": "8f5115590fd013b4fcdcc39d3691ff9f553651c13814cfc470ed58279bcd0ff7"
+      },
+      "results_fail_rt4": {
+        "path": "spikes/B1-RT/results.json",
+        "sha256": "02366717575a5c7488411b76b09037c0d4e8a79efe9d40528c6bf5aea840a159"
+      },
+      "blocked": {
+        "path": "spikes/B1-RT/BLOCKED.md",
+        "sha256": "6122baac8be586b0309a6a3ccc9226a212bc9e5650cd1f0a661928b3cac657b7"
+      }
+    },
+    "disclosure": {
+      "required_in": "every B1 write-up (B1-RT verdict report, B1 arms verdict report, any synthesis or claim that uses B1 results)",
+      "rt4_numbers": "RT-4 attempt 1 (results-cpu-attempt1.json): 0/4 slots pass. Clip fraction 0.086-0.588 (threshold 0.10; fails on 7/8 clips, mostly the elbow), sole penetration p95 0.0138-0.0302 m (threshold 0.01), stance-foot skate p95 0.685-1.912 m/s (threshold 0.10); root-height band fails only on jumps1_subject2 (p5 0.23). Used clips (first of each slot): walk1_subject1 0.197/0.0173/1.316, run1_subject2 0.439/0.0188/1.300, dance1_subject1 0.281/0.0202/1.142, jumps1_subject1 0.206/0.0150/1.297 (clip frac / penetration p95 m / skate p95 m/s).",
+      "source_baseline_numbers": "Same definitions on the 29-DoF reference body's own source motion (diag-source-baseline-attempt1.json): skate p95 0.88-2.74 m/s on all 8 clips; penetration p95 0.0071-0.0108 m.",
+      "claim_scope_line": "B1 references were produced by retarget route RT-a, which failed retarget QA (RT-4, waived under Class-2 option C); the sealed RT-4 skate measure is not attainable on the 29-DoF source itself. B1 results are within-plant arm comparisons on these shared references; absolute returns on the home humanoid are not comparable to the reference body's."
+    },
+    "not_changed": [
+      "verdict_rt.py semantics (it already reads `waive`)",
+      "RT-1..RT-3, RT-5..RT-8 definitions and thresholds",
+      "P4/P5 scoring (not reopened)",
+      "D-001 Provisional",
+      "P5 NO_GAIN / u_deficit caveat"
+    ],
+    "rejected_options": {
+      "B": "RT-b keypoint IK; may run later as its own packet, not in P6",
+      "A": "does not unblock"
+    },
+    "gpu_still_required": "RT-6, RT-7, RT-8 remain not_run until the p6-b1-rt deposit on xn-4090-gpu2 is opened and scored with verdict_rt.py --gpu-open ... --amendment spikes/B1-RT/AMENDMENT-C2-rt4.json",
+    "status": "Provisional",
+    "written_by": "Claude Orchestrator (claude-opus-5-5), P6 C2 apply wake",
+    "stamp": "2026-10-26 EDT (UTC in logs/seal.log)"
+  },
+  "verdict": "BLOCKED",
+  "failing_ids": [],
+  "not_run": [
+    "RT-6",
+    "RT-7",
+    "RT-8"
+  ],
+  "waived": [
+    "RT-4"
+  ],
+  "rt5_recorded": true,
+  "pass": false,
+  "RT-1": {
+    "pass": true
+  },
+  "RT-2": {
+    "pass": true
+  },
+  "RT-3": {
+    "pass": true
+  },
+  "RT-4": {
+    "pass": false
+  },
+  "RT-6": {
+    "pass": null
+  },
+  "RT-7": {
+    "pass": null
+  },
+  "RT-8": {
+    "pass": null
+  },
+  "RT-5": {
+    "recorded": true
+  }
+}

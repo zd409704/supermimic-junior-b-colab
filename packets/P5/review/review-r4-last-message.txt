@@ -1,0 +1,19 @@
+1. **BLOCKER:** None found.
+
+2. **R1 #2 — RESOLVED.** [verdict_b2.py:264](/srv/claude/research/supermimic-junior-b-colab/spikes/B2/verdict/verdict_b2.py:264) now requires a recorded nonzero exit or missing expected files to authorize `exec2`. [b2_driver_helper.py:99](/srv/claude/research/supermimic-junior-b-colab/packets/P5/b2_driver_helper.py:99) applies the same rule.
+
+3. **R1 #6 — RESOLVED.** [verdict_b2.py:293](/srv/claude/research/supermimic-junior-b-colab/spikes/B2/verdict/verdict_b2.py:293) validates public stream fields; [verdict_b2.py:1207](/srv/claude/research/supermimic-junior-b-colab/spikes/B2/verdict/verdict_b2.py:1207) sanitizes non-finite values before serialization. The ablation `calls=NaN` regression passes.
+
+4. **R1 #8 — NOT RESOLVED (MINOR).** [run.sh:40](/srv/claude/research/supermimic-junior-b-colab/orch/jobs/p5-b2-attempt1/run.sh:40) still includes job JSON only when found; [b2_driver.sh:327](/srv/claude/research/supermimic-junior-b-colab/packets/P5/b2_driver.sh:327) permits missing extras. Without runner-provided JSON, the archive violates §9.1. **Smallest fix:** supply and verify the required JSON inside the archive, or obtain a sealed amendment permitting its separate deposit.
+
+5. **R2 #10 — RESOLVED.** [verdict_b2.py:681](/srv/claude/research/supermimic-junior-b-colab/spikes/B2/verdict/verdict_b2.py:681) treats `aborted` solely as provenance. The missing-PERM case remains FAIL/PERM with or without an ablation abort.
+
+6. **R3 #8 — RESOLVED.** [verdict_b2.py:558](/srv/claude/research/supermimic-junior-b-colab/spikes/B2/verdict/verdict_b2.py:558) rejects non-object PERM JSON and normalizes non-finite metrics. Both gate and report-only regressions pass.
+
+7. **R3 #9 — RESOLVED.** [verdict_b2.py:156](/srv/claude/research/supermimic-junior-b-colab/spikes/B2/verdict/verdict_b2.py:156) checks truncated headers; [verdict_b2.py:508](/srv/claude/research/supermimic-junior-b-colab/spikes/B2/verdict/verdict_b2.py:508) converts stream-reading exceptions into MS problems. The truncated-header regressions pass.
+
+8. **R3 #10 — RESOLVED.** [b2_driver.sh:49](/srv/claude/research/supermimic-junior-b-colab/packets/P5/b2_driver.sh:49) copies `B2_STATE_IN` before rotating metadata and exits on copy failure, preserving state supplied from `$W/meta`.
+
+9. **NEW MAJOR — Malformed report-only sidecar prevents any verdict.** [verdict_b2.py:818](/srv/claude/research/supermimic-junior-b-colab/spikes/B2/verdict/verdict_b2.py:818) assumes `sidecar.attention` is an object, including when invoked for ablation at [verdict_b2.py:849](/srv/claude/research/supermimic-junior-b-colab/spikes/B2/verdict/verdict_b2.py:849). Reproduced in memory: a clean fixture returns PASS; changing only `b2idx_attention_s0_a1/junior_policy.json` to contain `"attention": [1]` raises `AttributeError`, preventing results and the verdict line. This violates §7.4’s report-only isolation. **Smallest fix:** type-check `attention` before accessing its fields and record malformed structure as a B2-V-3 problem—report-only for ablation, gating for scored T.
+
+REVIEW-RESULT: REVISE

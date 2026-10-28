@@ -1,0 +1,42 @@
+Method boot (required order):
+1. Read the global pin named in /srv/claude/research/METHOD/CURRENT and verify its sha256.
+2. Read any overlays under this program's method/local/ (skip if empty / only .gitkeep).
+3. Stay under this program's root. Home-humanoid / plant-class wording only; Provisional.
+
+---
+
+Role: Orchestrator. Packet: **P5 B2 Class-2 amend + re-emit §7.3 row-4 outcome** from the existing sealed deposit. Do not run Colab. Do not run XN-4090. Do not train. Do not reopen P4.
+
+Working directory: /srv/claude/research/supermimic-junior-b-colab
+
+## Authority (do not re-ask)
+
+- Owner/Manager Class-2 decision (sealed): orch/owner-decisions/20261026-1719-EDT-p5-b2-class2-iv-gpu-waive.md sha256 9985fc8fcd3a391b9577895a3bedf0c3643970b6ec701b7d96c4082ed0a3ef86
+- Machine BLOCKED results (unchanged audit base): orch/reports/VERDICT-P5-b2-attempt1-results.json sha256 c184bb889d0f101eb24eed66a76b278807ebb5101011a64c47118a1a2df5b29a
+- Machine line (quote for audit): B2_VERDICT verdict=BLOCKED outcome=null drho_u=-0.5570149528058929 g_u=0.43792569029292255 drho_t=0.9423446992931261 g_t=1.1404454055571487 t_status=ok gate_b1=Go failing_ids=[] blocked=[gpu_mismatch,U-REPRO,B2-V-2]
+- Open deposit (read-only): logs/xn4090/2026-10-26/open-b2-20261026-1611/
+- PLAN spikes/B2/PLAN.md §7.2 / §7.3 sealed 5d1f26f7…
+
+## Decisions to apply
+
+1. U-REPRO → §7.3 option (iv): accept with per-clip disclosure; score U from P5 re-evals. Do not choose (v).
+2. gpu_mismatch / B2-V-2(c) → WAIVE as harness join bug (8× identical 4090; CUDA_VISIBLE_DEVICES=0). B2-V-2(a)/(b) already pass. File a tool CR note under packets/P5/ or orch/reports/ for unique-name / visible-device parse (no code change required in this packet unless a one-line note file is cleaner).
+3. With (1)+(2), row-1 BLOCKED reasons are waived for scoring. Re-emit §7.3 row-4 outcome from existing numbers in results.json. Keep Provisional. gate_b1 stays as computed (Go). No P6. No GPU.
+
+## Required deliverables
+
+1. **Amended results JSON** orch/reports/VERDICT-P5-b2-attempt1-class2-results.json derived from the machine results:
+   - Record `class2_decision_sha256`, `machine_blocked_line` (exact quote), `waivers`: U-REPRO option (iv), gpu_mismatch / B2-V-2(c).
+   - Set `decision_row=4`, `verdict=PASS` (PASS = validly executed per PLAN; not a robustness claim).
+   - Compute §7.2 from existing f0.20 fields: u_gain=(drho_u>=g_u), u_deficit=(drho_u<=-g_u), t_gap_kept=(t_status==ok and drho_t>=g_t), t_deficit=(t_status==ok and drho_t<=-g_t); set `b2_outcome` per §7.2 table; `b2_gain` = (outcome==ROBUSTNESS_GAIN); keep `gate_b1=Go`.
+   - Disclose U-REPRO per-clip diffs from the machine results gates.U-REPRO evidence (do not invent clips).
+   - Disclose gpu waive rationale.
+   - Emit an amended verdict_line like: B2_VERDICT_CLASS2 verdict=PASS outcome=<...> ... machine_was=BLOCKED waivers=[U-REPRO:iv,gpu_mismatch]
+2. **Amended report** orch/reports/VERDICT-P5-b2-attempt1-class2-20261026.md (Provisional) quoting machine BLOCKED line, Class-2 decisions, amended outcome, disclosures.
+3. **Tool CR note** orch/reports/CR-verdict-b2-gpu-name-parse.md (or packets/P5/) describing unique-name / CUDA_VISIBLE_DEVICES fix; do not patch sealed VERDICT-TOOL-B2 bytes in this packet.
+4. **Seal** sha256 of amended results, report, CR note, decision file (if not already) into logs/seal.log.
+5. **Update** orch/STATUS.md: P5 Class-2 amended SCORED with outcome + shas; Next = await Manager (no P6/GPU). Copy STATUS to orch/reports/STATUS-<stamp>-EDT.md. Append progress.md. Job remains SCORED; note class2 amendment pointer.
+6. Print exactly:
+   P5_CLASS2_SCORED verdict=PASS outcome=<hex-free token> gate_b1=Go results_sha256=<hex> report_sha256=<hex> decision_sha256=9985fc8fcd3a391b9577895a3bedf0c3643970b6ec701b7d96c4082ed0a3ef86 machine_results_sha256=c184bb889d0f101eb24eed66a76b278807ebb5101011a64c47118a1a2df5b29a
+
+Stop. No GPU. No P6. Drive paused.

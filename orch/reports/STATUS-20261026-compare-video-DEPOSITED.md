@@ -1,0 +1,1 @@
+P4 B0 compare-video DEPOSITED. Tarball logs/xn4090/2026-10-26/b0-compare-videos-20261026-1225.tgz sha256=a0d775246062957fa2132ac5ed0e7220845bcc4cc35bcaeb5cd332323b5d4fd5. MP4s under /workspace/uploads/b0-compare-videos/. Arms: attention, mlp_matched, mlp_upstream (s0). Clips: walk1_subject1, dance1_subject1. Side-by-side walk1 written. No P5 start.

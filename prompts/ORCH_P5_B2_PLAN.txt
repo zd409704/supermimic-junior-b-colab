@@ -1,0 +1,66 @@
+Method boot (required order):
+1. Read the global pin named in /srv/claude/research/METHOD/CURRENT and verify its sha256.
+2. Read any overlays under this program's method/local/ (skip if empty / only .gitkeep).
+3. Read Appendix A: available-models catalog (A.6) and allocation preference (Claude family required; Codex Astra high as secondary preference when a second family is needed; remaining slots by documented characteristics).
+4. Analyze whether this program needs specials beyond the global method. If yes and overlays are missing, create append-only method/local/ files that name the global version+sha they extend, then continue. If no, use global only; do not invent a local full copy.
+5. Before Step 2 of a heterogeneous or high-stakes contest packet: allocate models from the catalog under A.7, write program-root roster.md (A.5 fields), and freeze. Do not copy another program's roster as methodology.
+6. In-flight packets keep the method hash they started under; adopt a newer global pin only at the next packet boundary (or explicit sealed amendment).
+Stay under this program's root for writes. Home-humanoid / plant-class wording only; Provisional unless explicitly authorized to Lock.
+
+---
+
+Role: Orchestrator. Packet: **P5 — draft and seal spikes/B2/PLAN.md** (B2 mask/ablation PLAN). Do not run Colab. Do not run XN-4090. Do not train. Do not amend sealed P4 deposits or reopen P4 scoring.
+
+Working directory: /srv/claude/research/supermimic-junior-b-colab
+Stay under /srv/claude/research/supermimic-junior-b-colab/.
+
+## Authority and closed upstream (do not re-ask; do not reopen)
+
+- orch/reports/DECISION-RV-BLK-20261026.md (RV-1, RV-2, RV-8, BLK-11, BLK-12 accepts)
+- spikes/B0/PLAN.md (sealed; Amendment v1; Class-2 frozen for B0)
+- orch/reports/VERDICT-P4-b0-attempt1-relaunch3-20261026.md
+- orch/reports/VERDICT-P4-b0-attempt1-relaunch3-results.json (machine PASS/NONINFERIOR)
+- Deposit (sealed, already opened for score): logs/xn4090/2026-10-26/b0-20261026-0919.tgz sha256 1f49118213d53538485303aa0b3f09bb5f068daeb06eb325045fd83a3118dde1
+- Open tree for M-10 inputs: logs/xn4090/2026-10-26/open-b0-20261026-0919/ (read-only for thresholding; do not rewrite deposit archive)
+
+P4 machine outcome (cite only): PASS / NONINFERIOR / superior on primary R_H; Provisional. Combined B0+B2 gate to B1 follows docs/SCHEME_PLAN.md §3 after P5.
+
+## Required reads before drafting
+
+- docs/SCHEME_PLAN.md §1 P5, **§3 B2** (arms, ρ(f), draft gain, combined gate), §7–§8 cost
+- spikes/B0/PLAN.md §5 M-10 (mask evals / retention), §7 reporting, Confounds on mask-seed fairness, Amendment v1
+- method/local/OVERLAY-001-owner-colab-runner.md
+- packets/P1/FREEZE_MANIFEST.md as needed for frozen code paths
+- VERDICT results.json eval/M-10 fields for freezing numeric B2 thresholds from P4 data
+
+## PLAN requirements
+
+Write a new file: `spikes/B2/PLAN.md` (create `spikes/B2/` if needed).
+
+Must include:
+1. Mechanism under test: robustness to missing tokens on B0 checkpoints (SCHEME_PLAN §3), consistent with RV-2 mask-fairness arms.
+2. Inputs: P4 sealed deposit / open eval JSONs for **untrained-mask** M-10; frozen code tarball CR-B0-1 sha 763867682e3cfa05ca8eb6382ffc9124be2347b898531c60b904061776c33bff unless a Class-2 amendment is required and signed in this PLAN.
+3. Arms as scheme §3: attention ρ(f) and mlp_matched ρ(f) from P4 ckpts (eval-only); attention_idx ablation; attention_mtrain; mlp_mind_mtrain (mask-fairness control). Seeds and budgets explicit; equal env steps/updates (RV-8) for any new trainings.
+4. Metric: retention ρ(f)=R(mask f)/R(mask 0) at f in {0.1,0.2}; report untrained-mask and trained-mask separately; primary ranking metric must be consistent with B0 cumulative R_H where R is used (disclose if using R_H vs R_step for ρ; prefer R_H to match sealed B0 primary unless a Class-2 reason is written).
+5. **Freeze B2 gain thresholds** using P4 M-10 numbers from the sealed deposit (replace scheme draft 0.05 / 0.03 with data-informed sealed values, or keep draft with explicit justification). Cite the deposit sha and which eval files fed the freeze.
+6. **Mask-seed fairness (RV-2):** settle whether eval_entry mask sampling uses a fixed seed list reusable across arms. If unverified, require a pre-start check or sealed procedure before B2 scoring uses P4 files; do not silently assume fairness.
+7. Permutation architectural check on GPU checkpoints (rel err < 1e-4).
+8. Combined B0+B2 gate to B1 per SCHEME_PLAN §3 (Go / Go-with-caveat / Kill), given B0 already NONINFERIOR.
+9. Pass / fail / blocked / attempt rules; deposit paths under logs/xn4090/ or logs/colab/ with seal-before-open; venue preference XN-4090-GPU2 Job READY when named (BLK-12); HF_ENDPOINT mirror note if venue is xn-4090 (DIAG b818a714…); no spend until Manager START after seal.
+10. Must-capture / harness keys for a later verdict script; Provisional; home-humanoid wording; no commercial brands.
+11. Explicit: do not reopen P4 scoring; do not modify spikes/B0/PLAN.md except by pointing at it; P4 remains PASS/NONINFERIOR historical.
+
+## Red-team (optional within this packet if catalog allows)
+
+If a second-family objection pass is allocated, record objections under spikes/B2/ and resolve or escalate before seal. If not allocated, note that in STATUS and seal with Orchestrator responsibility disclosed.
+
+## Seal procedure
+
+After PLAN content is complete:
+1. Append sha256 of spikes/B2/PLAN.md to logs/seal.log with event `SEAL spikes/B2/PLAN.md` and timestamp.
+2. Update orch/STATUS.md: P5 PLAN sealed, full sha256, pointer to PLAN, next step = await Manager START for P5 runner (no training yet).
+3. Append progress.md row for B2-plan DONE with hash.
+4. Copy STATUS to orch/reports/STATUS-<stamp>-EDT.md
+5. Print exactly: `P5_PLAN_SEALED sha256=<hex> path=spikes/B2/PLAN.md`
+
+Stop when sealed. Do not launch training. Do not start P6. Do not open Colab or XN jobs.

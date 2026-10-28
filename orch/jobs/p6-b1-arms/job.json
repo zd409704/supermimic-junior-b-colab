@@ -1,0 +1,93 @@
+{
+  "job_id": "p6-b1-arms",
+  "program": "supermimic-junior-b-colab",
+  "packet": "P6d-B1-arms",
+  "state": "RUNNING",
+  "state_note": "RUNNING attempt 1/2. Relay START after READY (934b3c9b item 4; a400ffd7 option 1). Mutex gpu0 held. No Colab.",
+  "venue": "xn-4090-gpu2",
+  "ssh_alias": "xn-4090-gpu2",
+  "workdir": "/tmp/supermimic-junior-b-colab-p6-b1-arms",
+  "upload": [
+    {
+      "src": "packets/P6/junior_b_colab-P6-B1ARMS.tgz",
+      "sha256": "0f18b8bbca7f7ef13fffb0bcf51b2370e997580a5b5f8f6ed2cffc4dd1eb8d87"
+    },
+    {
+      "src": "orch/jobs/p6-b1-arms/run.sh",
+      "sha256": "72bdf169a21ab4e26214fd8a3269f5358aa7131dc1df64706eb6d09154e5852d"
+    }
+  ],
+  "command": "UPLOAD_TGZ=\"$PWD/junior_b_colab-P6-B1ARMS.tgz\" bash ./run.sh",
+  "env": {
+    "CUDA_VISIBLE_DEVICES": "0",
+    "TZ": "America/Toronto",
+    "LANG": "en_US.UTF-8",
+    "LC_ALL": "en_US.UTF-8",
+    "HF_ENDPOINT": "https://hf-mirror.com",
+    "HF_HUB_ENABLE_HF_TRANSFER": "0"
+  },
+  "slot_rule": "first",
+  "timeout_hours": 10,
+  "spend_cap_gpu_hours": 9.0,
+  "mutex": "gpu0",
+  "deposit": {
+    "remote_glob": "/content/b1arms-*.tgz",
+    "local_dir": "logs/xn4090/<UTC date of the deposit, YYYY-MM-DD>",
+    "seal_event": "DEPOSIT xn4090",
+    "also_deposit": "runner stdout log and this job JSON, sealed beside the archive (RELAY-LOG)"
+  },
+  "success_hint": "DONE_DRIVER line and a b1arms-*.tgz under /content; 9 primary runs at it 1600 with 10 eval points each, or SPEND_CAP / BLOCKED.md",
+  "plan_ref": {
+    "path": "spikes/B1/PLAN.md",
+    "sha256": "1088752ba26a8798d721aa93d6e10d1b7bdb7fb924d9d72879acc78d8c2304c8",
+    "gate": {
+      "job": "orch/jobs/p6-b1-rt.json",
+      "rule": "verdict_rt PASS with waived=[RT-4]"
+    },
+    "rt_plan": {
+      "path": "spikes/B1-RT/PLAN.md",
+      "sha256": "b7365b4f2e382344151c64be979e5e2aff102fbaba6dc6826d8a429b3b9852a5"
+    },
+    "amendment": {
+      "path": "spikes/B1-RT/AMENDMENT-C2-rt4.json",
+      "sha256": "32143be4687ca6de270165a848eaf4aa8292a21a40e8255c142c32f9f048c591"
+    },
+    "decision": {
+      "path": "orch/owner-decisions/20261026-1931-EDT-p6-rt4-class2-c-waive.md",
+      "sha256": "934b3c9b85231ecedc2704b06e9abd9ccf41b92a871fcc09f8e622b4d294c262"
+    }
+  },
+  "ready_prereqs": [
+    "p6-b1-rt deposit sealed (DEPOSIT xn4090) and SCORED: B1RT_VERDICT verdict=PASS waived=[RT-4]",
+    "packets/P6/b1arms_driver.sh implementing spikes/B1/PLAN.md \u00a73-\u00a78 (arm order, harness stop at it 1600 per B0 PLAN \u00a74.3, 10-point eval, spend cap 9.0 h, source ckpt sha check, gpu_used.csv); CPU-mocked; sealed",
+    "spikes/B1/verdict_b1.py implementing PLAN \u00a75-\u00a76; CPU-tested on fixtures; sealed before the arms deposit is opened",
+    "tarball + manifest built and sealed; run.sh written with the tarball sha; upload[] shas filled",
+    "gpu0 mutex free (p6-b1-rt DEPOSITED/SCORED)"
+  ],
+  "p4_checkpoints": {
+    "note": "All six P4 ckpt_0001600.pt read-only (PLAN \u00a74 identities). Do not clean /content/SuperMimic-Reproduced or /content/p5_p4ckpts."
+  },
+  "created_by": "Claude Orchestrator (claude-opus-5-5), P6 C2 apply wake",
+  "stamp": "2026-10-26 22:01 EDT",
+  "ready_evidence": {
+    "gate_1": "orch/jobs/p6-b1-rt.json c595ed911bb2b302a0a7cca7810aba557ea1d815edde3b28bc64405bf1f971d5 SCORED PASS; results 126c23349ef6770ce7a8c5e3d9d7b60c66dceb7803ae27824f8d2651cc07be2d; deposit 4e49c3e9efd788e6a457e7df251143cc7c6d0c688179c0c38aa667c5e5d4d8e8",
+    "driver": "packets/P6/b1arms_driver.sh 10bfc76bcf1e5936e4a67df65d49922af8bf411e328321215d6035098ec88fe7 (+ packets/P6/b1/b1arms_helper.py 06d1292ba62a8e13ae8af5677fa0ac17bdaab5516511b8cc8a5f119fe0ef92bf); CPU mock logs/p6/b1arms-driver-mock-attempt1/SUMMARY.md 8a50a06b15f27742feab239e4273a4b95c7b2a6298051fc7c4af5bd9e98f96de",
+    "verdict": "spikes/B1/verdict_b1.py 62c3ae20151345950e44541569c45599860bf5c996c4b98f0243eada0f3b6ed6; tests logs/p6/verdict-b1-cpu-attempt1.log 55475c5be1d480075129bb1f30e96441bfd82f6430b7b0fd7ec8137d7d05db75 (33/33 + 2 end-to-end OK)",
+    "tarball": "packets/P6/junior_b_colab-P6-B1ARMS.tgz 0f18b8bbca7f7ef13fffb0bcf51b2370e997580a5b5f8f6ed2cffc4dd1eb8d87; manifest packets/P6/MANIFEST-b1arms.sha256 a3a57b42fc4a9680c9264579a77b6448a69300bedf289a248fb96ea9e3bd0736",
+    "run_sh": "orch/jobs/p6-b1-arms/run.sh 72bdf169a21ab4e26214fd8a3269f5358aa7131dc1df64706eb6d09154e5852d",
+    "notes": "spikes/B1/IMPLEMENTATION_NOTES.md a8f99109f262edd036371c16da9bf5d015b609e012e8d87c3d31953d7e1a8125; packets/P6/BUNDLE_CONTRACT-b1arms.md 08b1ff431f5b9a9e7e13e75396afb1c81643d41b8d31884856e454c922a951c4",
+    "mutex": "gpu0 free: p6-b1-rt SCORED (released)",
+    "not_run": "PLAN \u00a79: codex-astra cross-family red team on PLAN/driver not run (disclosed)"
+  },
+  "scoring": {
+    "tool": "spikes/B1/verdict_b1.py",
+    "sha256": "62c3ae20151345950e44541569c45599860bf5c996c4b98f0243eada0f3b6ed6",
+    "command": "python3 -I spikes/B1/verdict_b1.py --deposit logs/xn4090/<date>/b1arms-<stamp>.tgz --tarball-sha 0f18b8bbca7f7ef13fffb0bcf51b2370e997580a5b5f8f6ed2cffc4dd1eb8d87",
+    "rule": "run only after the DEPOSIT xn4090 seal line exists; by an agent process that is not an adjudicator (OVERLAY-001 rule 6)"
+  },
+  "ready_by": "Claude Orchestrator (claude-opus-5-5), P6d-arms-prereqs wake",
+  "started_stamp": "2026-10-26 22:04 EDT",
+  "started_utc": "2026-10-27T02:04:06Z",
+  "ready_stamp": "2026-10-26 22:01 EDT",
+  "remote": {}
+}

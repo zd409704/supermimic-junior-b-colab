@@ -1,0 +1,47 @@
+# P1 pre-freeze fixes: CHANGES
+
+Final verification (program root): `.venv/bin/python code/tests/test_smoke.py` (10 PASS), `code/train_entry.py --policy attention --out /tmp/p1-fx-smoke`, `code/eval_entry.py --out /tmp/p1-fx-smoke` all pass (attention perm_rel_err ~2.7e-6). Nothing written under logs/ or assets/. No descriptor v2 work.
+
+## FX-1 (GAP-1) default pose from env, not qpos0
+- Files: `code/attention_policy.py`, `code/train_entry.py`, `configs/colab_smoke.yaml`, `docs/COLAB_RUNBOOK.md`, `code/vendor/NOTES.md`, `code/tests/test_smoke.py`.
+- `morphology_from_mjmodel(model, joint_names=None, default_qpos=None, info=None)`: `default_qpos` is a per-hinge array (joint order) or name->angle mapping (length/missing names raise). Only the default-angle column (index 6) uses it; anchor/axis geometry still evaluated at qpos0. With `default_qpos=None` the column is qpos0 and `info["default_pose_source"]="qpos0-fallback"`. New helper `hinge_joint_names`.
+- `train_entry.load_morphology(cfg, n, info=None)`: reads robot entity config via new key `upstream.robot_cfg_loader` (the only place the upstream identifier appears, next to `model_loader`; identifier is UNVERIFIED), resolves `init_state.joint_pos` regexes to per-joint angles (`resolve_init_joint_pos`, conflicting patterns raise), sets source `env_init_state`. Unimportable loader raises RuntimeError (`_import_ref`); upstream mode also requires `attention.morphology: upstream_mjmodel`. Sidecar `junior_policy.json` gets `default_pose_source` and `descriptor_joint_names`.
+- Runbook §6 and NOTES: S4 "default pose source == env init state".
+- Verified: CPU tests (array/mapping/fallback/short-array error, only column 6 changes, loader failure raises, regex resolution). Upstream path itself cannot run on the box.
+
+## FX-2 (GAP-2) fixed depth normalisation
+- Files: `code/attention_policy.py`, tests.
+- Module constant `DEPTH_NORM = 8.0`; used in `morphology_from_mjmodel` (was per-body max depth) and `synthetic_morphology` (was depth/6).
+- Verified: test asserts depth column * 8 is integral for the owner MJCF and synthetic descriptor; permutation equivariance and 5% param match tests still pass.
+
+## FX-3 clip names
+- Files: `packets/P1/fixes/fx3-dataset-listing.json`, `packets/P1/fixes/FX3.md`, `configs/colab_smoke.yaml` (comment only).
+- All 4 clips exist in `g1/`; none replaced; "placeholders" comment removed.
+
+## FX-4 (GAP-7) hygiene
+- Files: `code/tests/test_smoke.py`.
+- `test_b1_second_body_from_owner_mjcf` (name kept) now documented/printed as a "J-agnostic shape test", not cross-embodiment evidence. Owner MJCF located by glob of `assets/home_humanoid_mjcf/*.xml` (asserts at most one; skip if none). No other hard-coded basename remained in code/ (grep checked).
+
+## FX-5 seam instrumentation (observation-only)
+- Files: `code/train_entry.py`, `code/tests/test_smoke.py`, `code/tools/make_notebook.py` (cell text), `notebooks/colab_smoke.ipynb` (regenerated), runbook.
+- `SeamProbe` (+ pure helpers `joint_order_match`, `obs_layout_check`, `find_env`, ...) used by `run_upstream` via `install_upstream_policy(..., probe_cls=SeamProbe)`. Wraps `Trainer.__init__` of `supermimic.training.loop` in-process (no upstream edits) and a one-shot forward pre-hook on our decoder. Prints `[seam] S1 joint_order_match=`, `S2 obs_policy_dim= term_major_ok=`, `S3 compile=`, `S4 default_pose_source=` (plus `detail` lines) and stores them in `junior_policy.json` under `seam`. S1 false (or env not found) raises after printing. S1 runs for all arms (descriptor is loaded from upstream loaders for every arm in upstream mode).
+- Caveats (cannot be checked on the box): `Trainer`, `env.scene["robot"].joint_names`, action-manager term attributes and observation-manager term dims are duck-typed guesses at upstream API. If the action order is not exposed, S1 compares descriptor vs entity only and says so in the detail line. S2 term_major_ok is false when the env exposes no term spec (dim alone is not proof). S2's dim is the decoder-input history dim.
+- Verified: CPU unit test with fake env/trainer/decoder (true path, mismatch raises after printing, helper truth tables).
+
+## DDESC-ADOPT descriptor v2 (candidate Y) becomes the production descriptor
+- Files: `code/descriptor_v2.py` (new), `code/attention_policy.py`, `code/train_entry.py`, `code/eval_entry.py`, `code/tests/test_smoke.py`, `code/tools/make_notebook.py`, `code/vendor/NOTES.md`, `notebooks/colab_smoke.ipynb` (regenerated), `configs/colab_smoke.yaml`, `docs/COLAB_RUNBOOK.md`.
+- Port (not redesign): `code/descriptor_v2.py` holds the spike's `morphology_v2`, `synthetic_morphology_v2` (order-invariant stage table), `ActuatorParams`, `home_actuator_params`, `home_default_qpos`, `ref29_actuator_params` and `_assemble` verbatim. `default_synthetic_v2` is a small helper (synthetic rows + reference fixture params) used as the default decoder descriptor and for CPU smoke.
+- Config: `attention.descriptor: v2` (default) | `v1`. `attention_cfg` sets `morph_dim` = 16 / 12 accordingly (a conflicting explicit `morph_dim` raises); `AttentionDecoderCfg.morph_dim` default is now 16 and the decoder's synthetic fallback dispatches on it. `load_morphology` dispatches on the descriptor. Optional `attention.descriptor_ablate` / `descriptor_scale_norm` pass through to the builder.
+- Upstream path (v2): effort limit / stiffness / damping from `robot_cfg.articulation.actuators` (each joint covered by exactly one group) via `upstream.robot_cfg_loader`; action scale sigma via new key `upstream.action_scale_loader` (regex -> value dict or number); default pose via `robot_cfg_loader` as before. All of it raises if a loader is missing, unimportable, or does not cover every joint. The regex reference table (`ref29_actuator_params`) is used only for the synthetic CPU descriptor (`actuator_source=ref29_cpu_fixture`) and tests, never on the upstream path.
+- Sidecar `junior_policy.json`: new `descriptor` (full v2 meta: version, constants, L, c, M, names, q_def, range, tau, kp, kd, sigma, limb_source, scale_norm, ablate, matrix, sha256), `actuator_source`, `descriptor_version`. `eval_entry --mode upstream` raises if the rebuilt descriptor sha256 differs from the sidecar's.
+- Seam S5: `[seam] S5 env_action_scale_match=<true|false>` (env action term per-joint scale/offset vs sidecar sigma/q_def, rel tol 1e-6; prints, records under `seam`, then raises when false or when the env does not expose them). `na` is printed only for `descriptor: v1`. Added to the runbook seam list and S5 paragraph, `code/vendor/NOTES.md`, and the notebook cell text (S1-S5).
+- `mlp_matched`: `build_decoder` already re-solves against the attention count built with the active descriptor. Measured: attention 464 001 (v1 463 489, +512), mlp_matched 468 317 (+0.93%), within 5% for both descriptors (test).
+- Verified (program root, CPU): `.venv/bin/python code/tests/test_smoke.py` (15 PASS, no SKIP) including v2 shapes/distinct rows, v2 and v1 permutation equivariance (rel err < 1e-4; eval smoke attention perm_rel_err 2.0e-6), param match for both descriptors, v1 path, equality with the spike module (`spikes/D-DESC/descriptor_v2.py` loaded by path; skipped if absent) on the synthetic 29-DoF reference (also reversed order), the home humanoid and its scale_norm/ablate variants (tensor equal, full meta equal), fake-robot-config actuator extraction and its failure cases, S5 true/false/raise paths with fake env. `code/train_entry.py --policy attention|mlp_matched --out /tmp/p1-adopt-smoke` and `code/eval_entry.py --out /tmp/p1-adopt-smoke` pass. Nothing written under logs/, assets/, spikes/, briefs/ or packets/P1/ddesc/.
+- Unverifiable on the box (Colab only): both loader identifiers (`robot_cfg_loader`, `action_scale_loader`) and the attribute names read from them (`articulation.actuators[].target_names_expr/effort_limit/stiffness/damping`, action-term `_scale`/`_offset`/`target_names`); that the real 29-DoF rows pass the build asserts (distinct, |x| <= 3.5); S5 itself; the real 29-DoF anchor values (the box only has the synthetic reference and the home humanoid).
+
+## Round 2 (REVIEW-1 response)
+- O-1: `code/eval_entry.py` applies the descriptor sha256 check only when the evaluated arm is `attention`; MLP arms proceed. Test `test_o1_eval_descriptor_hash_only_gates_attention` (mlp_matched sidecar hash, nothing rebuilt -> proceeds; attention match proceeds; attention mismatch or missing rebuild raises).
+- O-2: `joint_order_match` returns True/False/"unverified"; action order not exposed gives `unverified` (printed as `S1 joint_order_match=unverified`, recorded in sidecar `seam`) and `SeamProbe` raises unless True. Truth-table test updated.
+- O-3: `obs_layout_check(..., term_names)` is True only if names from `observation_manager.active_terms["policy"]` (fallback `group_obs_term_names`) equal exactly joint_pos, joint_vel, base_ang_vel, projected_gravity, actions (cited: upstream-d9be385 tracking env cfg, policy_terms) and term dims equal H x per-frame dims. Missing names/dims, or per-frame dims (flattening not inspectable), give `unverified`; wrong names give false. `SeamProbe.on_first_decoder_call` raises unless True. No equivalent name set accepted. Tests include the reviewer's swapped-order case.
+- Runbook seam text: `unverified` means stop. Notebook cell text unchanged, so not regenerated.
+- Verified: test_smoke.py, train_entry attention and eval_entry smoke pass.

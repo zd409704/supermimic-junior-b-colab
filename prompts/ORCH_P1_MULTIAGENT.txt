@@ -1,0 +1,49 @@
+You are Claude Code Orchestrator for program supermimic-junior-b-colab. This wake is P1 (scaffold freeze) multi-agent orchestration per the sealed scheme.
+
+Method boot (required order):
+1. Read the global pin named in /srv/claude/research/METHOD/CURRENT and verify its sha256.
+2. Read overlays under method/local/ in this program (including OVERLAY-001-owner-colab-runner.md).
+3. Analyze fit; create append-only method/local/ only if true specials are missing. Do not invent a full local method copy.
+Reusable snippet: /srv/claude/research/METHOD/ORCH_BOOTSTRAP_SNIPPET.txt
+
+Working directory: /srv/claude/research/supermimic-junior-b-colab
+Stay under /srv/claude/research/supermimic-junior-b-colab/ for writes.
+Decision cap: Provisional. Home-humanoid / plant-class wording only; no commercial product or company brand names.
+Times: America/Toronto.
+
+## Prior scheme (read; do not reopen eval)
+
+- docs/EVAL_REVIEW.md
+- docs/SCHEME_PLAN.md (packets P0-P6; roles in section 7; B1-RT in section 5)
+- briefs/B1-home-humanoid-cross-embodiment.md
+- orch/STATUS.md (run-002 DONE; multi-agent NOT STARTED; P1 recommended)
+- method/local/OVERLAY-001-owner-colab-runner.md
+- method-issues/ISSUE-001.md
+
+Owner assets at assets/home_humanoid_mjcf/ are already landed. Treat as read-only: do not edit, re-copy, or rename owner asset files. Refer to the morphology as home humanoid; cite the directory path, not product-like basenames, in new prose.
+
+## Hard scope of THIS wake (P1 only)
+
+DO (you orchestrate Authors / runners per METHOD A.7 and SCHEME_PLAN section 7):
+1. Write briefs/D-DESC.md (descriptor v2 + action-scale handling) BEFORE any drafting of implementation.
+2. Allocate roster.md per A.7: Author A claude-opus firewalled, Author B codex-astra high, adjudicator agy, runner claude-sonnet. Run D-DESC with enforced isolation.
+3. Apply pre-freeze fixes FX-1..FX-4 (single author plus a cross-family reviewer) as defined in the scheme / eval review.
+4. Seal packets/P1/FREEZE_MANIFEST.md and logs/seal.log.
+5. Re-run the CPU smoke as a new attempt log (on-box; no Colab required for this wake).
+6. Prepare the P2 tarball and spikes/B0-smoke/PLAN.md for the owner Colab smoke (deposit path only; do not claim Colab ran).
+7. Overwrite orch/STATUS.md with: method pin sha, P1 packet result, artifact hashes, what is sealed, what is NOT started (no B0/B2/B1 GPU; no B1 arms), next wake recommendation for the follow-on launch, Human-lead asks that still block P3+ only.
+8. Copy STATUS into orch/reports/ with a dated stamp.
+
+DO NOT in this wake:
+- Start B0 / B2 / B1 GPU work or B1 arms.
+- Edit the owner asset under assets/home_humanoid_mjcf/.
+- Wait on Human-lead asks in STATUS section 5; those block P3+ only. Proceed with P1.
+- Behave as a launcher-only pass-through instead of scheduling Authors and runners.
+- Claim Colab/GPU training finished.
+
+If a listed Author / runner CLI is unavailable on this box, record the gap honestly in STATUS and briefs, run the maximum METHOD-compliant subset you can with available tools, and do not invent fake seal evidence.
+
+When finished, print a short progress summary in session output.
+
+Begin now.
+
