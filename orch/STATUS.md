@@ -1,16 +1,18 @@
 # Program STATUS - supermimic-junior-b-colab
 
-**Stamp:** 20261028-2151-AsiaShanghai
+**Stamp:** 20261028-0954-EDT
 **Decision cap:** Provisional
 
 ## Headline
 
-**PROGRAM STOP + GitHub upload (in progress under Claude 4).** Owner: stop all further development; upload tree to GitHub via Claude 4 conversation. Prior P6 B1 arms compare-video remains DEPOSITED (`e266b5bb…`); scoring HOLD / M1 CLOSEOUT / arms CLOSE stand. Drive PAUSED. No new packets, no retrain, no scoring reopen.
+**PROGRAM STOP + GitHub upload DONE.** Private repo https://github.com/DavidZhang-HT/supermimic-junior-b-colab (`main` HEAD `5a08725daee346031ad058476aaeaad6e80deff1`; ~82M tracked). Decision `bb7087fb…`. Prior compare-video DEPOSITED `e266b5bb…` stands (omitted from git under `logs/`). Scoring HOLD / M1 CLOSEOUT / arms CLOSE. Drive PAUSED. Claude 4 idle HOLD — no further development.
 
-| Item | Path | note |
+| Item | Path / URL | note |
 |---|---|---|
-| **STOP + upload decision** | `orch/owner-decisions/20261028-2151-AsiaShanghai-STOP-and-GitHub-upload.md` | Claude 4 creates private `DavidZhang-HT` repo and pushes lean tree |
-| Compare-video (last research artifact) | tgz `e266b5bb…` under logs (omit bulky logs from git) | DEPOSITED; visual-only |
+| **STOP + upload decision** | `orch/owner-decisions/20261028-2151-AsiaShanghai-STOP-and-GitHub-upload.md` | sha256 `bb7087fbcc94262f9ec8f7f3202a7b38a48ff4cbe11671ac71c6dd2e5236d695` |
+| **GitHub (private)** | https://github.com/DavidZhang-HT/supermimic-junior-b-colab | branch `main`; HEAD `5a08725…` |
+| Contents note | `GITHUB-CONTENTS.md` | sha256 `67e0d8df410baf97170a22b00e36801c86a04082492edf759c5efc1b752d434a` |
+| Compare-video (last research artifact) | logs only (not in git) | DEPOSITED `e266b5bb…` |
 
 ## Jobs
 
@@ -22,5 +24,4 @@
 
 ## Hard non-touch
 
-No scoring reopen, no M1 reopen, no attempt 2, no seeds, no retrain, **no further development packets**. Upload-only until Manager says otherwise.
-
+No scoring reopen, no M1 reopen, no attempt 2, no seeds, no retrain, **no further development packets**. Upload complete; idle until Manager says otherwise.
